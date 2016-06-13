@@ -27,6 +27,7 @@
 		<commons-lang.version>2.5</commons-lang.version>
 		<commons-logging.version>1.1.3</commons-logging.version>
 		<commons-pool.version>1.6</commons-pool.version>
+		<core.version>3.1.0</core.version>
 		<dom4j.version>1.6.1</dom4j.version>
 		<jackson.version>1.9.13</jackson.version>
 		<jaxen.version>1.1.6</jaxen.version>
@@ -35,6 +36,7 @@
 		<log4j.version>1.2.16</log4j.version>
 		<junit.version>4.11</junit.version>
 		<mysql-connector-java.version>5.1.18</mysql-connector-java.version>
+		<poi.version>3.9</poi.version>
 		<quartz.version>1.8.6</quartz.version>
 		<spring.version>3.2.5.RELEASE</spring.version>
 		<standard.version>1.1.2</standard.version>
@@ -92,6 +94,13 @@
 			<version>${commons-pool.version}</version>
 		</dependency>
 
+		<!-- core -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${core.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
@@ -115,13 +124,14 @@
 			<artifactId>jaxen</artifactId>
 			<version>${jaxen.version}</version>
 		</dependency>
-<!-- 
-		<dependency>
-			<groupId>net.sf.json-lib</groupId>
-			<artifactId>json-lib</artifactId>
-			<version>${json-lib.version}</version>
-		</dependency>
- -->
+		
+		<dependency> 
+			<groupId>net.sf.json-lib</groupId> 
+			<artifactId>json-lib</artifactId> 
+			<version>${json-lib.version}</version> 
+			<classifier>jdk15</classifier>
+		</dependency> 
+		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -144,6 +154,19 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql-connector-java.version}</version>
+		</dependency>
+
+		<!-- POI -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi.version}</version>
 		</dependency>
 
 		<dependency>
@@ -178,6 +201,13 @@
 			<version>${spring.version}</version>
 		</dependency>
 
+		<!-- Spring beans -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
 		<!-- Spring context support -->
 		<dependency>
 			<groupId>org.springframework</groupId>
