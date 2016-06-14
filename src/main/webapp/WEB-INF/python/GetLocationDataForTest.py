@@ -41,21 +41,21 @@ class GetSvaData():
             while True:
                 timestamp = int(time.time())* 1000
                 print timestamp
-                message = "{\"locationstreamanonymous\":[{\"IdType\":\"IP\",\"Timestamp\":"+str(timestamp)+",\"datatype\":\"coordinates\",\"location\":{\"x\":1133.0,\"y\":492.0,\"z\":4},\"userid\":[\"0a82644e48a\"]}"
+                message = "{\"locationstream\":[{\"IdType\":\"IP\",\"Timestamp\":"+str(timestamp)+",\"datatype\":\"coordinates\",\"location\":{\"x\":1133.0,\"y\":492.0,\"z\":3},\"userid\":[\"0a26d23d\"]}"
                 #print message
-                for i in range(22):
-                    x = random.randint(0, 1000)
-                    y = random.randint(0, 1000)
-                    message = message + ',{"IdType":"IP","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x)+',"y":'+str(y)+',"z":2},"userid":["1userid44'+str(i)+'"]}'
+                for i in range(500):
+                    x = random.randint(300, 400)
+                    y = random.randint(350, 520)
+                    message = message + ',{"IdType":"IP","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x)+',"y":'+str(y)+',"z":1},"userid":["0a26d23d"]}'
                 message = message + "]}"
-
-                #{"locationstream":[{"IdType":"IP","Timestamp":1427560872000,"datatype":"coordinates","location":{"x":1133.0,"y":492.0,"z":1},"userid":["0a86e48a"]}]}
+                message = '{"geofencing":[{"IdType": "IP", "userid": ["bea80202"], "mapid": 2, "zoneid": 0, "zone_event": "exit", "Timestamp":1461054031000}]}'
+                #{"locationstream":[{"IdType":"IP","Timestamp":1427560872000,"datatype":"coordinates","location":{"x":1133.0,"y":492.0,"z":1},"userid":["0a26d23d"]}]}
                 try:             
                     print message
                     jsonData = json.loads(message)
                     conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3306)
                     cursor = conn.cursor()   
-                    conn.select_db('sva5')
+                    conn.select_db('sva7074')
                     if jsonData.keys()[0] == 'locationstream':
                         jsonList = jsonData["locationstream"]
                         for index in range(len(jsonList)):                            
@@ -133,6 +133,21 @@ class GetSvaData():
                             sqlparam = [gpp,self.brokeip,rsrp]                       
                             print sqlparam
                             cursor.execute("replace into prrusignal (gpp,svaIp,rsrp) values (%s,%s,%s)",sqlparam)
+                    if jsonData.keys()[0] == 'geofencing':
+                        jsonList = jsonData["geofencing"]
+                        for index in range(len(jsonList)):                            
+                            IdType = jsonList[index]["IdType"]
+                            if len(jsonList[index]["userid"]) < 1:
+                                continue
+                            userid = jsonList[index]["userid"][0] 
+                            mapid = jsonList[index]["mapid"]    
+                            zoneid = jsonList[index]["zoneid"] 
+                            zone_event = jsonList[index]["zone_event"]
+                            Timestamp = jsonList[index]["Timestamp"]
+                            time_local = time.time() * 1000
+                            sqlparam = [IdType,userid,mapid,zoneid,zone_event,Timestamp,time_local]                       
+                            print sqlparam
+                            cursor.execute("insert into geofencing (IdType,userid,mapid,zoneid,enter,Timestamp,time_local) values (%s,%s,%s,%s,%s,%s,%s)",sqlparam)
                     conn.commit() 
                     self.nowTime = datetime.now()
                     cursor.close()  
@@ -163,7 +178,7 @@ if __name__ == "__main__":
     brokeIP = "182.138.104.35"
     brokerPort = 4703
     queueID = "app0.7ce75a30c6184ef08b20994bdcb53dcb.66fc8841"
-    companyID = 2
+    companyID = 1
     getSvaData = GetSvaData(appName,brokeIP,brokerPort,queueID,companyID)
     try:
         thread1 = threading.Thread(target=getSvaData.Run)

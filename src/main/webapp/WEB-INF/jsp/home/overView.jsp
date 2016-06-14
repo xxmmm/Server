@@ -178,6 +178,7 @@
 
 	<script type="text/javascript">
 		var i18n_info = '<spring:message code="map_info" />';
+		var i18n_info3 = '<spring:message code="overview_title" />';
 		var i18n_info_title = '<spring:message code="global_overview_pictrue" />',
         i18n_dataview = '<spring:message code="common_echart_dataview" />',
         i18n_close = '<spring:message code="common_close" />',

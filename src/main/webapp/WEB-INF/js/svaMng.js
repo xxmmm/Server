@@ -232,6 +232,9 @@ var SvaMng = function () {
 					$("#typename1").hide();
 					$("#typename2").hide();
 				}
+	           	if (type==i18n_type2) {
+	           		$("#subscriptionId").val(2);
+	           	}
 	           	if (type==i18n_type1) {
 		           	$("#subscriptionId").val(0);
 					$("#typename1").show();

@@ -12,8 +12,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -40,6 +44,7 @@ import com.sva.dao.CommonDao;
 import com.sva.dao.DynamicAccuracyDao;
 import com.sva.dao.ElectronicDao;
 import com.sva.dao.EstimateDao;
+import com.sva.dao.GeofencingDao;
 import com.sva.dao.LocationDao;
 import com.sva.dao.LocationDelayDao;
 import com.sva.dao.MapsDao;
@@ -70,6 +75,7 @@ import com.sva.model.SvaModel;
 import com.sva.web.models.AccuracyApiModel;
 import com.sva.web.models.ApiRequestModel;
 import com.sva.web.models.DynamicAccuracyApiModel;
+import com.sva.web.models.GeofencingModel;
 import com.sva.web.models.MapMngModel;
 import com.sva.web.models.MsgMngModel;
 import com.sva.web.models.StaticAccuracyApiModel;
@@ -144,6 +150,9 @@ public class ApiController
     @Autowired
     private LocationDao locationDao;
 
+    @Autowired
+    private GeofencingDao geofencingDao;
+
     @RequestMapping(value = "/getData", method = {RequestMethod.POST})
     @ResponseBody
     public Map<String, Object> getData(@RequestBody ApiRequestModel requestModel)
@@ -155,6 +164,11 @@ public class ApiController
         {
             return null;
         }
+        List<String> lists = null;
+        List<String> allList = null;
+        Collection<GeofencingModel> geofencingModels = null;
+        GeofencingModel ge = null;
+        List<GeofencingModel> list2 = new ArrayList<GeofencingModel>();
         List<LocationModel> list = new ArrayList<LocationModel>(10);
         String ip = ConvertUtil.convertMacOrIp(requestModel.getIp());
         Collection<LocationModel> ResultList = new ArrayList<LocationModel>(10);
@@ -163,6 +177,10 @@ public class ApiController
         long paramUpdate = 0;
         // 查询参数更新的时间
         Collection<ParamModel> paramUpdates = daoParam.doquery();
+        List<String> ticketList = new ArrayList<String>();
+        TreeSet<Integer> areaIdList = new TreeSet<Integer>();
+        int len = 0;
+        String tikectPath = null;
         for (ParamModel paramModel : paramUpdates)
         {
             paramUpdate = paramModel.getUpdateTime();
@@ -174,6 +192,7 @@ public class ApiController
         }
 
         Map<String, Object> modelMap = new HashMap<String, Object>(3);
+        // long time = System.currentTimeMillis() - 60 * 1000;
         if (ResultList.size() >= 1)
         {
             LocationModel loc = list.get(0);
@@ -181,67 +200,73 @@ public class ApiController
             // Collection<MessageModel> msgList = new
             // ArrayList<MessageModel>(10);
             Collection<MessageModel> msgList1 = new ArrayList<MessageModel>(10);
-            Collection<ElectronicModel> msgList2 = new ArrayList<ElectronicModel>(
-                    10);
+            Collection<AreaModel> msgList2 = new ArrayList<AreaModel>(10);
+            // Collection<ElectronicModel> msgList2 = new
+            // ArrayList<ElectronicModel>(
+            // 10);
             // msgList = daoMsg.queryByLocation(loc);
             msgList1 = daoMsg.queryByLocation1(loc);
-            msgList2 = electronicDao.queryByLocation2(loc);
+            msgList2 = daoArea.geofencingByLocation(loc);
+            // msgList2 = electronicDao.queryByLocation2(loc);
             // List<MsgMngModel> outList = new ArrayList<MsgMngModel>(10);
             List<MsgMngModel> outList1 = new ArrayList<MsgMngModel>(10);
             List<ElectronicModel> outList2 = new ArrayList<ElectronicModel>(10);
             MsgMngModel mmm = null;
-            ElectronicModel eee = null;
 
-            for (ElectronicModel l : msgList2)
+            for (AreaModel a : msgList2)
             {
-                BigDecimal x = new BigDecimal(0);
-                BigDecimal x1 = new BigDecimal(0);
-                BigDecimal y = new BigDecimal(0);
-                BigDecimal y1 = new BigDecimal(0);
-                BigDecimal tempx = new BigDecimal(0);
-                BigDecimal tempy = new BigDecimal(0);
-                x = l.getxSpot();
-                x1 = l.getX1Spot();
-                y = l.getySpot();
-                y1 = l.getY1Spot();
-                tempx = x1.subtract(x);
-                tempy = y1.subtract(y);
-                eee = new ElectronicModel();
-                eee.setAreaId(l.getAreaId());
-                eee.setElectronicName(l.getElectronicName());
-                eee.setFloor(l.getFloor());
-                eee.setFloorNo(l.getFloorNo());
-                // eee.setX1Spot(l.getX1Spot());
-                eee.setxSpot(tempx);
-                eee.setySpot(tempy);
-                // eee.setY1Spot(l.getY1Spot());
-                eee.setId(l.getId());
-                eee.setMessage(l.getMessage());
-                eee.setMoviePath(l.getMoviePath());
-                eee.setPictruePath(l.getPictruePath());
-                eee.setPlaceId(l.getPlaceId());
-                eee.setPlace(l.getPlace());
-                eee.setShopName(l.getShopName());
-                outList2.add(eee);
-
-                // for (MessageModel l : msgList)
-                // {
-                // mmm = new MsgMngModel();
-                // mmm.setPlace(l.getPlace());
-                // mmm.setxSpot(l.getxSpot());
-                // mmm.setySpot(l.getySpot());
-                // mmm.setFloor(l.getFloor());
-                // mmm.setRangeSpot(l.getRangeSpot());
-                // mmm.setShopName(l.getShopName());
-                // mmm.setMessage(l.getMessage());
-                // mmm.setTimeInterval(l.getTimeInterval());
-                // mmm.setIsEnable(l.getIsEnable());
-                // mmm.setPictruePath(l.getPictruePath());
-                // mmm.setMoviePath(l.getMoviePath());
-                // mmm.setId(l.getId());
-                // outList.add(mmm);
-                // }
+                int zoneid = a.getZoneId();
+                geofencingModels = geofencingDao.getGeofencing(
+                        String.valueOf(zoneid), ip);
+                for (GeofencingModel g : geofencingModels)
+                {
+                    ge = new GeofencingModel();
+                    ge.setEntre(g.getEntre());
+                    ge.setId(g.getId());
+                    ge.setIdType(g.getIdType());
+                    ge.setMapid(g.getMapid());
+                    ge.setZoneid(g.getZoneid());
+                    ge.setTimestamp(g.getTimestamp());
+                    ge.setUserid(g.getUserid());
+                    list2.add(ge);
+                }
             }
+            // ElectronicModel eee = null;
+            BigDecimal fina = new BigDecimal(2);
+            // for (ElectronicModel l : msgList2)
+            // {
+            // BigDecimal x = new BigDecimal(0);
+            // BigDecimal x1 = new BigDecimal(0);
+            // BigDecimal y = new BigDecimal(0);
+            // BigDecimal y1 = new BigDecimal(0);
+            // BigDecimal tempx = new BigDecimal(0);
+            // BigDecimal tempy = new BigDecimal(0);
+            // x = l.getxSpot();
+            // x1 = l.getX1Spot();
+            // y = l.getySpot();
+            // y1 = l.getY1Spot();
+            // tempx = (x1.add(x)).divide(fina, 2);
+            // tempy = (y1.add(y)).divide(fina, 2);
+            // eee = new ElectronicModel();
+            // eee.setAreaId(l.getAreaId());
+            // eee.setElectronicName(l.getElectronicName());
+            // eee.setFloor(l.getFloor());
+            // eee.setFloorNo(l.getFloorNo());
+            // // eee.setX1Spot(l.getX1Spot());
+            // eee.setxSpot(tempx);
+            // eee.setySpot(tempy);
+            // // eee.setY1Spot(l.getY1Spot());
+            // eee.setId(l.getId());
+            // eee.setMessage(l.getMessage());
+            // eee.setMoviePath(l.getMoviePath());
+            // eee.setPictruePath(l.getPictruePath());
+            // eee.setPlaceId(l.getPlaceId());
+            // eee.setPlace(l.getPlace());
+            // eee.setShopName(l.getShopName());
+            // outList2.add(eee);
+            //
+            //
+            // }
             for (MessageModel l : msgList1)
             {
                 BigDecimal x = new BigDecimal(0);
@@ -254,12 +279,12 @@ public class ApiController
                 x1 = l.getX1Spot();
                 y = l.getySpot();
                 y1 = l.getY1Spot();
-                tempx = x1.subtract(x);
-                tempy = y1.subtract(y);
+                tempx = (x1.add(x)).divide(fina, 2);
+                tempy = (y1.add(y)).divide(fina, 2);
                 mmm = new MsgMngModel();
-                mmm.setPlace(l.getPlace());
                 mmm.setxSpot(tempx);
                 mmm.setySpot(tempy);
+                mmm.setPlace(l.getPlace());
                 mmm.setFloor(l.getFloor());
                 mmm.setRangeSpot(l.getRangeSpot());
                 mmm.setShopName(l.getShopName());
@@ -270,22 +295,83 @@ public class ApiController
                 mmm.setMoviePath(l.getMoviePath());
                 mmm.setId(l.getId());
                 mmm.setShopId(l.getShopId());
+                if (l.getTicketPath() != null)
+                {
+                    if (l.getTicketPath().length() > 6)
+                    {
+                        ticketList.add(l.getTicketPath());
+                    }
+                }
+//                areaIdList.add(l.getShopId());
                 outList1.add(mmm);
             }
+            len = ticketList.size();
+            if (len > 0)
+            {
+                Random rand = new Random();
+                int randNum = rand.nextInt(len);
+                tikectPath = ticketList.get(randNum);
+            }
+            modelMap.put("tikectPath", tikectPath);
             modelMap.put("error", null);
             modelMap.put("data", loc);
-            if (msgList2.size() < 1)
-            {
-                modelMap.put("message", outList1);
-            }
-            if (msgList2.size() > 0)
-            {
-                modelMap.put("message", outList2);
-            }
+            modelMap.put("message", outList1);
+            modelMap.put("message1", outList2);
             modelMap.put("paramUpdateTime", paramUpdate);
         }
+        modelMap.put("geofencing", list2);
 
         return modelMap;
+    }
+
+    @RequestMapping(value = "/getTikectData", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> getTikectData(
+            @RequestBody ApiRequestModel requestModel)
+    {
+
+        if (StringUtils.isEmpty(requestModel.getIp()))
+        {
+            return null;
+        }
+        String userId = ConvertUtil.convertMacOrIp(requestModel.getIp());
+        List<LocationModel> list = new ArrayList<LocationModel>(10);
+        Collection<LocationModel> ResultList = new ArrayList<LocationModel>(10);
+        ResultList = dao.queryLocationByUseId(userId);
+        // 查询参数更新的时间
+        List<String> ticketList = new ArrayList<String>();
+        int len = 0;
+        String tikectPath = null;
+        for (LocationModel l : ResultList)
+        {
+            list.add(l);
+        }
+
+        Map<String, Object> modelMap = new HashMap<String, Object>(3);
+        if (ResultList.size() >= 1)
+        {
+            LocationModel loc = list.get(0);
+            Collection<MessageModel> msgList1 = new ArrayList<MessageModel>(10);
+            msgList1 = daoMsg.queryByLocation3(loc);
+            for (MessageModel l : msgList1)
+            {
+                if (l.getTicketPath().length() > 6)
+                {
+                    ticketList.add(l.getTicketPath());
+                }
+            }
+            len = ticketList.size();
+            if (len > 0)
+            {
+                Random rand = new Random();
+                int randNum = rand.nextInt(len);
+                tikectPath = ticketList.get(randNum);
+
+            }
+        }
+        modelMap.put("tikectPath", tikectPath);
+        return modelMap;
+
     }
 
     @RequestMapping(value = "/getLocationData", method = {RequestMethod.POST})
@@ -934,6 +1020,27 @@ public class ApiController
         modelMap.put("error", null);
         return modelMap;
     }
+    
+    @RequestMapping(value = "/refreshRegister", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> refreshRegister(@RequestBody RegisterModel model)
+    {
+
+        log.debug("api refreshRegister:");
+        long time = System.currentTimeMillis();
+        model.setTimes(time);
+        try
+        {
+            registerDao.refreshRegister(model);
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage());
+        }
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        modelMap.put("error", null);
+        return modelMap;
+    }
 
     // 登陆验证
     @RequestMapping(value = "/loginCheck", method = {RequestMethod.POST})
@@ -976,6 +1083,8 @@ public class ApiController
         List<RegisterModel> lis1 = null;
         List<RegisterModel> lis2 = null;
         List<RegisterModel> lis3 = null;
+        List<RegisterModel> lis4 = null;
+        List<RegisterModel> lis5 = null;
         lis3 = registerDao.getDataByStatus2(otherPhone);
         if (lis3.size() > 0)
         {
@@ -986,7 +1095,7 @@ public class ApiController
         if (lis.size() > 0)
         {
             log.debug("gai bian zhuang tai 1");
-            registerDao.updataStatus(myPhone, otherPhone);
+            // registerDao.updataStatus(myPhone, otherPhone);
             // 线程没两秒查询一次是否接受
             for (int i = 0; i < 15; i++)
             {
@@ -995,7 +1104,14 @@ public class ApiController
                     lis1 = registerDao.getDataByIsTrue(otherPhone);
                     lis2 = registerDao.getDataByIsTrue1(otherPhone);
                     // lis3 = registerDao.getDataByStatus2(otherPhone);
-
+                    lis4 = registerDao.getDataByStatus2(otherPhone);
+                    lis5 = registerDao.getDataByStatus3(otherPhone);
+                    if (lis4.size() > 0)
+                    {
+                        // registerDao.updataStatus1(otherPhone);
+                        modelMap.put("error", "4");
+                        return modelMap;
+                    }
                     if (lis1.size() > 0)
                     {
                         log.debug("error1");
@@ -1003,8 +1119,8 @@ public class ApiController
                         // registerDao.updateIsTrue1(otherPhone);
                         // registerDao.updateIsTrue1(myPhone);
                         // registerDao.updateIsTrue1(otherPhone);
-                        registerDao.updataStatus1(myPhone);
-                        registerDao.updataStatus1(otherPhone);
+                        // registerDao.updataStatus1(myPhone);
+                        // registerDao.updataStatus1(otherPhone);
                         modelMap.put("error", "1");
                         return modelMap;
                     }
@@ -1015,10 +1131,16 @@ public class ApiController
                         // registerDao.updateIsTrue1(myPhone);
                         // registerDao.updateIsTrue1(otherPhone);
                         // registerDao.updateIsTrue1(otherPhone);
-                        registerDao.updataStatus1(myPhone);
-                        registerDao.updataStatus1(otherPhone);
+                        // registerDao.updataStatus1(myPhone);
+                        // registerDao.updataStatus1(otherPhone);
                         modelMap.put("error", "3");
                         // System.out.println("erro1");
+                        return modelMap;
+                    }
+                    if (lis5.size() > 0)
+                    {
+                        // registerDao.updataStatus1(otherPhone);
+                        modelMap.put("error", "2");
                         return modelMap;
                     }
                     // if (lis3.size() > 0)
@@ -1039,8 +1161,8 @@ public class ApiController
             }
             // registerDao.updateIsTrue1(myPhone);
             // registerDao.updateIsTrue1(otherPhone);
-//            registerDao.updataStatus1(myPhone);
-//            registerDao.updataStatus1(otherPhone);
+            // registerDao.updataStatus1(myPhone);
+            // registerDao.updataStatus1(otherPhone);
             log.debug("seekPeople wei xiang ying!");
             modelMap.put("error", "2");
             return modelMap;
@@ -1096,27 +1218,82 @@ public class ApiController
 
     @RequestMapping(value = "/updateStatus", method = {RequestMethod.POST})
     @ResponseBody
-    public void updateStatus(@RequestBody MyModel model)
+    public Map<String, Object> updateStatus(@RequestBody MyModel model)
     {
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
         log.debug("updateStatus :");
         // String myPhone = model.getMyPhone();
         String otherPhone = model.getOtherPhone();
         // registerDao.updateIsTrue1(myPhone);
         registerDao.updateIsTrue1(otherPhone);
         // registerDao.updataStatus1(otherPhone);
+        modelMap.put("error", "1");
+        return modelMap;
 
     }
 
     @RequestMapping(value = "/updateStatus1", method = {RequestMethod.POST})
     @ResponseBody
-    public void updateStatus1(@RequestBody MyModel model)
+    public Map<String, Object> updateStatus1(@RequestBody MyModel model)
     {
-        log.debug("updateStatus :");
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        log.debug("updateStatus1 :");
         // String myPhone = model.getMyPhone();
         String myPhone = model.getMyPhone();
         // registerDao.updateIsTrue1(myPhone);
         // registerDao.updateIsTrue1(otherPhone);
         registerDao.updataStatus1(myPhone);
+        modelMap.put("error", "1");
+        return modelMap;
+
+    }
+    
+    @RequestMapping(value = "/updateStatus4", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> updateStatus4(@RequestBody MyModel model)
+    {
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        log.debug("updateStatus1 :");
+        // String myPhone = model.getMyPhone();
+        String otherPhone = model.getOtherPhone();
+        // registerDao.updateIsTrue1(myPhone);
+        // registerDao.updateIsTrue1(otherPhone);
+        registerDao.updataStatus1(otherPhone);
+        modelMap.put("error", "1");
+        return modelMap;
+
+    }
+
+    @RequestMapping(value = "/updateStatus2", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> updateStatus2(@RequestBody MyModel model)
+    {
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        log.debug("updateStatus2 :");
+        // String myPhone = model.getMyPhone();
+        String myPhone = model.getMyPhone();
+        // registerDao.updateIsTrue1(myPhone);
+        // registerDao.updateIsTrue1(otherPhone);
+        registerDao.updataStatus2(myPhone);
+        modelMap.put("error", "1");
+        return modelMap;
+
+    }
+
+    @RequestMapping(value = "/updateStatus3", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> updateStatus3(@RequestBody MyModel model)
+    {
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        log.debug("updateStatus3 :");
+        String myPhone = model.getMyPhone();
+        String otherPhone = model.getOtherPhone();
+        registerDao.updataStatus(myPhone, otherPhone);
+        modelMap.put("error", "1");
+        return modelMap;
+        // registerDao.updateIsTrue1(myPhone);
+        // registerDao.updateIsTrue1(otherPhone);
+        // registerDao.updataStatus2(myPhone);
 
     }
 
@@ -1130,17 +1307,24 @@ public class ApiController
         Map<String, Object> modelMap = new HashMap<String, Object>(2);
         log.debug("api returnResult:" + " result:" + result + " myPhone:"
                 + myPhone);
-
+        List<String> lis = registerDao.getStatusByphoneNumber2(myPhone);
+        if (lis.size() > 0)
+        {
+            modelMap.put("data", "2");
+            registerDao.updataStatus1(myPhone);
+            return modelMap;
+        }
         if (result.equals("1"))
         {
             registerDao.updateIsTrue(myPhone);
-
+            registerDao.updataStatus1(myPhone);
             modelMap.put("data", "1");
             return modelMap;
         }
         if (result.equals("0"))
         {
             registerDao.updateIsTrue2(myPhone);
+            registerDao.updataStatus1(myPhone);
             // try
             // {
             // Thread.sleep(3000);
@@ -1187,11 +1371,26 @@ public class ApiController
         String otherPhone = model.getOtherPhone();
         Map<String, Object> modelMap = new HashMap<String, Object>(2);
         log.debug("api cancalFind:" + " otherPhone:" + otherPhone);
+        List<String> lis = registerDao.getStatusByIsTrue2(otherPhone);
+        List<String> lis1 = registerDao.getStatusByIsTrue1(otherPhone);
+        if (lis.size() > 0)
+        {
+            modelMap.put("error", "0");
+            registerDao.updataStatus1(otherPhone);
+            registerDao.updateIsTrue1(otherPhone);
+            return modelMap;
+        }
+        if (lis1.size() > 0)
+        {
+            modelMap.put("error", "1");
+            registerDao.updataStatus1(otherPhone);
+            registerDao.updateIsTrue1(otherPhone);
+            return modelMap;
+        }
         registerDao.updataStatusByCancel(otherPhone);
         // registerDao.updateIsTrue1(otherPhone);
         modelMap.put("error", null);
         return modelMap;
-
     }
 
     // 两个人实时坐标
@@ -1253,8 +1452,8 @@ public class ApiController
 
         }
 
-        registerDao.updataStatus1(myPhone);
-        registerDao.updataStatus1(otherPhone);
+        // registerDao.updataStatus1(myPhone);
+        // registerDao.updataStatus1(otherPhone);
         modelMap.put("myDate", model2);
         modelMap.put("otherDate", model1);
         return modelMap;
@@ -1577,5 +1776,162 @@ public class ApiController
 
         return map;
     }
+    
+	@RequestMapping(value = "/getBaShow", method = { RequestMethod.POST })
+	@ResponseBody
+	public Map<String, Object> getBaShow() {
+		Calendar currentDate = new GregorianCalendar();
+		currentDate.set(Calendar.HOUR_OF_DAY, 0);
+		currentDate.set(Calendar.MINUTE, 0);
+		currentDate.set(Calendar.SECOND, 0);
+		// InputStream in = getClass().getClassLoader().getResourceAsStream(
+		// "sva.properties");
+		// Properties properties = new Properties();
+		// try
+		// {
+		// properties.load(in);
+		// } catch (IOException e)
+		// {
+		// log.error("load properties ERROR.", e);
+		// }
+		// // String time1 = properties.getProperty("bashow.time");
+		// String floorNo = properties.getProperty("bashow.floorNo");
+		List<Map<String, Object>> bzData = bzDao.getBzAllData("1");
+		String floorNo = null;
+		String floorNo2 = null;
+		String floorNo3 = null;
+		String periodSel = null;
+		double coefficient = 0;
+		int floorflag = 0;
+		int floorflag2 = 0;
+		int floorflag3 = 0;
+		long bztime = 0;
+		String startTime = null;
+		long time = 0;
+		if (bzData.size() > 0) {
+			floorNo = bzData.get(0).get("floorNo").toString();
+			floorNo2 = bzData.get(0).get("floorNo2").toString();
+			floorNo3 = bzData.get(0).get("floorNo3").toString();
+			startTime = bzData.get(0).get("startTime").toString();
+			periodSel = bzData.get(0).get("periodSel").toString();
+			coefficient = Double.parseDouble(bzData.get(0).get("coefficient")
+					.toString());
+			startTime = startTime.split(" ")[1].substring(0, 8);
+			if (0 != (int) Double.parseDouble(floorNo)) {
+				floorflag = 1;
+			}
+			if (0 != (int) Double.parseDouble(floorNo2)) {
+				floorflag2 = 1;
+			}
+			if (0 != (int) Double.parseDouble(floorNo3)) {
+				floorflag3 = 1;
+			}
+			long maxTimestamp = daoArea.getMaxTimestamp();
+			if(maxTimestamp > 0)
+			{
+				time = maxTimestamp - Integer.parseInt(periodSel)
+						* 60 * 1000;
+			}
+			else
+			{
+				time = System.currentTimeMillis() - Integer.parseInt(periodSel)
+					* 60 * 1000;
+			}
+		}
+		if (coefficient == 0) {
+			coefficient = 1.0;
+		}
+
+		List<AreaModel> ResultList = daoArea.selectAeareBaShow(floorNo);
+		List<Object> areaData = new ArrayList<Object>();
+		Map<String, Object> map = null;
+		Map<String, Object> allDataMap = new HashMap<String, Object>(2);
+		
+
+		String tableName = Params.LOCATION
+				+ ConvertUtil
+						.dateFormat(currentDate.getTime(), Params.YYYYMMDD);
+		String visitDay = ConvertUtil.dateFormat(currentDate.getTime(),
+				"yyyy-MM-dd");
+		//当前时间拼接
+		if (startTime!=null) {
+			String startDate = visitDay+" "+startTime;
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				bztime = sdf.parse(startDate).getTime();
+			} catch (Exception e) {
+				log.debug("Time zhuanhuan error!");
+			}
+		}
+		Map<String, Object> quyu = null;
+		Map<String, Object> allQuyu = null;
+		Map<String, Object> allQuyu2 = null;
+		Map<String, Object> allQuyu3 = null;
+		
+		for (int i = 0; i < ResultList.size(); i++) {
+			int allSize = 0;
+			int size = 0;
+			String areaId = ResultList.get(i).getId();
+			String times = null;
+			quyu = daoArea.getAverageTimeByAreaId1(areaId, bztime);
+			if (!quyu.isEmpty()) {
+				allSize =  Integer.parseInt(quyu.get("count").toString());
+				times = getMinute(Long.parseLong( quyu.get("timePeriod").toString()), allSize);
+			}
+			size = daoArea.getBaShowVisitUser(areaId, String.valueOf(time));
+			map = new HashMap<String, Object>();
+			map.put("name", ResultList.get(i).getAreaName());
+			map.put("current", Math.ceil(size * coefficient));
+			map.put("cumulative",Math.ceil(allSize * coefficient));
+			map.put("average", times);
+			areaData.add(map);
+		}
+		allDataMap.put("item", areaData);
+
+		String allAverageTime = null;
+		int allUsers = 0;
+		String areaTime = null;
+		String allAverageTime2 = null;
+		int allUsers2 = 0;
+		String areaTime2 = null;
+		String allAverageTime3 = null;
+		int allUsers3 = 0;
+		String areaTime3 = null;
+		allQuyu = daoArea.getAllAverageTimeByAreaId(floorNo, bztime, tableName);
+		allQuyu2 = daoArea.getAllAverageTimeByAreaId(floorNo2, bztime,
+				tableName);
+		allQuyu3 = daoArea.getAllAverageTimeByAreaId(floorNo3, bztime,
+				tableName);
+		if (!allQuyu.isEmpty()) {
+			allAverageTime = allQuyu.get("timePeriod").toString();
+
+			allUsers = Integer.parseInt( allQuyu.get("count").toString());
+			areaTime = getMinute(Long.valueOf(allAverageTime), allUsers);
+		}
+		if (!allQuyu2.isEmpty()) {
+			allAverageTime2 = allQuyu2.get("timePeriod").toString();
+
+			allUsers2 =  Integer.parseInt(allQuyu2.get("count").toString());
+			areaTime2 = getMinute(Long.valueOf(allAverageTime2), allUsers2);
+		}
+		if (!allQuyu3.isEmpty()) {
+			allAverageTime3 = allQuyu3.get("timePeriod").toString();
+
+			allUsers3 = Integer.parseInt( allQuyu3.get("count").toString());
+			areaTime3 = getMinute(Long.valueOf(allAverageTime3), allUsers3);
+		}
+		// 用于隐藏热力图
+		allDataMap.put("coefficient", coefficient);
+		allDataMap.put("allTime", areaTime);
+		allDataMap.put("allUser", Math.ceil(allUsers * coefficient));
+		allDataMap.put("allTime2", areaTime2);
+		allDataMap.put("allUser2", allUsers2);
+		allDataMap.put("allTime3", areaTime3);
+		allDataMap.put("allUser3", allUsers3);
+		allDataMap.put("floorflag", floorflag);
+		allDataMap.put("floorflag2", floorflag2);
+		allDataMap.put("floorflag3", floorflag3);
+		return allDataMap;
+	}
 
 }

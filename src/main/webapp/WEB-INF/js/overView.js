@@ -200,7 +200,7 @@ var Heatmap = function() {
 			    series: [
 			        {
 			        	barMaxWidth:45,
-			            name: i18n_info_title,
+			            name: i18n_info3,
 			            type: 'bar',
 			            itemStyle: {
 			                normal: {

@@ -346,6 +346,7 @@ var MsgMng = function () {
 						$("#isEnableId").val(isEnable);
 						$("#textfield").val(data1.pictruePath);
 						$("#textfield1").val(data1.moviePath);
+						$("#textfield2").val(data1.ticketPath);
 						$("#idid").val(data1.id);
 						updateFloorList("zSel",data.data,floor,function(){$("#zSel").change();});
 					}
@@ -440,6 +441,11 @@ var MsgMng = function () {
         		var file = this;
         		document.getElementById('textfield1').value=file.value;	
         		$("#textfield1").blur();
+        	});
+        	$("#fileField2").on("change",function(e){
+        		var file = this;
+        		document.getElementById('textfield2').value=file.value;	
+        		$("#textfield2").blur();
         	});
             
             $("#play").click(function(e){
@@ -719,6 +725,12 @@ function clickFile1()
 	//document.getElementById('textfield1').value=file.value;
 	file.click();
 }
+function clickFile2()
+{
+	var file = document.getElementById("fileField2");
+	//document.getElementById('textfield1').value=file.value;
+	file.click();
+}
 function fileValue(file)
 {
 
@@ -729,6 +741,12 @@ function fileValue1(file)
 {
 	document.getElementById('textfield1').value=file.value;	
 	$("#textfield1").blur();
+}
+
+function fileValue2(file)
+{
+	document.getElementById('textfield2').value=file.value;	
+	$("#textfield2").blur();
 }
 function pictrueMovie(event)
 {

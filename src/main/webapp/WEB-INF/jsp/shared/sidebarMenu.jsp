@@ -148,7 +148,8 @@
                                 <span><spring:message code="shop_name" /></span>
                             </a>
                             </li>
-                        </c:if>                         
+                        </c:if> 
+                        <!--                       
                         <c:choose>  
                                 <c:when test="${showElectronic}">  
                                     <li class="active">
@@ -162,7 +163,7 @@
                                 <span><spring:message code="Electronic_info" /></span>
                             </a>
                             </li> 
-                                              
+                            -->                     
                         <c:if test = "${fn:contains(menu,'key_role') or menu eq 'all' }" >
                             <c:choose>
                                 <c:when test="${role}">  
@@ -193,7 +194,7 @@
                             </a>
                             </li>
                         </c:if>
-                     <!--   <c:choose>
+                      <c:choose>
                                 <c:when test="${content}">  
                                     <li class="active">
                                 </c:when>  
@@ -202,7 +203,17 @@
                                 </c:otherwise> 
                             </c:choose>
                                 <a href="<c:url value='/home/content' />"><i class="round" style="background-color: #E64C66;"></i><span><spring:message code="bz_showparam" /></span></a>
-                            </li>    -->                       
+                            </li>
+                      <c:choose>
+                                <c:when test="${content1}">  
+                                    <li class="active">
+                                </c:when>  
+                                <c:otherwise>  
+                                    <li class="">
+                                </c:otherwise> 
+                            </c:choose>
+                                <a href="<c:url value='/home/content1' />"><i class="round" style="background-color: #E64C66;"></i><span><spring:message code="bz_zhanshicanshu" /></span></a>
+                            </li>                                                    
                     </ul>
                 </li>
             </c:when>   
@@ -611,9 +622,55 @@
                 </c:choose> 
             </ul>
             </li>
-      <!--    <li class="last"><a href="<c:url value='/down/contentShow' />"> <img src="<c:url value='/images/bz.png'/>">
+       	<c:choose>
+            <c:when test="${tools}">  
+                <li class="start active open">
+                <a href="javascript:;"> <img src="<c:url value='/images/bz.png'/>"><span class="toggleMenuTxt"><spring:message code="judian_yanshi" /></span><span class="arrow open"></span></a>
+            </c:when>  
+            <c:otherwise>  
+                <li class="start">
+                <a href="javascript:;"> <img src="<c:url value='/images/bz.png'/>"><span class="toggleMenuTxt"><spring:message code="judian_yanshi" /></span><span class="arrow "></span></a>
+            </c:otherwise>  
+      	  </c:choose>
+      	  	 <ul class="sub-menu">
+      	      <c:choose>
+                    <c:when test="${auth eq 'root'}">
+                        <c:choose>
+                            <c:when test="${content}">
+                                <li class="active">
+                            </c:when>
+                            <c:otherwise>
+                                <li class="">
+                            </c:otherwise>
+                        </c:choose>
+                        <a href="<c:url value='/down/contentShow' />">
+                            <i class="round" style="background-color: #E64C66;"></i>
+                            <span><spring:message code="huangzhou_manhua" /></span>
+                        </a>
+                        </li>
+                    </c:when>
+                </c:choose>
+      	      <c:choose>
+                    <c:when test="${auth eq 'root'}">
+                        <c:choose>
+                            <c:when test="${content1}">
+                                <li class="active">
+                            </c:when>
+                            <c:otherwise>
+                                <li class="">
+                            </c:otherwise>
+                        </c:choose>
+                        <a href="<c:url value='/home/content2' />">
+                            <i class="round" style="background-color: #E64C66;"></i>
+                            <span><spring:message code="judian_yanshi_bz" /></span>
+                        </a>
+                        </li>
+                    </c:when>
+                </c:choose>                
+                </ul>
+     <!--   <li class="last"><a href="<c:url value='/down/contentShow' />"> <img src="<c:url value='/images/bz.png'/>">
                 <span class="title toggleMenuTxt"><spring:message code="huangzhou_manhua" /></span>
-        </a></li>  -->         
+        </a></li>     -->      
         <li class="last"><a href="<c:url value='/account/logout' />"> 
             <img src="<c:url value='/images/header/navicon7.png'/>">
             <span class="title toggleMenuTxt"><spring:message code="menu_logout" /></span>

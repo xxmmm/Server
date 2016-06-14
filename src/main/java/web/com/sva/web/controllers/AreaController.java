@@ -42,10 +42,10 @@ public class AreaController
 
     @Autowired
     private AreaDao dao;
-    
+
     @Autowired
     private SvaDao svaDao;
-    
+
     @Autowired
     private MapsDao mapDao;
 
@@ -199,26 +199,27 @@ public class AreaController
 
     @RequestMapping(value = "/api/disableData", method = {RequestMethod.POST})
     @ResponseBody
-    public Map<String, Object> disableData(
-            @RequestParam("areaId") String areaId)
+    public Map<String, Object> disableData(@RequestParam("areaId") String areaId)
     {
         log.info("Params[areaId]:" + areaId);
         List<AreaModel> areaList = dao.getAreaByAreaId(areaId);
-        if(areaList == null || areaList.isEmpty())
+        if (areaList == null || areaList.isEmpty())
         {
             return null;
         }
         AreaModel area = areaList.get(0);
-        
-        Collection<MapsModel> mapList = mapDao.getMapDetail(String.valueOf(area.getFloorNo()));
+
+        Collection<MapsModel> mapList = mapDao.getMapDetail(String.valueOf(area
+                .getFloorNo()));
         String mapId = "";
-        for(MapsModel map : mapList)
+        for (MapsModel map : mapList)
         {
             mapId = String.valueOf(map.getMapid());
             break;
         }
-       
-        Collection<SvaModel> svaList = svaDao.queryByStoreId2(String.valueOf(area.getPlaceId()));
+
+        Collection<SvaModel> svaList = svaDao.queryByStoreId2(String
+                .valueOf(area.getPlaceId()));
         String token = null;
         HttpUtil capi = null;
         boolean result = true;
@@ -251,32 +252,36 @@ public class AreaController
                 // https://sva_server_ip:9001/enabler/catalog/locationstreamreg/json/v1.0
                 // anoymous subscribe url:
                 // https://sva_server_ip:9001/enabler/catalog/locationstreamanonymousreg/json/v1.0
-                //3.4   区域定义
+                // 3.4 区域定义
                 url = "https://" + sva.getIp() + ':' + sva.getTokenProt()
                         + "/enabler/zonedef/json/v1.0";
-                if(area.getZoneId() < 0)
+                if (area.getZoneId() < 0)
                 {
-                    log.debug("area Id:"+area.getId()+",zoneid is null");
+                    log.debug("area Id:" + area.getId() + ",zoneid is null");
                 }
                 else
                 {
                     content = "{\"appid\":\"" + sva.getUsername()
-                            + "\",\"zoneid\":"+area.getZoneId()+"}";
-                    log.debug("zonedef ip:" + sva.getIp() + ",unsubscription url:" + url
-                            + " content:" + content);
+                            + "\",\"zoneid\":" + area.getZoneId() + "}";
+                    log.debug("zonedef ip:" + sva.getIp()
+                            + ",unsubscription url:" + url + " content:"
+                            + content);
                     jsonStr = capi.subscription(url, content, token, "DELETE");
-                    log.debug("area Id:"+area.getId()+",Zone definition unSubscription respone:" + jsonStr);
+                    log.debug("area Id:" + area.getId()
+                            + ",Zone definition unSubscription respone:"
+                            + jsonStr);
                 }
-                
+
                 dao.updateZoneIdToNull(area.getId());
                 dao.updateStatus(areaId);
-                
-                //电子围栏订阅
+
+                // 电子围栏订阅
                 url = "https://" + sva.getIp() + ':' + sva.getTokenProt()
                         + "/enabler/catalog/geofencingcancel/json/v1.0";
-                content = "{\"appid\":\"" + sva.getUsername()+ "\"}";
+                content = "{\"appid\":\"" + sva.getUsername() + "\"}";
                 jsonStr = capi.subscription(url, content, token, "DELETE");
-                log.debug("area Id:"+area.getId()+",geofencing unSubscription respone:" + jsonStr);
+                log.debug("area Id:" + area.getId()
+                        + ",geofencing unSubscription respone:" + jsonStr);
             }
         }
         catch (KeyManagementException e)
@@ -320,21 +325,23 @@ public class AreaController
     {
         log.info("Params[areaId]:" + areaId);
         List<AreaModel> areaList = dao.getAreaByAreaId(areaId);
-        if(areaList == null || areaList.isEmpty())
+        if (areaList == null || areaList.isEmpty())
         {
             return null;
         }
         AreaModel area = areaList.get(0);
-        
-        Collection<MapsModel> mapList = mapDao.getMapDetail(String.valueOf(area.getFloorNo()));
+
+        Collection<MapsModel> mapList = mapDao.getMapDetail(String.valueOf(area
+                .getFloorNo()));
         String mapId = "";
-        for(MapsModel map : mapList)
+        for (MapsModel map : mapList)
         {
             mapId = String.valueOf(map.getMapid());
             break;
         }
-       
-        Collection<SvaModel> svaList = svaDao.queryByStoreId2(String.valueOf(area.getPlaceId()));
+
+        Collection<SvaModel> svaList = svaDao.queryByStoreId2(String
+                .valueOf(area.getPlaceId()));
         String token = null;
         HttpUtil capi = null;
         boolean result = true;
@@ -367,52 +374,69 @@ public class AreaController
                 // https://sva_server_ip:9001/enabler/catalog/locationstreamreg/json/v1.0
                 // anoymous subscribe url:
                 // https://sva_server_ip:9001/enabler/catalog/locationstreamanonymousreg/json/v1.0
-                //3.4   区域定义
+                // 3.4 区域定义
                 url = "https://" + sva.getIp() + ':' + sva.getTokenProt()
                         + "/enabler/zonedef/json/v1.0";
-                if(area.getZoneId() > 0)
+                if (area.getZoneId() > 0)
                 {
                     content = "{\"appId\":\"" + sva.getUsername()
-                            + "\",\"zone\":{"
-                            + "\"mapid\":"+mapId+",\"zoneid\":"+area.getZoneId()+",\"zonetype\":\"rectangle\",\"point\":[{\"x\":"+x1.intValue()+",\"y\":"+y1.intValue()+"},{\"x\":"+x2.intValue()+",\"y\":"+y2.intValue()+"}]}" + "}";
+                            + "\",\"zone\":{" + "\"mapid\":" + mapId
+                            + ",\"zoneid\":" + area.getZoneId()
+                            + ",\"zonetype\":\"rectangle\",\"point\":[{\"x\":"
+                            + x1.intValue() + ",\"y\":" + y1.intValue()
+                            + "},{\"x\":" + x2.intValue() + ",\"y\":"
+                            + y2.intValue() + "}]}" + "}";
 
-                    log.debug("zonedef ip:" + sva.getIp() + ",subscription url:" + url
-                            + " content:" + content);
+                    log.debug("zonedef ip:" + sva.getIp()
+                            + ",subscription url:" + url + " content:"
+                            + content);
                 }
                 else
                 {
                     content = "{\"appId\":\"" + sva.getUsername()
-                            + "\",\"zone\":{"
-                            + "\"mapid\":"+mapId+",\"zonetype\":\"rectangle\",\"point\":[{\"x\":"+x1.intValue()+",\"y\":"+y2.intValue()+"},{\"x\":"+x2.intValue()+",\"y\":"+y1.intValue()+"}]}" + "}";
-                        log.debug("zonedef ip:" + sva.getIp() + ",subscription url:" + url
-                            + " content:" + content);
+                            + "\",\"zone\":{" + "\"mapid\":" + mapId
+                            + ",\"zonetype\":\"rectangle\",\"point\":[{\"x\":"
+                            + x1.intValue() + ",\"y\":" + y2.intValue()
+                            + "},{\"x\":" + x2.intValue() + ",\"y\":"
+                            + y1.intValue() + "}]}" + "}";
+                    log.debug("zonedef ip:" + sva.getIp()
+                            + ",subscription url:" + url + " content:"
+                            + content);
                 }
                 jsonStr = capi.subscription(url, content, token, "POST");
                 JSONObject jsonObj = JSONObject.fromObject(jsonStr);
-                log.debug("area Id:"+area.getId()+",Zone definition respone:" + jsonStr);
-                String zoneId ="";
-                if(jsonObj.containsKey("ADD ZONE"))
+                log.debug("area Id:" + area.getId()
+                        + ",Zone definition respone:" + jsonStr);
+                String zoneId = "";
+                if (jsonObj.containsKey("ADD ZONE"))
                 {
                     JSONArray list = jsonObj.getJSONArray("ADD ZONE");
-                    JSONObject object = (JSONObject)list.get(0);
+                    JSONObject object = (JSONObject) list.get(0);
                     zoneId = object.getString("ZONEID");
                 }
-                else if(jsonObj.containsKey("\u589e\u52a0\u533a\u57df"))
+                else if (jsonObj.containsKey("\u589e\u52a0\u533a\u57df"))
                 {
-                    JSONArray list = jsonObj.getJSONArray("\u589e\u52a0\u533a\u57df");
-                    JSONObject object = (JSONObject)list.get(0);
+                    JSONArray list = jsonObj
+                            .getJSONArray("\u589e\u52a0\u533a\u57df");
+                    JSONObject object = (JSONObject) list.get(0);
                     zoneId = object.getString("\u533a\u57dfID");
+                }
+                else if (jsonObj.containsKey("zone"))
+                {
+                    JSONArray list = jsonObj.getJSONArray("zone");
+                    JSONObject object = (JSONObject) list.get(0);
+                    zoneId = object.getString("zoneid");
                 }
                 dao.updateZoneId(area.getId(), zoneId);
                 dao.updateStatus1(areaId);
-                
-                //电子围栏订阅
+
+                // 电子围栏订阅
                 url = "https://" + sva.getIp() + ':' + sva.getTokenProt()
                         + "/enabler/catalog/geofencing/json/v1.0";
-                content = "{\"appid\":\"" + sva.getUsername()
-                        + "\"}";
+                content = "{\"appid\":\"" + sva.getUsername() + "\"}";
                 jsonStr = capi.subscription(url, content, token, "POST");
-                log.debug("area Id:"+area.getId()+",geofencing Subscription respone:" + jsonStr);
+                log.debug("area Id:" + area.getId()
+                        + ",geofencing Subscription respone:" + jsonStr);
             }
         }
         catch (KeyManagementException e)

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sva.common.ConvertUtil;
 import com.sva.dao.BZPramesDao;
 import com.sva.model.BZPramesModel;
+import com.sva.model.BZPramesModel1;
 
 @Controller
 @RequestMapping(value = "/content")
@@ -42,6 +43,21 @@ public class BZPramesController
         return modelMap;
     }
 
+    
+    @RequestMapping(value = "/api/getData1", method = {RequestMethod.GET})
+    @ResponseBody
+    public Map<String, Object> getTableData1(Model model)
+    {
+        log.info("ParamController:getTableData");
+
+        Collection<BZPramesModel1> ResultList = bzPramesDao.doquery2();
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+
+        modelMap.put("error", null);
+        modelMap.put("data", ResultList);
+
+        return modelMap;
+    }
     @RequestMapping(value = "/api/saveData", method = {RequestMethod.POST})
     @ResponseBody
     public Map<String, Object> saveData(
@@ -125,4 +141,69 @@ public class BZPramesController
         return modelMap;
     }
 
+    
+    @RequestMapping(value = "/api/saveData1", method =
+		{ RequestMethod.POST})
+		@ResponseBody
+		public Map<String, Object> saveData1(
+				@RequestParam("densitySel") int densitySel,
+				@RequestParam("radiusSel") int radiusSel,
+				@RequestParam("densitySel1") int densitySel1,
+				@RequestParam("radiusSel1") int radiusSel1,
+				@RequestParam("densitySel2") int densitySel2,
+				@RequestParam("radiusSel2") int radiusSel2,
+				@RequestParam("placeId") int placeId,
+				@RequestParam("placeId2") int placeId2,
+				@RequestParam("placeId2Sp") int placeId2Sp,
+				@RequestParam("placeId3") int placeId3,
+				@RequestParam("placeId3Sp") int placeId3Sp,
+				@RequestParam("floorNo") String  floorNo,
+				@RequestParam("floorNo2") String  floorNo2,
+				@RequestParam("floorNo2Sp") String  floorNo2Sp,
+				@RequestParam("floorNo3") String  floorNo3,
+				@RequestParam("floorNo3Sp") String  floorNo3Sp,
+				@RequestParam("periodSel") int  periodSel,
+				@RequestParam("coefficient") Double coefficient,
+				@RequestParam("startTime") String startTime)
+		{
+			log.info("ParamController:saveData:: "+ placeId + ','
+					+ floorNo + ',' + startTime );
+			Map<String, Object> modelMap = new HashMap<String, Object>(2);
+			BigDecimal bd=new BigDecimal(floorNo);   
+			BigDecimal bd2=new BigDecimal(floorNo2);   
+			BigDecimal bd2sp=new BigDecimal(floorNo2Sp);   
+			BigDecimal bd3=new BigDecimal(floorNo3);   
+			BigDecimal bd3sp=new BigDecimal(floorNo3Sp);   
+			BZPramesModel1 sm = new BZPramesModel1();
+			sm.setDensitySel(densitySel);
+			sm.setRadiusSel(radiusSel);
+			sm.setDensitySel1(densitySel1);
+			sm.setRadiusSel1(radiusSel1);
+			sm.setDensitySel2(densitySel2);
+			sm.setRadiusSel2(radiusSel2);
+			sm.setPlaceId(placeId);
+			sm.setPlaceId2(placeId2);
+			sm.setPlaceId2sp(placeId2Sp);
+			sm.setPlaceId3(placeId3);
+			sm.setPlaceId3sp(placeId3Sp);
+			sm.setFloorNo(bd);
+			sm.setFloorNo2(bd2);
+			sm.setFloorNo2sp(bd2sp);
+			sm.setFloorNo3(bd3);
+			sm.setFloorNo3sp(bd3sp);
+			sm.setPeriodSel(periodSel);
+			sm.setCoefficient(coefficient);
+			startTime = "2016-02-15 " + startTime;
+			sm.setStartTime(ConvertUtil.dateStringFormat(startTime,"yyyy-MM-dd HH:mm:ss"));
+			sm.setId(1);
+			try
+			{
+				bzPramesDao.updateBZInfo1(sm);
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+			modelMap.put("data", null);
+			return modelMap;
+		}
 }

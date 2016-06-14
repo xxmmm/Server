@@ -84,6 +84,12 @@ public class CommonDao
         return this.jdbcTemplate.update(sql, departure_time, timestamp,
                 time_local, disId, userID);
     }
+    public int updateDistrict1(String sql, long timestamp,
+    		 int disId, String userID) throws SQLException
+    {
+    	return this.jdbcTemplate.update(sql, timestamp
+    			, disId, userID);
+    }
 
     public List<Map<String, Object>> getLastTime(String sql, int disId,
             String userID) throws SQLException
@@ -94,6 +100,11 @@ public class CommonDao
     public int doTest(String sql) throws SQLException
     {
         return this.jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+    
+    public List<Map<String, Object>> doTest1(String sql) throws SQLException
+    {
+        return this.jdbcTemplate.queryForList(sql);
     }
 
     public List<String> doDeleteInfo(String time)

@@ -90,10 +90,13 @@ public class MessageController
     }
 
     @RequestMapping(value = "/api/saveData")
-    public String saveMsgData(HttpServletRequest request, ModelMap model,
+    public String saveMsgData(
+            HttpServletRequest request,
+            ModelMap model,
             MsgMngModel msgMngModel,
             @RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestParam(value = "file1", required = false) MultipartFile file1)
+            @RequestParam(value = "file1", required = false) MultipartFile file1,
+            @RequestParam(value = "file2", required = false) MultipartFile file2)
     {
         // 保存
         String path = request.getSession().getServletContext()
@@ -121,14 +124,14 @@ public class MessageController
         Date d = calendar.getTime();
         if (msgMngModel.getId().equals(nu))
         {
-            saveFile(msgMngModel, file, file1, path, nu, d);
+            saveFile(msgMngModel, file, file1, file2, path, nu, d);
 
             return "redirect:/home/showMsgMng";
 
         }
         else
         {
-            saveFile1(msgMngModel, file, file1, path, nu, d);
+            saveFile1(msgMngModel, file, file1, file2, path, nu, d);
 
             return "redirect:/home/showMsgMng";
         }
@@ -179,17 +182,32 @@ public class MessageController
     }
 
     private void saveFile1(MsgMngModel msgMngModel, MultipartFile file,
-            MultipartFile file1, String path, String nu, Date d)
+            MultipartFile file1, MultipartFile file2, String path, String nu,
+            Date d)
     {
         try
         {
             String fileName = file.getOriginalFilename();
             String fileName1 = file1.getOriginalFilename();
-            if (fileName.equals(nu) && fileName1.equals(nu))
+            String fileName2 = file2.getOriginalFilename();
+            if (fileName.equals(nu) && fileName1.equals(nu)
+                    && fileName2.equals(nu))
             {
                 dao.updateMsgInfo(msgMngModel);
             }
-            if (fileName.equals(nu) && !fileName1.equals(nu))
+            if (fileName.equals(nu) && fileName1.equals(nu)
+                    && !fileName2.equals(nu))
+            {
+                String _ext2 = fileName2.substring(fileName2.lastIndexOf('.'));
+                fileName2 = "ticket" + d.getTime() + _ext2;
+                msgMngModel.setTicketPath(fileName2);
+                File targetFile2 = new File(path, fileName2);
+                getFile(targetFile2);
+                file2.transferTo(targetFile2);
+                dao.updateMsgInfoT1(msgMngModel);
+            }
+            if (fileName.equals(nu) && !fileName1.equals(nu)
+                    && fileName2.equals(nu))
             {
                 String _ext1 = fileName1.substring(fileName1.lastIndexOf('.'));
                 fileName1 = d.getTime() + _ext1;
@@ -199,7 +217,25 @@ public class MessageController
                 file1.transferTo(targetFile1);
                 dao.updateMsgInfo1(msgMngModel);
             }
-            if (!fileName.equals(nu) && fileName1.equals(nu))
+            if (fileName.equals(nu) && !fileName1.equals(nu)
+                    && !fileName2.equals(nu))
+            {
+                String _ext1 = fileName1.substring(fileName1.lastIndexOf('.'));
+                fileName1 = d.getTime() + _ext1;
+                msgMngModel.setMoviePath(fileName1);
+                File targetFile1 = new File(path, fileName1);
+                getFile(targetFile1);
+                file1.transferTo(targetFile1);
+                String _ext2 = fileName2.substring(fileName2.lastIndexOf('.'));
+                fileName2 = "ticket" + d.getTime() + _ext2;
+                msgMngModel.setTicketPath(fileName2);
+                File targetFile2 = new File(path, fileName2);
+                getFile(targetFile2);
+                file2.transferTo(targetFile2);
+                dao.updateMsgInfo1T2(msgMngModel);
+            }
+            if (!fileName.equals(nu) && fileName1.equals(nu)
+                    && fileName2.equals(nu))
             {
                 String _ext = fileName.substring(fileName.lastIndexOf('.'));
                 fileName = d.getTime() + _ext;
@@ -209,7 +245,25 @@ public class MessageController
                 file.transferTo(targetFile);
                 dao.updateMsgInfo2(msgMngModel);
             }
-            if (!fileName.equals(nu) && !fileName1.equals(nu))
+            if (!fileName.equals(nu) && fileName1.equals(nu)
+                    && !fileName2.equals(nu))
+            {
+                String _ext = fileName.substring(fileName.lastIndexOf('.'));
+                fileName = d.getTime() + _ext;
+                msgMngModel.setPictruePath(fileName);
+                File targetFile = new File(path, fileName);
+                getFile(targetFile);
+                file.transferTo(targetFile);
+                String _ext2 = fileName2.substring(fileName2.lastIndexOf('.'));
+                fileName2 = "ticket" + d.getTime() + _ext2;
+                msgMngModel.setTicketPath(fileName2);
+                File targetFile2 = new File(path, fileName2);
+                getFile(targetFile2);
+                file2.transferTo(targetFile2);
+                dao.updateMsgInfo2T3(msgMngModel);
+            }
+            if (!fileName.equals(nu) && !fileName1.equals(nu)
+                    && fileName2.equals(nu))
             {
                 String _ext = fileName.substring(fileName.lastIndexOf('.'));
                 fileName = d.getTime() + _ext;
@@ -224,6 +278,29 @@ public class MessageController
                 getFile(targetFile1);
                 file1.transferTo(targetFile1);
                 dao.updateMsgInfo3(msgMngModel);
+            }
+            if (!fileName.equals(nu) && !fileName1.equals(nu)
+                    && !fileName2.equals(nu))
+            {
+                String _ext = fileName.substring(fileName.lastIndexOf('.'));
+                fileName = d.getTime() + _ext;
+                msgMngModel.setPictruePath(fileName);
+                File targetFile = new File(path, fileName);
+                getFile(targetFile);
+                file.transferTo(targetFile);
+                String _ext1 = fileName1.substring(fileName1.lastIndexOf('.'));
+                fileName1 = d.getTime() + _ext1;
+                msgMngModel.setMoviePath(fileName1);
+                File targetFile1 = new File(path, fileName1);
+                getFile(targetFile1);
+                file1.transferTo(targetFile1);
+                String _ext2 = fileName2.substring(fileName2.lastIndexOf('.'));
+                fileName2 = "ticket" + d.getTime() + _ext2;
+                msgMngModel.setTicketPath(fileName2);
+                File targetFile2 = new File(path, fileName2);
+                getFile(targetFile2);
+                file2.transferTo(targetFile2);
+                dao.updateMsgInfo3T4(msgMngModel);
             }
 
         }
@@ -242,12 +319,15 @@ public class MessageController
     }
 
     private void saveFile(MsgMngModel msgMngModel, MultipartFile file,
-            MultipartFile file1, String path, String nu, Date d)
+            MultipartFile file1, MultipartFile file2, String path, String nu,
+            Date d)
     {
         String fileName = file.getOriginalFilename();
         String fileName1 = file1.getOriginalFilename();
+        String fileName2 = file2.getOriginalFilename();
         String _ext = null;
         String _ext1 = null;
+        String _ext2 = null;
         if (fileName != nu)
         {
             _ext = fileName.substring(fileName.lastIndexOf('.'));
@@ -258,9 +338,15 @@ public class MessageController
             _ext1 = fileName1.substring(fileName1.lastIndexOf('.'));
 
         }
+        if (fileName2 != nu)
+        {
+            _ext2 = fileName2.substring(fileName2.lastIndexOf('.'));
+
+        }
 
         fileName = d.getTime() + _ext;
         fileName1 = d.getTime() + _ext1;
+        fileName2 = "ticket" + d.getTime() + _ext2;
         if (_ext != null)
         {
             msgMngModel.setPictruePath(fileName);
@@ -269,16 +355,23 @@ public class MessageController
         {
             msgMngModel.setMoviePath(fileName1);
         }
+        if (_ext2 != null)
+        {
+            msgMngModel.setTicketPath(fileName2);
+        }
         Logger.getLogger(MapController.class).debug(path);
         File targetFile = new File(path, fileName);
         File targetFile1 = new File(path, fileName1);
+        File targetFile2 = new File(path, fileName2);
         getFile(targetFile);
         getFile(targetFile1);
+        getFile(targetFile2);
         // 保存
         try
         {
             file.transferTo(targetFile);
             file1.transferTo(targetFile1);
+            file2.transferTo(targetFile2);
             dao.saveMsgInfo1(msgMngModel);
 
         }
