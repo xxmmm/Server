@@ -1,2 +1,2 @@
-# 01_SVA_DEMO_APP_SERVER
+# server
 Source code of SVA Demo APP Server.
