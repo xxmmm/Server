@@ -44,6 +44,22 @@ public class BZPramesController
     }
 
     
+    @RequestMapping(value = "/api/getData2", method = {RequestMethod.GET})
+    @ResponseBody
+    public Map<String, Object> getTableData2(Model model)
+    {
+        log.info("ParamController:getTableData");
+
+        Collection<BZPramesModel> ResultList = bzPramesDao.doquery3();
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+
+        modelMap.put("error", null);
+        modelMap.put("data", ResultList);
+
+        return modelMap;
+    }
+
+    
     @RequestMapping(value = "/api/getData1", method = {RequestMethod.GET})
     @ResponseBody
     public Map<String, Object> getTableData1(Model model)
@@ -132,6 +148,55 @@ public class BZPramesController
         try
         {
             bzPramesDao.updateBZInfo(sm);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        modelMap.put("data", null);
+        return modelMap;
+    }
+
+    
+    @RequestMapping(value = "/api/saveData2", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> saveData2(
+            @RequestParam("densitySel") int densitySel,
+            @RequestParam("radiusSel") int radiusSel,
+            @RequestParam("densitySel1") int densitySel1,
+            @RequestParam("radiusSel1") int radiusSel1,
+            @RequestParam("densitySel2") int densitySel2,
+            @RequestParam("radiusSel2") int radiusSel2,
+            @RequestParam("floorNo") String floorNo,
+            @RequestParam("floorNo2") String floorNo2,
+            @RequestParam("floorNo3") String floorNo3,
+            @RequestParam("periodSel") int periodSel,
+            @RequestParam("coefficient") Double coefficient,
+            @RequestParam("startTime") String startTime)
+    {
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        BigDecimal bd = new BigDecimal(floorNo);
+        BigDecimal bd2 = new BigDecimal(floorNo2);
+        BigDecimal bd3 = new BigDecimal(floorNo3);
+        BZPramesModel sm = new BZPramesModel();
+        sm.setDensitySel(densitySel);
+        sm.setRadiusSel(radiusSel);
+        sm.setDensitySel1(densitySel1);
+        sm.setRadiusSel1(radiusSel1);
+        sm.setDensitySel2(densitySel2);
+        sm.setRadiusSel2(radiusSel2);
+        sm.setFloorNo(bd);
+        sm.setFloorNo2(bd2);
+        sm.setFloorNo3(bd3);
+        sm.setPeriodSel(periodSel);
+        sm.setCoefficient(coefficient);
+        startTime = "2016-02-15 " + startTime;
+        sm.setStartTime(ConvertUtil.dateStringFormat(startTime,
+                "yyyy-MM-dd HH:mm:ss"));
+        sm.setId(1);
+        try
+        {
+            bzPramesDao.updateSHInfo(sm);
         }
         catch (SQLException e)
         {

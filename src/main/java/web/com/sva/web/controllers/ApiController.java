@@ -1460,6 +1460,341 @@ public class ApiController
 
     }
 
+    @RequestMapping(value = "/getShDate", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> getShDate()
+    {
+        Calendar currentDate = new GregorianCalendar();
+        currentDate.set(Calendar.HOUR_OF_DAY, 0);
+        currentDate.set(Calendar.MINUTE, 0);
+        currentDate.set(Calendar.SECOND, 0);
+        List<Map<String, Object>> bzData = bzDao.getAllFloorNo2("1");
+        String floorNo1 = null;
+        String floorNo2 = null;
+        String floorNo3 = null;
+        String periodSel = null;
+        double coefficient = 0;
+        long bztime = 0;
+        String startTime = null;
+        long time = 0;
+        if (bzData.size() > 0)
+        {
+            floorNo1 = bzData.get(0).get("floorNo1").toString();
+            floorNo2 = bzData.get(0).get("floorNo2").toString();
+            floorNo3 = bzData.get(0).get("floorNo3").toString();
+            startTime = bzData.get(0).get("startTime").toString();
+            periodSel = bzData.get(0).get("periodSel").toString();
+            coefficient = Double.parseDouble(bzData.get(0).get("coefficient")
+                    .toString());
+            startTime = startTime.split(" ")[1].substring(0, 8);
+//            long maxTimestamp = daoArea.getMaxTimestamp();
+//            if (maxTimestamp > 0)
+//            {
+//                time = maxTimestamp - Integer.parseInt(periodSel) * 60 * 1000;
+//            }
+//            else
+//            {
+//                time = System.currentTimeMillis() - Integer.parseInt(periodSel)
+//                        * 60 * 1000;
+//            }
+        }
+        if (coefficient == 0)
+        {
+            coefficient = 1.0;
+        }
+
+        List<AreaModel> ResultList1 = daoArea.selectAeareBaShow(floorNo1);
+        List<AreaModel> ResultList2 = daoArea.selectAeareBaShow(floorNo2);
+        List<AreaModel> ResultList3 = daoArea.selectAeareBaShow(floorNo3);
+        long nowTime = System.currentTimeMillis()
+                - (Integer.parseInt(periodSel) + 10) * 60 * 1000;
+        List<Object> areaData = new ArrayList<Object>();
+        List<Object> areaData2 = new ArrayList<Object>();
+        List<Object> areaData3 = new ArrayList<Object>();
+        List<Object> areaData1 = null;
+        Map<String, Object> map = null;
+        Map<String, Object> allDataMap = new HashMap<String, Object>(2);
+
+        String tableName = Params.LOCATION
+                + ConvertUtil
+                        .dateFormat(currentDate.getTime(), Params.YYYYMMDD);
+        String visitDay = ConvertUtil.dateFormat(currentDate.getTime(),
+                "yyyy-MM-dd");
+        // 当前时间拼接
+        if (startTime != null)
+        {
+            String startDate = visitDay + " " + startTime;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try
+            {
+                bztime = sdf.parse(startDate).getTime();
+            }
+            catch (Exception e)
+            {
+                log.debug("Time zhuanhuan error!");
+            }
+        }
+        Map<String, Object> tquyu = null;
+        double allTime1 = 0;
+        double allTime2 = 0;
+        double allTime3 = 0;
+        for (int i = 0; i < ResultList1.size(); i++)
+        {
+            Map<String, Object> quyu1 = null;
+            quyu1 = getAreaDate(areaData1, ResultList1.get(i).getId(),
+                    ResultList1.get(i).getAreaName(), visitDay, tquyu, map,
+                    nowTime, coefficient);
+            allTime1 = allTime1 + Double.parseDouble((quyu1.get("average").toString()));
+            if (quyu1.size() != 0)
+            {
+            	areaData.add(quyu1);
+            }
+        }
+        for (int i = 0; i < ResultList2.size(); i++)
+        {
+            Map<String, Object> quyu2 = null;
+            quyu2 = getAreaDate(areaData1, ResultList2.get(i).getId(),
+                    ResultList2.get(i).getAreaName(), visitDay, tquyu, map,
+                    nowTime, coefficient);
+            allTime2 = allTime2 +  Double.parseDouble(quyu2.get("average").toString());
+            if (quyu2.size() != 0)
+            {
+                areaData2.add(quyu2);
+            }
+        }
+        for (int i = 0; i < ResultList3.size(); i++)
+        {
+            Map<String, Object> quyu3 = null;
+            quyu3 = getAreaDate(areaData1, ResultList3.get(i).getId(),
+                    ResultList3.get(i).getAreaName(), visitDay, tquyu, map,
+                    nowTime, coefficient);
+            allTime3 = allTime3 +  Double.parseDouble((quyu3.get("average").toString()));
+            if (quyu3.size() != 0)
+            {
+                areaData3.add(quyu3);
+            }
+        }
+    
+        allDataMap.put("item", areaData);
+        allDataMap.put("item1", areaData2);
+        allDataMap.put("item2", areaData3);
+
+        int allUsers1 = 0;
+        int allUsers2 = 0;
+        int allUsers3 = 0;
+ 
+        int allLeiji1 = 0;
+        int allLeiji2 = 0;
+        int allLeiji3 = 0;
+        
+        
+        allLeiji1 = dao.queryHeatmap6(floorNo1).size();
+        allLeiji2 = dao.queryHeatmap6(floorNo2).size();
+        allLeiji3 = dao.queryHeatmap6(floorNo3).size();
+        
+        allUsers1 = (dao.queryHeatmap5(floorNo1, Integer.parseInt(periodSel))).size();
+        allUsers2 = (dao.queryHeatmap5(floorNo2, Integer.parseInt(periodSel))).size();
+        allUsers3 = (dao.queryHeatmap5(floorNo3, Integer.parseInt(periodSel))).size();
+//        allUsers2 = daoArea.getAllPeoples(floorNo2, tableName, bztime);
+//        allUsers3 = daoArea.getAllPeoples(floorNo3, tableName, bztime);
+
+        allDataMap.put("coefficient", coefficient);
+        allDataMap.put("allTime1", allTime1);
+        allDataMap.put("allTime2", allTime2);
+        allDataMap.put("allTime3", allTime3);
+        allDataMap.put("User1", Math.ceil(allUsers1 * coefficient));
+        allDataMap.put("User2", Math.ceil(allUsers2 * coefficient));
+        allDataMap.put("User3", Math.ceil(allUsers3 * coefficient));
+        allDataMap.put("allUser1", Math.ceil(allLeiji1 * coefficient));
+        allDataMap.put("allUser2", Math.ceil(allLeiji2 * coefficient));
+        allDataMap.put("allUser3", Math.ceil(allLeiji3 * coefficient));
+
+
+        return allDataMap;
+    }
+
+    private String getMinute(long time, int size)
+    {
+        if (size == 0 || time == 0)
+        {
+            return "0";
+        }
+        else
+        {
+
+            float b = (float) (time / 1000) / 60;
+            float averageTime = b / size;
+            DecimalFormat df = new DecimalFormat("0.00");
+            String min = df.format(averageTime);
+            return min;
+        }
+
+    }
+
+    private Map<String, Object> getAreaDate(List<Object> areaData,
+            String areaId, String areaName, String visitDay,
+            Map<String, Object> quyu, Map<String, Object> map, long nowTime,
+            double coefficient)
+    {
+        areaData = new ArrayList<Object>();
+        quyu = new HashMap<String, Object>();
+        map = new HashMap<String, Object>();
+
+        int allSize = 0;
+
+        int size = 0;
+        // String areaId = ResultList1.get(i).getId();
+        String times = null;
+        quyu = daoArea.getAverageTimeByAreaId(areaId, visitDay);
+        if (!quyu.isEmpty())
+        {
+            allSize = Integer.parseInt(quyu.get("count").toString());
+            times = getMinute(
+                    (Long.parseLong(quyu.get("timePeriod").toString())),
+                    allSize);
+        }
+        int allSize1 = daoArea.getAllArea(areaId);
+        size = daoArea.getBaShowVisitUser(areaId, String.valueOf(nowTime));
+        map = new HashMap<String, Object>();
+        map.put("name", areaName);
+        map.put("current", Math.ceil(size * coefficient));
+        map.put("cumulative", Math.ceil(allSize1 * coefficient));
+        map.put("average", times);
+
+        return map;
+    }
+    
+	@RequestMapping(value = "/getBaShow", method = { RequestMethod.POST })
+	@ResponseBody
+	public Map<String, Object> getBaShow() {
+		Calendar currentDate = new GregorianCalendar();
+		currentDate.set(Calendar.HOUR_OF_DAY, 0);
+		currentDate.set(Calendar.MINUTE, 0);
+		currentDate.set(Calendar.SECOND, 0);
+		List<Map<String, Object>> bzData = bzDao.getBzAllData("1");
+		String floorNo = null;
+		String floorNo2 = null;
+		String floorNo3 = null;
+		String periodSel = null;
+		double coefficient = 0;
+		long bztime = 0;
+		String startTime = null;
+		long time = 0;
+		if (bzData.size() > 0) {
+			floorNo = bzData.get(0).get("floorNo").toString();
+			floorNo2 = bzData.get(0).get("floorNo2").toString();
+			floorNo3 = bzData.get(0).get("floorNo3").toString();
+			startTime = bzData.get(0).get("startTime").toString();
+			periodSel = bzData.get(0).get("periodSel").toString();
+			coefficient = Double.parseDouble(bzData.get(0).get("coefficient")
+					.toString());
+			startTime = startTime.split(" ")[1].substring(0, 8);
+			long maxTimestamp = daoArea.getMaxTimestamp();
+			if(maxTimestamp > 0)
+			{
+				time = maxTimestamp - Integer.parseInt(periodSel)
+						* 60 * 1000;
+			}
+			else
+			{
+				time = System.currentTimeMillis() - Integer.parseInt(periodSel)
+					* 60 * 1000;
+			}
+		}
+		if (coefficient == 0) {
+			coefficient = 1.0;
+		}
+
+		List<AreaModel> ResultList = daoArea.selectAeareBaShow(floorNo);
+		List<Object> areaData = new ArrayList<Object>();
+		Map<String, Object> map = null;
+		Map<String, Object> allDataMap = new HashMap<String, Object>(2);
+		
+
+		String tableName = Params.LOCATION
+				+ ConvertUtil
+						.dateFormat(currentDate.getTime(), Params.YYYYMMDD);
+		String visitDay = ConvertUtil.dateFormat(currentDate.getTime(),
+				"yyyy-MM-dd");
+		//当前时间拼接
+		if (startTime!=null) {
+			String startDate = visitDay+" "+startTime;
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				bztime = sdf.parse(startDate).getTime();
+			} catch (Exception e) {
+				log.debug("Time zhuanhuan error!");
+			}
+		}
+		Map<String, Object> quyu = null;
+		Map<String, Object> allQuyu = null;
+		Map<String, Object> allQuyu2 = null;
+		Map<String, Object> allQuyu3 = null;
+		
+		for (int i = 0; i < ResultList.size(); i++) {
+			int allSize = 0;
+			int size = 0;
+			String areaId = ResultList.get(i).getId();
+			String times = null;
+			quyu = daoArea.getAverageTimeByAreaId1(areaId, bztime);
+			if (!quyu.isEmpty()) {
+				allSize =  Integer.parseInt(quyu.get("count").toString());
+				times = getMinute(Long.parseLong( quyu.get("timePeriod").toString()), allSize);
+			}
+			size = daoArea.getBaShowVisitUser(areaId, String.valueOf(time));
+			map = new HashMap<String, Object>();
+			map.put("name", ResultList.get(i).getAreaName());
+			map.put("current", Math.ceil(size * coefficient));
+			map.put("cumulative",Math.ceil(allSize * coefficient));
+			map.put("average", times);
+			areaData.add(map);
+		}
+		allDataMap.put("item", areaData);
+
+		String allAverageTime = null;
+		int allUsers = 0;
+		String areaTime = null;
+		String allAverageTime2 = null;
+		int allUsers2 = 0;
+		String areaTime2 = null;
+		String allAverageTime3 = null;
+		int allUsers3 = 0;
+		String areaTime3 = null;
+		allQuyu = daoArea.getAllAverageTimeByAreaId(floorNo, bztime, tableName);
+		allQuyu2 = daoArea.getAllAverageTimeByAreaId(floorNo2, bztime,
+				tableName);
+		allQuyu3 = daoArea.getAllAverageTimeByAreaId(floorNo3, bztime,
+				tableName);
+		if (!allQuyu.isEmpty()) {
+			allAverageTime = allQuyu.get("timePeriod").toString();
+
+			allUsers = Integer.parseInt( allQuyu.get("count").toString());
+			areaTime = getMinute(Long.valueOf(allAverageTime), allUsers);
+		}
+		if (!allQuyu2.isEmpty()) {
+			allAverageTime2 = allQuyu2.get("timePeriod").toString();
+
+			allUsers2 =  Integer.parseInt(allQuyu2.get("count").toString());
+			areaTime2 = getMinute(Long.valueOf(allAverageTime2), allUsers2);
+		}
+		if (!allQuyu3.isEmpty()) {
+			allAverageTime3 = allQuyu3.get("timePeriod").toString();
+
+			allUsers3 = Integer.parseInt( allQuyu3.get("count").toString());
+			areaTime3 = getMinute(Long.valueOf(allAverageTime3), allUsers3);
+		}
+		// 用于隐藏热力图
+		allDataMap.put("coefficient", coefficient);
+		allDataMap.put("allTime", areaTime);
+		allDataMap.put("allUser", Math.ceil(allUsers * coefficient));
+		allDataMap.put("allTime2", areaTime2);
+		allDataMap.put("allUser2", allUsers2);
+		allDataMap.put("allTime3", areaTime3);
+		allDataMap.put("allUser3", allUsers3);
+		return allDataMap;
+	}
+	
+	
     @RequestMapping(value = "/getBaShowData", method = {RequestMethod.POST})
     @ResponseBody
     public Map<String, Object> getBaShowData()
@@ -1725,213 +2060,5 @@ public class ApiController
 
         return allDataMap;
     }
-
-    private String getMinute(long time, int size)
-    {
-        if (size == 0 || time == 0)
-        {
-            return "0";
-        }
-        else
-        {
-
-            float b = (float) (time / 1000) / 60;
-            float averageTime = b / size;
-            DecimalFormat df = new DecimalFormat("0.00");
-            String min = df.format(averageTime);
-            return min;
-        }
-
-    }
-
-    private Map<String, Object> getAreaDate(List<Object> areaData,
-            String areaId, String areaName, String visitDay,
-            Map<String, Object> quyu, Map<String, Object> map, long nowTime,
-            double coefficient)
-    {
-        areaData = new ArrayList<Object>();
-        quyu = new HashMap<String, Object>();
-        map = new HashMap<String, Object>();
-
-        int allSize = 0;
-
-        int size = 0;
-        // String areaId = ResultList1.get(i).getId();
-        String times = null;
-        quyu = daoArea.getAverageTimeByAreaId(areaId, visitDay);
-        if (!quyu.isEmpty())
-        {
-            allSize = Integer.parseInt(quyu.get("count").toString());
-            times = getMinute(
-                    (Long.parseLong(quyu.get("timePeriod").toString())),
-                    allSize);
-        }
-        int allSize1 = daoArea.getAllArea(areaId);
-        size = daoArea.getBaShowVisitUser(areaId, String.valueOf(nowTime));
-        map = new HashMap<String, Object>();
-        map.put("name", areaName);
-        map.put("current", Math.ceil(size * coefficient));
-        map.put("cumulative", Math.ceil(allSize1 * coefficient));
-        map.put("average", times);
-
-        return map;
-    }
-    
-	@RequestMapping(value = "/getBaShow", method = { RequestMethod.POST })
-	@ResponseBody
-	public Map<String, Object> getBaShow() {
-		Calendar currentDate = new GregorianCalendar();
-		currentDate.set(Calendar.HOUR_OF_DAY, 0);
-		currentDate.set(Calendar.MINUTE, 0);
-		currentDate.set(Calendar.SECOND, 0);
-		// InputStream in = getClass().getClassLoader().getResourceAsStream(
-		// "sva.properties");
-		// Properties properties = new Properties();
-		// try
-		// {
-		// properties.load(in);
-		// } catch (IOException e)
-		// {
-		// log.error("load properties ERROR.", e);
-		// }
-		// // String time1 = properties.getProperty("bashow.time");
-		// String floorNo = properties.getProperty("bashow.floorNo");
-		List<Map<String, Object>> bzData = bzDao.getBzAllData("1");
-		String floorNo = null;
-		String floorNo2 = null;
-		String floorNo3 = null;
-		String periodSel = null;
-		double coefficient = 0;
-		int floorflag = 0;
-		int floorflag2 = 0;
-		int floorflag3 = 0;
-		long bztime = 0;
-		String startTime = null;
-		long time = 0;
-		if (bzData.size() > 0) {
-			floorNo = bzData.get(0).get("floorNo").toString();
-			floorNo2 = bzData.get(0).get("floorNo2").toString();
-			floorNo3 = bzData.get(0).get("floorNo3").toString();
-			startTime = bzData.get(0).get("startTime").toString();
-			periodSel = bzData.get(0).get("periodSel").toString();
-			coefficient = Double.parseDouble(bzData.get(0).get("coefficient")
-					.toString());
-			startTime = startTime.split(" ")[1].substring(0, 8);
-			if (0 != (int) Double.parseDouble(floorNo)) {
-				floorflag = 1;
-			}
-			if (0 != (int) Double.parseDouble(floorNo2)) {
-				floorflag2 = 1;
-			}
-			if (0 != (int) Double.parseDouble(floorNo3)) {
-				floorflag3 = 1;
-			}
-			long maxTimestamp = daoArea.getMaxTimestamp();
-			if(maxTimestamp > 0)
-			{
-				time = maxTimestamp - Integer.parseInt(periodSel)
-						* 60 * 1000;
-			}
-			else
-			{
-				time = System.currentTimeMillis() - Integer.parseInt(periodSel)
-					* 60 * 1000;
-			}
-		}
-		if (coefficient == 0) {
-			coefficient = 1.0;
-		}
-
-		List<AreaModel> ResultList = daoArea.selectAeareBaShow(floorNo);
-		List<Object> areaData = new ArrayList<Object>();
-		Map<String, Object> map = null;
-		Map<String, Object> allDataMap = new HashMap<String, Object>(2);
-		
-
-		String tableName = Params.LOCATION
-				+ ConvertUtil
-						.dateFormat(currentDate.getTime(), Params.YYYYMMDD);
-		String visitDay = ConvertUtil.dateFormat(currentDate.getTime(),
-				"yyyy-MM-dd");
-		//当前时间拼接
-		if (startTime!=null) {
-			String startDate = visitDay+" "+startTime;
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			try {
-				bztime = sdf.parse(startDate).getTime();
-			} catch (Exception e) {
-				log.debug("Time zhuanhuan error!");
-			}
-		}
-		Map<String, Object> quyu = null;
-		Map<String, Object> allQuyu = null;
-		Map<String, Object> allQuyu2 = null;
-		Map<String, Object> allQuyu3 = null;
-		
-		for (int i = 0; i < ResultList.size(); i++) {
-			int allSize = 0;
-			int size = 0;
-			String areaId = ResultList.get(i).getId();
-			String times = null;
-			quyu = daoArea.getAverageTimeByAreaId1(areaId, bztime);
-			if (!quyu.isEmpty()) {
-				allSize =  Integer.parseInt(quyu.get("count").toString());
-				times = getMinute(Long.parseLong( quyu.get("timePeriod").toString()), allSize);
-			}
-			size = daoArea.getBaShowVisitUser(areaId, String.valueOf(time));
-			map = new HashMap<String, Object>();
-			map.put("name", ResultList.get(i).getAreaName());
-			map.put("current", Math.ceil(size * coefficient));
-			map.put("cumulative",Math.ceil(allSize * coefficient));
-			map.put("average", times);
-			areaData.add(map);
-		}
-		allDataMap.put("item", areaData);
-
-		String allAverageTime = null;
-		int allUsers = 0;
-		String areaTime = null;
-		String allAverageTime2 = null;
-		int allUsers2 = 0;
-		String areaTime2 = null;
-		String allAverageTime3 = null;
-		int allUsers3 = 0;
-		String areaTime3 = null;
-		allQuyu = daoArea.getAllAverageTimeByAreaId(floorNo, bztime, tableName);
-		allQuyu2 = daoArea.getAllAverageTimeByAreaId(floorNo2, bztime,
-				tableName);
-		allQuyu3 = daoArea.getAllAverageTimeByAreaId(floorNo3, bztime,
-				tableName);
-		if (!allQuyu.isEmpty()) {
-			allAverageTime = allQuyu.get("timePeriod").toString();
-
-			allUsers = Integer.parseInt( allQuyu.get("count").toString());
-			areaTime = getMinute(Long.valueOf(allAverageTime), allUsers);
-		}
-		if (!allQuyu2.isEmpty()) {
-			allAverageTime2 = allQuyu2.get("timePeriod").toString();
-
-			allUsers2 =  Integer.parseInt(allQuyu2.get("count").toString());
-			areaTime2 = getMinute(Long.valueOf(allAverageTime2), allUsers2);
-		}
-		if (!allQuyu3.isEmpty()) {
-			allAverageTime3 = allQuyu3.get("timePeriod").toString();
-
-			allUsers3 = Integer.parseInt( allQuyu3.get("count").toString());
-			areaTime3 = getMinute(Long.valueOf(allAverageTime3), allUsers3);
-		}
-		// 用于隐藏热力图
-		allDataMap.put("coefficient", coefficient);
-		allDataMap.put("allTime", areaTime);
-		allDataMap.put("allUser", Math.ceil(allUsers * coefficient));
-		allDataMap.put("allTime2", areaTime2);
-		allDataMap.put("allUser2", allUsers2);
-		allDataMap.put("allTime3", areaTime3);
-		allDataMap.put("allUser3", allUsers3);
-		allDataMap.put("floorflag", floorflag);
-		allDataMap.put("floorflag2", floorflag2);
-		allDataMap.put("floorflag3", floorflag3);
-		return allDataMap;
-	}
 
 }

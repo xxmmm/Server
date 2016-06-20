@@ -178,6 +178,35 @@ public class LocationDao
             }
         });
     }
+    
+    public Collection<LocationModel> queryHeatmap6(String floorNo)
+    {
+        String tableName = Params.LOCATION
+                + ConvertUtil.dateFormat(new Date(), Params.YYYYMMDD);
+        String sql = "select * from "
+                + "(select * from "
+                + tableName
+                + " where z = ? ) a group by a.userID";
+
+        String[] params = {floorNo};
+        log.info("sql:" + sql + ";parmas:" + params[0] );
+
+        return this.jdbcTemplate.query(sql, params, new RowMapper()
+        {
+            public Object mapRow(ResultSet rs, int num) throws SQLException
+            {
+                LocationModel user = new LocationModel();
+                user.setDataType(rs.getString("DATATYPE"));
+                user.setIdType(rs.getString("IDTYPE"));
+                user.setX(rs.getBigDecimal("X"));
+                user.setY(rs.getBigDecimal("Y"));
+                user.setZ(rs.getBigDecimal("Z"));
+                user.setTimestamp(rs.getBigDecimal("TIMESTAMP"));
+                user.setUserID(rs.getString("USERID"));
+                return user;
+            }
+        });
+    }
 
     /**
      * locationPhone为非匿名订阅，提高数据查询效率

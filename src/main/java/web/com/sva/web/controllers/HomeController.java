@@ -388,6 +388,16 @@ public class HomeController
     }
     
     @AuthPassport
+    @RequestMapping(value = "/content4", method = {RequestMethod.GET})
+    public String Contentshow4 (Model model)
+    {
+    model.addAttribute("content4", true);
+    model.addAttribute("infoMng", true);
+    model.addAttribute("contentshow2", true);
+    return "home/contentshow2";
+    }
+    
+    @AuthPassport
     @RequestMapping(value = "/content2", method = {RequestMethod.GET})
     public String Contentshow2 (Model model)
     {
@@ -401,7 +411,7 @@ public class HomeController
     @RequestMapping(value = "/content3", method = {RequestMethod.GET})
     public String Contentshow3 (Model model)
     {
-    model.addAttribute("content", true);
+    model.addAttribute("content3", true);
     model.addAttribute("infoMng", true);
     model.addAttribute("contentshow3", true);
     return "home/contentShowindex2";

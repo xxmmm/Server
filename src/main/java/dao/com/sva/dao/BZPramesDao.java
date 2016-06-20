@@ -35,6 +35,15 @@ public class BZPramesDao
         return this.jdbcTemplate.query(sql, new BZPramesMapper());
     }
     
+    public Collection<BZPramesModel> doquery3()
+    {
+        // String sql =
+        // "SELECT a.*,b.floor,c.name place FROM BZPrames a left join maps b on a.floorNo = b.floorNo left join store c on a.placeId = c.id ";
+        String sql = "select * from shprames";
+        // JdbcTemplate tem = this.getJdbcTemplate();
+        return this.jdbcTemplate.query(sql, new BZPramesMapper2());
+    }
+    
     public Collection<BZPramesModel> doquery1()
     {
          String sql ="SELECT a.*,b.floor,c.name place FROM BZPrames a left join maps b on a.floorNo = b.floorNo left join store c on a.placeId = c.id ";
@@ -56,6 +65,16 @@ public class BZPramesDao
                 mmm.getFloorNo2(), mmm.getFloorNo3(), mmm.getFloorNo4(),
                 mmm.getFloorNo5(), mmm.getFloorNo6(), mmm.getFloorNo7(),
                 mmm.getFloorNo8(), mmm.getPeriodSel(), mmm.getStartTime(),
+                mmm.getCoefficient(), mmm.getId());
+    }
+    
+    public void updateSHInfo(BZPramesModel mmm) throws SQLException
+    {
+        String sql = "REPLACE INTO shprames(densitySel1,radiusSel1,densitySel2,radiusSel2,densitySel3,radiusSel3,floorNo1,floorNo2,floorNo3,periodSel,startTime,coefficient,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        this.jdbcTemplate.update(sql, mmm.getDensitySel(), mmm.getRadiusSel(),
+                mmm.getDensitySel1(), mmm.getRadiusSel1(), mmm.getDensitySel2(),
+                mmm.getRadiusSel2(),mmm.getFloorNo(), mmm.getFloorNo2(),
+                mmm.getFloorNo3(), mmm.getPeriodSel(), mmm.getStartTime(),
                 mmm.getCoefficient(), mmm.getId());
     }
 
@@ -99,6 +118,32 @@ public class BZPramesDao
             return bzPramesModel;
         }
     }
+    
+    private class BZPramesMapper2 implements RowMapper
+    {
+        public Object mapRow(ResultSet rs, int num) throws SQLException
+        {
+            BZPramesModel bzPramesModel = new BZPramesModel();
+            bzPramesModel.setDensitySel(rs.getInt("densitySel1"));
+            bzPramesModel.setRadiusSel(rs.getInt("radiusSel1"));
+            bzPramesModel.setDensitySel1(rs.getInt("densitySel2"));
+            bzPramesModel.setRadiusSel1(rs.getInt("radiusSel2"));
+            bzPramesModel.setDensitySel2(rs.getInt("densitySel3"));
+            bzPramesModel.setRadiusSel2(rs.getInt("radiusSel3"));
+            bzPramesModel.setFloorNo(rs.getBigDecimal("FLOORNO1"));
+            bzPramesModel.setFloorNo2(rs.getBigDecimal("FLOORNO2"));
+            bzPramesModel.setFloorNo3(rs.getBigDecimal("FLOORNO3"));
+            bzPramesModel.setPeriodSel(rs.getInt("periodSel"));
+            bzPramesModel.setCoefficient(rs.getDouble("coefficient"));
+            bzPramesModel.setStartTime(rs.getTimestamp("startTime"));
+            String a = bzPramesModel.getStartTime().toString()
+                    .substring(11, 19);
+            bzPramesModel.setStartTimeEmp(a);
+            bzPramesModel.setId(rs.getInt("ID"));
+
+            return bzPramesModel;
+        }
+    }
 
     public List<Map<String, Object>> getBzData(String placeId)
     {
@@ -119,6 +164,14 @@ public class BZPramesDao
     public List<Map<String, Object>> getAllFloorNo(String id)
     {
         String sql = "select floorNo1,startTime,floorNo2,floorNo3,floorNo4,floorNo5,floorNo6,floorNo7,floorNo8,periodSel,coefficient from mwcprames where id=?";
+        // JdbcTemplate tem = this.getJdbcTemplate();
+        String[] params = {id};
+        return this.jdbcTemplate.queryForList(sql, params);
+    }
+    
+    public List<Map<String, Object>> getAllFloorNo2(String id)
+    {
+        String sql = "select floorNo1,startTime,floorNo2,floorNo3,periodSel,coefficient from shprames where id=?";
         // JdbcTemplate tem = this.getJdbcTemplate();
         String[] params = {id};
         return this.jdbcTemplate.queryForList(sql, params);

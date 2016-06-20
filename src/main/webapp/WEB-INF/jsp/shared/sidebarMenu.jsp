@@ -213,7 +213,17 @@
                                 </c:otherwise> 
                             </c:choose>
                                 <a href="<c:url value='/home/content1' />"><i class="round" style="background-color: #E64C66;"></i><span><spring:message code="bz_zhanshicanshu" /></span></a>
-                            </li>                                                    
+                            </li>    
+                      <c:choose>
+                                <c:when test="${content4}">  
+                                    <li class="active">
+                                </c:when>  
+                                <c:otherwise>  
+                                    <li class="">
+                                </c:otherwise> 
+                            </c:choose>
+                                <a href="<c:url value='/home/content4' />"><i class="round" style="background-color: #E64C66;"></i><span><spring:message code="sh_yanshicanshu" /></span></a>
+                            </li>                                                                              
                     </ul>
                 </li>
             </c:when>   
@@ -666,7 +676,25 @@
                         </a>
                         </li>
                     </c:when>
-                </c:choose>                
+                </c:choose> 
+                
+      	      <c:choose>
+                    <c:when test="${auth eq 'root'}">
+                        <c:choose>
+                            <c:when test="${content3}">
+                                <li class="active">
+                            </c:when>
+                            <c:otherwise>
+                                <li class="">
+                            </c:otherwise>
+                        </c:choose>
+                        <a href="<c:url value='/home/content3' />">
+                            <i class="round" style="background-color: #E64C66;"></i>
+                            <span><spring:message code="sh_yanshi" /></span>
+                        </a>
+                        </li>
+                    </c:when>
+                </c:choose>                                
                 </ul>
      <!--   <li class="last"><a href="<c:url value='/down/contentShow' />"> <img src="<c:url value='/images/bz.png'/>">
                 <span class="title toggleMenuTxt"><spring:message code="huangzhou_manhua" /></span>
