@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import com.sva.dao.MessageDao;
 import com.sva.dao.StoreDao;
 import com.sva.model.AreaInputModel;
 import com.sva.model.AreaModel;
+import com.sva.model.LocationModel;
 import com.sva.model.MessageModel;
 import com.sva.model.StoreModel;
 
@@ -791,5 +794,138 @@ public class QuartzJob {
 			log.info(e.getStackTrace());
 		}
 	}
+	
+	
+	public void getFakeData()
+	{
+		System.out.println("getFakeData");
+		InputStream in = getClass().getClassLoader().getResourceAsStream("sva.properties");
+		Properties properties = new Properties();
+		try {
+			properties.load(in);
+		} catch (IOException e) {
+			log.error("load properties ERROR.", e);
+		}
+		String port = (properties.getProperty("sva.port"));
+		String tableName ="location"+(properties.getProperty("sva.table"));
+		String floorNo = properties.getProperty("sva.floorNo");
+		System.out.println("port:"+port+" tableName:"+tableName);
+		
+		String db1 = "autoReconncet=true&useUnicode=true&characterEncoding=utf8";
+		String url = "jdbc:mysql://localhost:3306/sva" +port+ '?' + "user=root&password=123456&"+ db1;
+		Connection conn = null;
+		CallableStatement cs = null;
+		ResultSet rs=null;
+		LocationModel model = null;
+		LocationModel inserModel = null;
+		LocationModel updateModel = null;
+//		String nowTableName = Params.LOCATION + ConvertUtil.dateFormat(currentDate.getTime(), Params.YYYYMMDD);
+		String nowTableName = null;
+		List<LocationModel> list = new ArrayList<>();
+		List<LocationModel> insertList = new ArrayList<>();
+		List<LocationModel> updateList = new ArrayList<>();
+		try {
+			DriverManager.registerDriver(new sun.jdbc.odbc.JdbcOdbcDriver());
+			conn = DriverManager.getConnection(url);
+	        Statement stmt=(Statement) conn.createStatement();  
+	        rs=stmt.executeQuery("select * from "+tableName+" where timestamp=1466415965000");
+	        while(rs.next())  
+	        {  
+	        	model = new LocationModel();
+	        	model.setIdType(rs.getString(1));
+	        	model.setTimestamp(rs.getBigDecimal(2));
+	        	model.setX(rs.getBigDecimal(4));
+	        	model.setY(rs.getBigDecimal(5));
+	        	model.setUserID(rs.getString(7));
+	        	list.add(model);
+	        }  
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		String idType = null;
+		String userID = null;
+		BigDecimal timestamp = new BigDecimal(0);
+		BigDecimal x = new BigDecimal(0);
+		BigDecimal y = new BigDecimal(0);
+		int inserSie = list.size();
+		String sql1 = null;
+		String sql2 = null;
+		String dataType = "coordinates";
+		long localTime = System.currentTimeMillis();
+		String insertsql = "insert into "+nowTableName+"(idType,timestamp,time_begin,time_local,during,dataType,x,y,z,loc_count,userID) values";
+		for (int i = 0; i < inserSie; i++) {
+			idType = list.get(i).getIdType();
+			userID = list.get(i).getUserID();
+			timestamp = list.get(i).getTimestamp();
+			x = list.get(i).getX();
+			y = list.get(i).getY();
+			String sqlChk = "select count(*) from "+nowTableName+" where z = "+floorNo+" and userID='"+userID+"';";
+			int result;
+			try {
+				result = dao.doTest(sqlChk);
+
+			if (result==0) {
+				inserModel = new LocationModel();
+				inserModel.setIdType(idType);
+				inserModel.setUserID(userID);
+				inserModel.setTimestamp(timestamp);
+				inserModel.setX(x);
+				inserModel.setY(y);
+				insertList.add(inserModel);
+
+				
+			}else
+			{
+				updateModel = new LocationModel();
+				updateModel.setIdType(idType);
+				updateModel.setUserID(userID);
+				updateModel.setTimestamp(timestamp);
+				updateModel.setX(x);
+				updateModel.setY(y);
+				updateList.add(updateModel);
+			}	
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		int insertSize = insertList.size();
+		int updateSize = updateList.size();
+		for (int j = 0; j < insertSize; j++) {
+			
+			if (j==0) {
+				sql1 = "('"+idType+"',"+timestamp+","+timestamp+","+localTime+","+0+",'"+dataType+"',"+x+","+y+","+floorNo+","+0+",'"+userID+"'),";
+			}else
+			{
+				if (j+1<inserSie) {
+					sql1 = sql1+"('"+idType+"',"+timestamp+","+timestamp+","+localTime+","+0+",'"+dataType+"',"+x+","+y+","+floorNo+","+0+",'"+userID+"'),";
+					
+				}else
+				{
+					sql1 = sql1+"('"+idType+"',"+timestamp+","+timestamp+","+localTime+","+0+",'"+dataType+"',"+x+","+y+","+floorNo+","+0+",'"+userID+"');";
+					
+				}
+			}
+		}
+		for (int i = 0; i<updateSize; i++) {
+			sql2 = "update"+nowTableName+" set timestamp="+updateList.get(0).getTimestamp()+" where ";
+		}
+		String sql = insertsql+sql1;
+
+		System.out.println("insertSiz:"+inserSie+" updateSiz:"+updateList.size());
+		try {
+
+			if (inserSie>0) {
+				dao.doUpdate(sql);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch bl ock
+			log.debug("inser ERROR:"+e.getMessage());
+		}
+		System.out.println("end");
+	}
+	
+	
 
 }
