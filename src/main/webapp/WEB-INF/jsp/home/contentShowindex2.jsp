@@ -24,6 +24,11 @@
 	rel="stylesheet" type="text/css" />
 <link href="<c:url value='/css/pages/heatmap.css'/>" rel="stylesheet"
 	type="text/css" />
+<style type="text/css">
+	.nomargin{
+		margin: 0 !important;
+	}
+</style>
 
 </head>
 <body>
@@ -32,22 +37,48 @@
 		<div class="row-fluid" id="huawei">
 			<div class="span5">
 				<div class="row-fluid">
-					<div class="span12" style="padding: 10px 30px;">
-						<div class="row-fluid" style="margin: 50px 0">
+					<div class="span12" style="padding: 3% 7%;">
+						<div class="row-fluid" style="margin-bottom:3%;">
 							<div class="span12">
 								<img alt="" src="../images/7.png">
 							</div>
 						</div>
 						<div class="row-fluid">
-							<div class="span12" style="padding: 10px 10px;">
-								<div class="row-fluid" style="margin-bottom: 25px;">
-									<div class="span12">
-										<img alt="" src="../images/9.png">
+							<div class="span12" >
+								<div class="row-fluid">
+									<div class="span12" style="border: 5px solid #864319;">
+										
+										<div id="myCarousel" class="carousel slide" style="margin-bottom:0 !important;">
+											<ol class="carousel-indicators">
+											    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+											    <li data-target="#myCarousel" data-slide-to="1"></li>
+											    <li data-target="#myCarousel" data-slide-to="2"></li>
+										  	</ol>
+											<!-- Carousel items -->
+											<div class="carousel-inner">
+											    <div class="active item nomargin">
+											    	<img alt="" src="../images/ppt1.png">
+												</div>
+											    <div class="item nomargin">
+											    	<img alt="" src="../images/ppt2.png">
+											    </div>
+											    <div class="item nomargin">
+											    	<img alt="" src="../images/ppt3.png">
+											    </div>
+											</div>
+											<!-- Carousel nav -->
+											<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+											<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+										</div>
 									</div>
 								</div>
 								<div class="row-fluid">
 									<div class="span12">
-										<img alt="" src="../images/17.png">
+										<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="445px">
+										    <param name="movie" value="../images/flvplayer.swf" />
+										    <param name="allowFullScreen" value="true" />
+										    <param name="FlashVars" value="flv=../images/videoShow.flv&showtime=1&showstop=1&showfullscreen=1&bgcolor1=864319&bgcolor2=864319&playercolor=A55E22" />
+										</object>
 									</div>
 								</div>
 							</div>
@@ -58,9 +89,10 @@
 
 			<div id="sp7" class="span7">
 				<div class="row-fluid">
-					<div class="span12" style="padding: 6% 5% 0 0;">
+					<div class="span12" style="padding: 7% 5% 0 0;">
 						<div class="swiper-container">
 							<div id="wrapper" class="swiper-wrapper">
+							<!-- 
 								<div class="swiper-slide">
 									<div id="sb1" class="slide-box">
 										<div class="heatmap-slide1">
@@ -123,45 +155,57 @@
 										</div>
 									</div>
 								</div>
+								 -->
 								<div class="swiper-slide">
 									<div id="sb2" class="slide-box">
-		
-										<div class="heatmap-slide2">
-											<div class="heatmapTitle">
-												<spring:message code="dayuecheng_titile" />
-											</div>
-											<div id="heatmap-slide2-graphic">
-												<div id="heatmap2" class="heatmap2"></div>
+										<div class="row-fluid">
+											<div class="span12">
+												<div class="heatmap-slide2">
+													<div class="heatmapTitle">
+														<spring:message code="dayuecheng_titile" />
+													</div>
+												</div>
 											</div>
 										</div>
-		
-										<div class="row-fluid" style="margin:3.8% 0;">
-											<div class="span4" style="text-align: center;line-height: 2.5em;">
-												<div class="row-fluid">
-													<span class="number-value" id="numbern-data-item4"></span>
+										<div class="row-fluid">
+											<div class="span12" style="background-color: rgba(0,0,0,0.7);">	
+												<div class="row-fluid" >
+													<div class="span12">
+														<div id="heatmap-slide2-graphic">
+															<div id="heatmap2" class="heatmap2"></div>
+														</div>
+													</div>
 												</div>
-												<div class="row-fluid">
-													<span
-													class="numbern-data-item">Current Visitor Number</span>
-												</div>
-											</div>
-											<div class="span4" style="text-align: center;line-height: 2.5em;">
-												<div class="row-fluid">
-													<span class="number-value" id="numbern-data-item5"></span>
-												</div>
-												<div class="row-fluid">
-													<span
-													class="numbern-data-item">Cumulative Visitor Number</span>
-												</div>
-											</div>
-											<div class="span4" style="text-align: center;line-height: 2.5em;">
-												<div class="row-fluid">
-													<span class="number-value" id="numbern-data-item6"></span>
-												</div>
-												<div class="row-fluid">
-													<span
-													class="numbern-data-item">Average Visit Time(Min)</span>
-												</div>
+				
+												<div class="row-fluid" style="margin:3.5% 0;">
+													<div class="span4" style="text-align: center;line-height: 2.5em;">
+														<div class="row-fluid">
+															<span class="number-value" id="numbern-data-item4"></span>
+														</div>
+														<div class="row-fluid">
+															<span
+															class="numbern-data-item">Current Visitor Number</span>
+														</div>
+													</div>
+													<div class="span4" style="text-align: center;line-height: 2.5em;">
+														<div class="row-fluid">
+															<span class="number-value" id="numbern-data-item5"></span>
+														</div>
+														<div class="row-fluid">
+															<span
+															class="numbern-data-item">Cumulative Visitor Number</span>
+														</div>
+													</div>
+													<div class="span4" style="text-align: center;line-height: 2.5em;">
+														<div class="row-fluid">
+															<span class="number-value" id="numbern-data-item6"></span>
+														</div>
+														<div class="row-fluid">
+															<span
+															class="numbern-data-item">Average Visit Time(Min)</span>
+														</div>
+													</div>
+												</div>	
 											</div>
 										</div>	
 		
@@ -190,13 +234,17 @@
 		
 									<div id="sb3" class="slide-box">
 										<div class="row-fluid">
+											<div class="span12">
+												<div class="heatmapTitle">
+													<spring:message code="dayuecheng_titile" />
+												</div>
+											</div>
+										</div>
+										<div class="row-fluid" style="background-color: rgba(0,0,0,0.7);">
 											<div class="span7" id="imge3">	
-													<div class="heatmapTitle">
-														<spring:message code="dayuecheng_titile" />
-													</div>
-													<div id="heatmap-slide3-graphic">
-														<div id="heatmap3" class="heatmap3"></div>
-													</div>
+												<div id="heatmap-slide3-graphic">
+													<div id="heatmap3" class="heatmap3"></div>
+												</div>
 											</div>
 											
 											<div class="span5">			
@@ -315,7 +363,7 @@
 		//var tooltip = document.querySelector('.tip');
 		jQuery(document).ready(function() {
 			var mySwiper = new Swiper('.swiper-container', {
-				autoplay : 10000,
+				autoplay : 2000,
 				direction : 'horizontal',
 				//loop : true,
 				pagination : '.swiper-pagination',
@@ -329,16 +377,31 @@
 			// 如果需要滚动条
 			//   scrollbar: '.swiper-scrollbar'
 			});
+			$("#wrapper").on("mouseover",function(e){
+				mySwiper.stopAutoplay();
+			});
+			$("#wrapper").on("mouseout",function(e){
+				mySwiper.startAutoplay();
+			});
+			
 			Heatmap.initDropdown();
 			setTimeout(function(){
+				/*
 				var height1 = $("#sb1").css("height"),
 					height2 = $("#sb2").css("height"),
 					height3 = $("#sb3").css("height");
 					maxHeight = _.max([height1,height2,height3],function(el){
 						return parseInt(el.slice(0, -2));
 					});
-				$("#wrapper").css("height",maxHeight);
+					*/
+				var height = $("#huawei").css("height");
+				$("#wrapper").css("height",height);
 			},1000);
+			
+			$('.carousel').carousel({
+				  interval: 2000,
+				  pause:"hover"
+			});
 		});
 	</script>
 </body>
