@@ -242,7 +242,7 @@
 				<ref bean="taskJobTrigger" />
 				<ref bean="SynchroDataTime" />
 				<ref bean="BluemixTime" />
-				<ref bean="doTime12" />
+				<!-- <ref bean="doTime12" /> -->
 			</list>
 		</property>
 		<property name="taskExecutor" ref="executor" />

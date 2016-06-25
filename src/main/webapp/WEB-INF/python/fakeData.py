@@ -39,14 +39,20 @@ class GetSvaData():
         
         try:
             while True:
+            	multi1x = 4
+            	multi1y = 3
+            	multi2x = 2
+            	multi2y = 4
                 startTime = datetime(2016,6,15)
                 endtime = datetime.now()
                 chaDays = (endtime-startTime).days
+                print chaDays
                 differenceTime = chaDays*86400000
                 print differenceTime		
                 timestamp = int(time.time())* 1000
-                selectTime = timestamp-differenceTime
                 print timestamp
+                selectTime = timestamp-differenceTime
+                print selectTime
                 message = "{\"locationstreamanonymous\":[{\"IdType\":\"IP\",\"Timestamp\":"+str(timestamp)+",\"datatype\":\"coordinates\",\"location\":{\"x\":1133.0,\"y\":492.0,\"z\":2},\"userid\":[\"c20a820a69\"]}"
                 #print message
   #              for i in range(1):
@@ -60,7 +66,8 @@ class GetSvaData():
                     conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3307)
                     cursor = conn.cursor()   
                     conn.select_db('sva')
-                    cursor.execute ("select * from location20160615 where timestamp=%s",[selectTime]) 
+                    #select * from location20150822 where timestamp=(select max(timestamp) from location20150822 where timestamp < %s)
+                    cursor.execute ("select * from location20160615 where timestamp=(select max(timestamp) from location20160615 where timestamp < %s)",[selectTime]) 
                     results=cursor.fetchall()
                     cursor.close()                    
                     conn.close()
@@ -68,19 +75,22 @@ class GetSvaData():
                         IdType1 = r[0]
                         Timestamp1 = r[1]
                         datatype1 = r[2]
-                        x1 = r[3]
-                        y1 = r[4]
+                        x1 = r[3] * multi1x
+                        y1 = r[4] * multi1y
                         z1 = 1
+                        x2 = r[3] * multi2x
+                        y2 = r[4] * multi2y
+                        z2 = 2
                         userid1 = r[6]
-                        message = message + ',{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x1)+',"y":'+str(y1)+',"z":'+str(z1)+'},"userid":["'+str(userid1)+'"]}'
+                        message = message + ',{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x1)+',"y":'+str(y1)+',"z":'+str(z1)+'},"userid":["'+str(userid1)+'"]},{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x2)+',"y":'+str(y2)+',"z":'+str(z2)+'},"userid":["'+str(userid1)+'"]}'
                     message = message + "]}"
                     #print message
                     print repr(message)					
                     jsonData = json.loads(message, encoding="utf-8")
-                    print jsonData.keys()[0] + 'abcd'
-                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3306)
+                    print jsonData.keys()[0]
+                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3307)
                     cursor = conn.cursor()   
-                    conn.select_db('sva7074')
+                    conn.select_db('sva')
                     jsonData = json.loads(message)                    
                     if jsonData.keys()[0] == 'locationstreamanonymous':
                         jsonList = jsonData["locationstreamanonymous"]
@@ -150,7 +160,7 @@ if __name__ == "__main__":
     brokeIP = "182.138.104.35"
     brokerPort = 4703
     queueID = "app0.7ce75a30c6184ef08b20994bdcb53dcb.66fc8841"
-    companyID = 6
+    companyID = 1
     getSvaData = GetSvaData(appName,brokeIP,brokerPort,queueID,companyID)
     try:
         thread1 = threading.Thread(target=getSvaData.Run)

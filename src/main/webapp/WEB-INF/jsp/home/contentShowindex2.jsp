@@ -28,6 +28,27 @@
 	.nomargin{
 		margin: 0 !important;
 	}
+	
+	.fullscreen{
+		width:100%;
+		height:100%;
+	}
+	
+	.fullImg{
+		margin:0 auto;
+		height:900px;
+	}
+	
+	.expand{
+	    cursor: pointer;
+	    float: left;
+	    position: fixed;
+	    z-index: 2;
+	    background: none !important;
+	    margin: 10px 0 0 5px;
+	    color:#76d3d8;
+	}
+	
 </style>
 
 </head>
@@ -47,6 +68,7 @@
 							<div class="span12" >
 								<div class="row-fluid">
 									<div class="span12" style="border: 5px solid #864319;">
+										<i id="expand" class="icon-resize-full icon-2x expand"></i>
 										
 										<div id="myCarousel" class="carousel slide" style="margin-bottom:0 !important;">
 											<ol class="carousel-indicators">
@@ -319,7 +341,8 @@
 		</div>
 
 	</div>
-	<script src="<c:url value='../plugins/html/js/jquery-2.1.3.min.js'/>"></script>
+	<%@ include file="../shared/importJs.jsp"%>
+	<script src="<c:url value='../plugins/layer/layer.js'/>"></script>
 	<script src="<c:url value='../plugins/html/js/swiper.min.js'/>"></script>
 	<script src="<c:url value='/js/appcontent2.js'/>"></script>
 	<script src="<c:url value='/js/contentshowindex2.js'/>"
@@ -328,7 +351,6 @@
 		type="text/javascript"></script>
 	<script src="<c:url value='../plugins/underscore/underscore-min.js'/>"
 		type="text/javascript"></script>
-	<%@ include file="../shared/importJs.jsp"%>
 	<script type="text/javascript">
 		var configObj = {
 			container : document.getElementById("heatmap"),
@@ -401,6 +423,41 @@
 			$('.carousel').carousel({
 				  interval: 2000,
 				  pause:"hover"
+			});
+			
+			$("#expand").on("click",function(){
+				var content = '<div id="myCarouselPop" class="carousel slide fullscreen" style="margin-bottom:0 !important;background-color:#333;">'+
+									'<ol class="carousel-indicators">'+
+									    '<li data-target="#myCarouselPop" data-slide-to="0" class="active"></li>'+
+									    '<li data-target="#myCarouselPop" data-slide-to="1"></li>'+
+									    '<li data-target="#myCarouselPop" data-slide-to="2"></li>'+
+								  	'</ol>'+
+									'<div class="carousel-inner fullscreen">'+
+									    '<div class="active item nomargin fullscreen">'+
+									    	'<img class="fullImg" alt="" src="../images/ppt1.png">'+
+										'</div>'+
+									    '<div class="item nomargin">'+
+									    	'<img class="fullImg" alt="" src="../images/ppt2.png">'+
+									    '</div>'+
+									    '<div class="item nomargin">'+
+									    	'<img class="fullImg" alt="" src="../images/ppt3.png">'+
+									    '</div>'+
+									'</div>'+
+									'<a class="carousel-control left" href="#myCarouselPop" data-slide="prev">&lsaquo;</a>'+
+									'<a class="carousel-control right" href="#myCarouselPop" data-slide="next">&rsaquo;</a>'+
+								'</div>';
+				var index = layer.open({
+				  	type: 1,
+				  	content: content,
+				  	maxmin: false,
+				  	success: function(layero, index){
+				  		//$('.carousel').carousel({
+						//	  interval: 2000,
+						//	  pause:"hover"
+						//});
+				  	}
+				});
+				layer.full(index);
 			});
 		});
 	</script>

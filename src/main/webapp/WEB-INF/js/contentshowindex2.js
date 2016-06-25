@@ -541,9 +541,9 @@ var Heatmap = function() {
 					configObj2.radius = parseInt(radiusSel1); 
 					configObj3.radius = parseInt(radiusSel2); 
 					
-					floorNo = data.data[0].floorNo;
-					floorNo2 = data.data[0].floorNo2;
-					floorNo3 = data.data[0].floorNo3;
+					floorNo = data.data[0].floorNo3;
+					floorNo2 = data.data[0].floorNo;
+					floorNo3 = data.data[0].floorNo2;
 				
 					period = data.data[0].periodSel;
 					coefficient = data.data[0].coefficient;
