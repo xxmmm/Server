@@ -39,10 +39,10 @@ class GetSvaData():
         
         try:
             while True:
-            	multi1x = 4
-            	multi1y = 3
-            	multi2x = 2
-            	multi2y = 4
+            	multi1x = 43
+            	multi1y = 34
+            	multi2x = 20
+            	multi2y = 42
                 startTime = datetime(2016,6,15)
                 endtime = datetime.now()
                 chaDays = (endtime-startTime).days
@@ -63,11 +63,11 @@ class GetSvaData():
                #message = ',{"geofencing":[{"IdType": "IP", "userid": ["bea80202"], "mapid": 2, "zoneid": 0, "zone_event": "exit", "Timestamp":1461054031000}]}'
                 #{"locationstream":[{"IdType":"IP","Timestamp":1427560872000,"datatype":"coordinates","location":{"x":1133.0,"y":492.0,"z":1},"userid":["c0a80a69"]}]}
                 try:             
-                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3307)
+                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3306)
                     cursor = conn.cursor()   
                     conn.select_db('sva')
-                    #select * from location20150822 where timestamp=(select max(timestamp) from location20150822 where timestamp < %s)
-                    cursor.execute ("select * from location20160615 where timestamp=(select max(timestamp) from location20160615 where timestamp < %s)",[selectTime]) 
+                    #select * from location20150822 where z = 3 and timestamp=(select max(timestamp) from location20150822 where timestamp < %s)
+                    cursor.execute ("select * from location20160615 where z = 40003 and timestamp=(select max(timestamp) from location20160615 where timestamp < %s)",[selectTime]) 
                     results=cursor.fetchall()
                     cursor.close()                    
                     conn.close()
@@ -75,20 +75,19 @@ class GetSvaData():
                         IdType1 = r[0]
                         Timestamp1 = r[1]
                         datatype1 = r[2]
-                        x1 = r[3] * multi1x
-                        y1 = r[4] * multi1y
-                        z1 = 1
-                        x2 = r[3] * multi2x
-                        y2 = r[4] * multi2y
-                        z2 = 2
+                        x1 = r[3] * multi1x /10
+                        y1 = r[4] * multi1y / 10
+                        z1 = 7
+                        x2 = r[3] * multi2x / 10
+                        y2 = r[4] * multi2y / 10
+                        z2 = 8
                         userid1 = r[6]
                         message = message + ',{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x1)+',"y":'+str(y1)+',"z":'+str(z1)+'},"userid":["'+str(userid1)+'"]},{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x2)+',"y":'+str(y2)+',"z":'+str(z2)+'},"userid":["'+str(userid1)+'"]}'
                     message = message + "]}"
                     #print message
-                    print repr(message)					
+                    #print repr(message)					
                     jsonData = json.loads(message, encoding="utf-8")
-                    print jsonData.keys()[0]
-                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3307)
+                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3306)
                     cursor = conn.cursor()   
                     conn.select_db('sva')
                     jsonData = json.loads(message)                    

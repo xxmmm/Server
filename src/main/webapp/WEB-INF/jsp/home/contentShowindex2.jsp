@@ -99,7 +99,7 @@
 										<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="445px">
 										    <param name="movie" value="../images/flvplayer.swf" />
 										    <param name="allowFullScreen" value="true" />
-										    <param name="FlashVars" value="flv=../images/videoShow.flv&showtime=1&showstop=1&showfullscreen=1&bgcolor1=864319&bgcolor2=864319&playercolor=A55E22" />
+										    <param name="FlashVars" value="flv=../images/videoShow.flv&startimage=../images/startimage_en.jpg&showtime=1&showstop=1&showfullscreen=1&bgcolor1=864319&bgcolor2=864319&playercolor=A55E22" />
 										</object>
 									</div>
 								</div>
