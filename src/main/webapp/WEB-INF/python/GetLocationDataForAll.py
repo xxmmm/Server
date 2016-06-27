@@ -105,7 +105,6 @@ class GetSvaData():
                                 loc_count = loc_count + int(row[0])
                                 during = Timestamp - int(row[1]);
                                 sqlparam = [IdType,Timestamp,time_local,loc_count,during,datatype,x,y,z,userid]
-                                print sqlparam
                                 cursor.execute("update location"+dataStr+" set IdType=%s, Timestamp = %s,time_local=%s,loc_count=%s, during=%s,datatype=%s,x=%s, y =%s where z = %s and userid = %s ",sqlparam)
                             else:
                                 sqlparam = [IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,userid] 
@@ -123,15 +122,17 @@ class GetSvaData():
                         jsonList = jsonData["geofencing"]
                         for index in range(len(jsonList)):                            
                             IdType = jsonList[index]["IdType"]
-                            userid = jsonList[index]["userid"] 
+                            if len(jsonList[index]["userid"]) < 1:
+                                continue
+                            userid = jsonList[index]["userid"][0] 
                             mapid = jsonList[index]["mapid"]    
                             zoneid = jsonList[index]["zoneid"] 
-                            zone_event = jsonList[index]["enter"]
+                            zone_event = jsonList[index]["zone_event"]
                             Timestamp = jsonList[index]["Timestamp"]
                             time_local = time.time() * 1000
                             sqlparam = [IdType,userid,mapid,zoneid,zone_event,Timestamp,time_local]                       
                             LOG.info(sqlparam)
-                            cursor.execute("into geofencing (IdType,userid,mapid,zoneid,enter,Timestamp,time_local) values (%s,%s,%s,%s,%s,%s,%s)",sqlparam)
+                            cursor.execute("insert into geofencing (IdType,userid,mapid,zoneid,enter,Timestamp,time_local) values (%s,%s,%s,%s,%s,%s,%s)",sqlparam)
                     conn.commit() 
                     self.nowTime = datetime.now()
                     cursor.close()  

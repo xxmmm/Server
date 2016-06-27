@@ -153,7 +153,14 @@
                                <input type="text"  datatype="password"  nullmsg='<spring:message code="msg_dianpu" />' style="width: 62%;height: 15%;" class="input-xlarge" maxlength="100" name="shopName" id="shopNameId" placeholder="<spring:message code="message_table_title_shopName" />"
                                >
                           </div>
-                   </div>                                     
+                   </div> 
+                   <div class="control-group">
+                        <label class="control-label" for="messageId"><spring:message code="message_table_title_message" /></label>
+                          <div class="controls">
+                               <input type="text" maxlength="300" datatype="password"  nullmsg='<spring:message code="msg_xiaoxi" />' style="width: 62%;height: 15%;" class="input-xlarge" name="message" id="messageId" placeholder="<spring:message code="message_table_title_message" />"
+                               >
+                          </div>
+                   </div>                                                        
                     <div class="control-group">
                         <div class="controls">
                             <input type="hidden" name = "id" id="idid" style="width: 56%; height: 15%;">
@@ -200,13 +207,7 @@
                    </div>
                   <div class="row-fluid">
                       <div class="span12" style="outline:0px solid #E6E4E4;padding:20px 0;">
-                   <div class="control-group">
-                        <label class="control-label" for="messageId"><spring:message code="message_table_title_message" /></label>
-                          <div class="controls">
-                               <input type="text" maxlength="300" datatype="password"  nullmsg='<spring:message code="msg_xiaoxi" />' style="width: 58%;height: 15%;" class="input-xlarge" name="message" id="messageId" placeholder="<spring:message code="message_table_title_message" />"
-                               >
-                          </div>
-                   </div>                      
+                     
                    <div class="control-group">
                         <label class="control-label" for="timeInterval"><spring:message code="msg_timeInterval" /></label>
                           <div class="controls">
@@ -233,7 +234,17 @@
                             <input id="fileField1"  type="file" style="height: 30px;" multiple name="file1" class="input-file-1">
                             </span>                           
                           </div>
-                   </div>                  
+                   </div> 
+                   <div class="control-group">
+                        <label class="control-label" for="pictrueId2"><spring:message code="seller_choose_tikect" /><i class="icon-question-sign tip" data-toggle="tooltip" title="<spring:message code="map_map_info" />"></i></label>
+                          <div class="controls">
+                            <input type='text' name='textfield2' errormsg='<spring:message code="map_format" />' nullmsg='<spring:message code="map_table_title_choose" />' datatype="jp"  id='textfield2' disabled="disabled"   style="width:24%;margin: auto;" /> 
+                            <span class="btn-upload form-group">
+                             <input type='button'  class="btn" value='<spring:message code="seller_choose_tikect" />'  style="width: 101%; margin-left: -1%;margin-top: 2px;" />
+                             <input id="fileField2"  type="file" style="height: 30px;" multiple name="file2" class="input-file-1">
+                            </span>                          
+                          </div>
+                   </div>                                    
                    <div class="control-group">
                         <label class="control-label" for="isEnableId"><spring:message code="message_table_title_enable" /></label>
                           <div class="controls">

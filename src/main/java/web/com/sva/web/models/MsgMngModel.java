@@ -28,11 +28,23 @@ public class MsgMngModel
 
     private String moviePath;
 
+    private String ticketPath;
+
     private String id;
 
     private String floorNo;
 
     private int shopId;
+
+    public String getTicketPath()
+    {
+        return ticketPath;
+    }
+
+    public void setTicketPath(String ticketPath)
+    {
+        this.ticketPath = ticketPath;
+    }
 
     public BigDecimal getX1Spot()
     {

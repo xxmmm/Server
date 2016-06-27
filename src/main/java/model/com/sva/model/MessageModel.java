@@ -34,7 +34,19 @@ public class MessageModel
 
     private String moviePath;
 
+    private String ticketPath;
+
     private String id;
+
+    public String getTicketPath()
+    {
+        return ticketPath;
+    }
+
+    public void setTicketPath(String ticketPath)
+    {
+        this.ticketPath = ticketPath;
+    }
 
     public String getAreaName()
     {

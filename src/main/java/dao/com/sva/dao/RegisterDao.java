@@ -31,6 +31,11 @@ public class RegisterDao
                 register.getStatus(), register.getPhoneNumber(),
                 register.getTimes());
     }
+    public void refreshRegister(RegisterModel register)
+    {
+    	String sql = "update register set ip=1 where phoneNumber = ?";
+    	this.jdbcTemplate.update(sql,register.getIp(),register.getPhoneNumber());
+    }
 
     public List<RegisterModel> getDataByUserName(String userName)
     {
@@ -38,7 +43,7 @@ public class RegisterDao
         String[] params = {userName};
         return this.jdbcTemplate.query(sql, params, new RegisterMapper());
     }
-    
+
     public List<RegisterModel> getDataBy(String phone)
     {
         String sql = "select * from register where phoneNumber=? and status=1";
@@ -59,17 +64,24 @@ public class RegisterDao
         String[] params = {phone};
         return this.jdbcTemplate.query(sql, params, new RegisterMapper());
     }
-    
+
     public List<RegisterModel> getDataByIsTrue1(String phone)
     {
         String sql = "select * from register where phoneNumber=? and isTrue=2";
         String[] params = {phone};
         return this.jdbcTemplate.query(sql, params, new RegisterMapper());
     }
-    
+
     public List<RegisterModel> getDataByStatus2(String phone)
     {
         String sql = "select * from register where phoneNumber=? and status=2";
+        String[] params = {phone};
+        return this.jdbcTemplate.query(sql, params, new RegisterMapper());
+    }
+
+    public List<RegisterModel> getDataByStatus3(String phone)
+    {
+        String sql = "select * from register where phoneNumber=? and status=3";
         String[] params = {phone};
         return this.jdbcTemplate.query(sql, params, new RegisterMapper());
     }
@@ -79,7 +91,7 @@ public class RegisterDao
         String sql = "update register set isTrue=1 where phoneNumber = ?";
         this.jdbcTemplate.update(sql, phone);
     }
-    
+
     public void updateIsTrue2(String phone)
     {
         String sql = "update register set isTrue=2 where phoneNumber = ?";
@@ -94,9 +106,9 @@ public class RegisterDao
 
     public void updataStatus(String phone, String otherPhone)
     {
-        System.out.println("status");
+        // System.out.println("status");
         String sql = "update register set status=1,otherPhone= " + phone
-                + " where phoneNumber = ?";
+                + ",isTrue=0 where phoneNumber = ?";
         this.jdbcTemplate.update(sql, otherPhone);
     }
 
@@ -105,7 +117,13 @@ public class RegisterDao
         String sql = "update register set status=0 where phoneNumber = ?";
         this.jdbcTemplate.update(sql, phone);
     }
-    
+
+    public void updataStatus2(String phone)
+    {
+        String sql = "update register set status=3 where phoneNumber = ?";
+        this.jdbcTemplate.update(sql, phone);
+    }
+
     public void updataStatusByCancel(String phone)
     {
         String sql = "update register set status=2 where phoneNumber = ?";
@@ -115,6 +133,29 @@ public class RegisterDao
     public List<String> getIpByUserName(String phoneNumber)
     {
         String sql = "select ip from register where phoneNumber=? ";
+        // JdbcTemplate tem = this.getJdbcTemplate();
+        String[] params = {phoneNumber};
+        return this.jdbcTemplate.queryForList(sql, params, String.class);
+    }
+
+    public List<String> getStatusByphoneNumber2(String phoneNumber)
+    {
+        String sql = "select ip from register where phoneNumber=? and status=2 ";
+        // JdbcTemplate tem = this.getJdbcTemplate();
+        String[] params = {phoneNumber};
+        return this.jdbcTemplate.queryForList(sql, params, String.class);
+    }
+
+    public List<String> getStatusByIsTrue2(String phoneNumber)
+    {
+        String sql = "select ip from register where  isTrue=2  and phoneNumber=? ";
+        // JdbcTemplate tem = this.getJdbcTemplate();
+        String[] params = {phoneNumber};
+        return this.jdbcTemplate.queryForList(sql, params, String.class);
+    }
+    public List<String> getStatusByIsTrue1(String phoneNumber)
+    {
+        String sql = "select ip from register where  isTrue=1  and phoneNumber=? ";
         // JdbcTemplate tem = this.getJdbcTemplate();
         String[] params = {phoneNumber};
         return this.jdbcTemplate.queryForList(sql, params, String.class);

@@ -82,14 +82,14 @@
 								<div class="control-group">
 									<label class="control-label" for="menuAccount"><spring:message code="menu_name" /></label>
 									<div class="controls"> 
-										<table id="menuAccount" style="width:967px" class="table table-bordered">
+										<table id="menuAccount" style="width:100%" class="table table-bordered">
 										</table>
 									</div>
 								</div>
 								<div class="control-group">
 									<label class="control-label" for="storeAccount"><spring:message code="store_add_name" /></label>
 									<div class="controls"> 
-										<table id="storeAccount"  style="width:967px" class="table table-bordered">
+										<table id="storeAccount"  style="width:100%" class="table table-bordered">
 										</table>
 									</div>
 								</div>

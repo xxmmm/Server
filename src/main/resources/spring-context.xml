@@ -188,7 +188,12 @@
 		<property name="dataSource">
 			<ref bean="dataSource" />
 		</property>
-	</bean>         
+	</bean>   
+    <bean id="geofencingDao" class="com.sva.dao.GeofencingDao">
+        <property name="dataSource">
+            <ref bean="dataSource" />
+        </property>
+    </bean> 	      
 	<bean id="subsribeDao" class="com.sva.dao.subsribeDao">
 		<property name="dataSource">
 			<ref bean="dataSource" />

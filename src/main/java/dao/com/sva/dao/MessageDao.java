@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -34,6 +36,12 @@ public class MessageDao
         // JdbcTemplate tem = this.getJdbcTemplate();
         return this.jdbcTemplate.query(sql, new MessageMapper1());
     }
+
+    // public List<Map<String, Object>> getGeofencing(int id, String sql)
+    // {
+    // String[] params = {String.valueOf(id)};
+    // return this.jdbcTemplate.queryForList(sql, params);
+    // }
 
     /*
      * 通过用户名获取相对应的商场权限
@@ -88,6 +96,29 @@ public class MessageDao
         return this.jdbcTemplate.query(sql, new MessageMapper());
     }
 
+
+
+    public Collection<MessageModel> queryByLocation3(LocationModel loc)
+    {
+        String sql = "select t.*,m.floor,0 place from message t join maps m on t.floorNo = m.floorNo where m.floorNo = "
+                + loc.getZ()
+                + " and (t.xSpot) < "
+                + loc.getX().doubleValue()
+                / 10
+                + " and (t.x1Spot) > "
+                + loc.getX().doubleValue()
+                / 10
+                + " and (t.ySpot) < "
+                + loc.getY().doubleValue()
+                / 10
+                + " and (t.y1Spot) > "
+                + loc.getY().doubleValue()
+                / 10
+                + " and t.ticketPath is not null;";
+        // JdbcTemplate tem = this.getJdbcTemplate();
+        return this.jdbcTemplate.query(sql, new MessageMapper());
+    }
+
     public Collection<MessageModel> queryByLocation2(LocationModel loc)
     {
         String sql = "SELECT a.*,b.*,p.* FROM electronic a left join area b on a.shopId=b.id  left join locationphone p on a.floorNo=p.z where a.floorNo="
@@ -124,12 +155,13 @@ public class MessageDao
 
     public void saveMsgInfo1(MsgMngModel mmm) throws SQLException
     {
-        String sql = "INSERT INTO message(shopId,x1Spot,y1Spot,placeId,shopName,xSpot,ySpot,floorNo,rangeSpot,message,timeInterval,isEnable,pictruePath,moviePath) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO message(shopId,x1Spot,y1Spot,placeId,shopName,xSpot,ySpot,floorNo,rangeSpot,message,timeInterval,isEnable,pictruePath,moviePath,ticketPath) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         this.jdbcTemplate.update(sql, mmm.getShopId(), mmm.getX1Spot(),
                 mmm.getY1Spot(), mmm.getPlaceId(), mmm.getShopName(),
                 mmm.getxSpot(), mmm.getySpot(), mmm.getFloorNo(),
                 mmm.getRangeSpot(), mmm.getMessage(), mmm.getTimeInterval(),
-                mmm.getIsEnable(), mmm.getPictruePath(), mmm.getMoviePath());
+                mmm.getIsEnable(), mmm.getPictruePath(), mmm.getMoviePath(),
+                mmm.getTicketPath());
     }
 
     public int deleteMessage(String xSpot, String ySpot, String floorNo)
@@ -149,6 +181,16 @@ public class MessageDao
                 mmm.getFloorNo(), mmm.getId());
     }
 
+    public void updateMsgInfoT1(MsgMngModel mmm) throws SQLException
+    {
+        String sql = "UPDATE message SET ticketPath=?, shopId=?,x1Spot=?,y1Spot=?,placeId=?,shopName=?,xSpot=?,ySpot=?,rangeSpot=?,message=?,timeInterval=?,isEnable=?,floorNo=? where id=?";
+        this.jdbcTemplate.update(sql, mmm.getTicketPath(), mmm.getShopId(),
+                mmm.getX1Spot(), mmm.getY1Spot(), mmm.getPlaceId(),
+                mmm.getShopName(), mmm.getxSpot(), mmm.getySpot(),
+                mmm.getRangeSpot(), mmm.getMessage(), mmm.getTimeInterval(),
+                mmm.getIsEnable(), mmm.getFloorNo(), mmm.getId());
+    }
+
     public void updateMsgInfo1(MsgMngModel mmm) throws SQLException
     {
         String sql = "UPDATE message SET shopId=?,x1Spot=?,y1Spot=?, placeId=?,shopName=?,xSpot=?,ySpot=?,rangeSpot=?,message=?,timeInterval=?,isEnable=?,moviePath=?,floorNo=? where id=?";
@@ -157,6 +199,17 @@ public class MessageDao
                 mmm.getxSpot(), mmm.getySpot(), mmm.getRangeSpot(),
                 mmm.getMessage(), mmm.getTimeInterval(), mmm.getIsEnable(),
                 mmm.getMoviePath(), mmm.getFloorNo(), mmm.getId());
+    }
+
+    public void updateMsgInfo1T2(MsgMngModel mmm) throws SQLException
+    {
+        String sql = "UPDATE message SET ticketPath=?, shopId=?,x1Spot=?,y1Spot=?, placeId=?,shopName=?,xSpot=?,ySpot=?,rangeSpot=?,message=?,timeInterval=?,isEnable=?,moviePath=?,floorNo=? where id=?";
+        this.jdbcTemplate.update(sql, mmm.getTicketPath(), mmm.getShopId(),
+                mmm.getX1Spot(), mmm.getY1Spot(), mmm.getPlaceId(),
+                mmm.getShopName(), mmm.getxSpot(), mmm.getySpot(),
+                mmm.getRangeSpot(), mmm.getMessage(), mmm.getTimeInterval(),
+                mmm.getIsEnable(), mmm.getMoviePath(), mmm.getFloorNo(),
+                mmm.getId());
     }
 
     public void updateMsgInfo2(MsgMngModel mmm) throws SQLException
@@ -169,6 +222,17 @@ public class MessageDao
                 mmm.getPictruePath(), mmm.getFloorNo(), mmm.getId());
     }
 
+    public void updateMsgInfo2T3(MsgMngModel mmm) throws SQLException
+    {
+        String sql = "UPDATE message SET ticketPath=?,shopId=?,x1Spot=?,y1Spot=?,placeId=?,shopName=?,xSpot=?,ySpot=?,rangeSpot=?,message=?,timeInterval=?,isEnable=?,pictruePath=?,floorNo=? where id=?";
+        this.jdbcTemplate.update(sql, mmm.getTicketPath(), mmm.getShopId(),
+                mmm.getX1Spot(), mmm.getY1Spot(), mmm.getPlaceId(),
+                mmm.getShopName(), mmm.getxSpot(), mmm.getySpot(),
+                mmm.getRangeSpot(), mmm.getMessage(), mmm.getTimeInterval(),
+                mmm.getIsEnable(), mmm.getPictruePath(), mmm.getFloorNo(),
+                mmm.getId());
+    }
+
     public void updateMsgInfo3(MsgMngModel mmm) throws SQLException
     {
         String sql = "UPDATE message SET shopId=?,x1Spot=?,y1Spot=?,placeId=?,shopName=?,xSpot=?,ySpot=?,rangeSpot=?,message=?,timeInterval=?,isEnable=?,pictruePath=?,moviePath=?,floorNo=? where id=?";
@@ -178,6 +242,17 @@ public class MessageDao
                 mmm.getMessage(), mmm.getTimeInterval(), mmm.getIsEnable(),
                 mmm.getPictruePath(), mmm.getMoviePath(), mmm.getFloorNo(),
                 mmm.getId());
+    }
+
+    public void updateMsgInfo3T4(MsgMngModel mmm) throws SQLException
+    {
+        String sql = "UPDATE message SET  ticketPath=?,shopId=?,x1Spot=?,y1Spot=?,placeId=?,shopName=?,xSpot=?,ySpot=?,rangeSpot=?,message=?,timeInterval=?,isEnable=?,pictruePath=?,moviePath=?,floorNo=? where id=?";
+        this.jdbcTemplate.update(sql, mmm.getTicketPath(), mmm.getShopId(),
+                mmm.getX1Spot(), mmm.getY1Spot(), mmm.getPlaceId(),
+                mmm.getShopName(), mmm.getxSpot(), mmm.getySpot(),
+                mmm.getRangeSpot(), mmm.getMessage(), mmm.getTimeInterval(),
+                mmm.getIsEnable(), mmm.getPictruePath(), mmm.getMoviePath(),
+                mmm.getFloorNo(), mmm.getId());
     }
 
     public String getFloorByFloorNo(String floorNo)
@@ -241,6 +316,7 @@ public class MessageDao
             msg.setMoviePath(rs.getString("MOVIEPATH"));
             msg.setId(rs.getString("ID"));
             msg.setShopId(rs.getInt("SHOPID"));
+            msg.setTicketPath(rs.getString("TICKETPATH"));
             return msg;
         }
     }
@@ -268,6 +344,7 @@ public class MessageDao
             msg.setMoviePath(rs.getString("MOVIEPATH"));
             msg.setId(rs.getString("ID"));
             msg.setShopId(rs.getInt("SHOPID"));
+            msg.setTicketPath(rs.getString("TICKETPATH"));
             return msg;
         }
     }

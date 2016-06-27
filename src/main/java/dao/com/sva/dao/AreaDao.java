@@ -13,6 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.sva.model.AreaModel;
+import com.sva.model.LocationModel;
+import com.sva.model.MessageModel;
 
 @SuppressWarnings("all")
 public class AreaDao
@@ -48,7 +50,7 @@ public class AreaDao
         String[] params = {zSel};
         return this.jdbcTemplate.query(sql, params, new AreaMapper1());
     }
-    
+
     public List<AreaModel> getAreaDatAById(String id)
     {
         String sql = "SELECT xSpot,ySpot,x1Spot,y1Spot from area where id = ?";
@@ -227,6 +229,27 @@ public class AreaDao
         }
     }
 
+    private class AreaMapper4 implements RowMapper
+    {
+        public Object mapRow(ResultSet rs, int num) throws SQLException
+        {
+            AreaModel area = new AreaModel();
+            area.setPlaceId(rs.getInt("PLACEID"));
+            area.setxSpot(rs.getBigDecimal("XSPOT"));
+            area.setySpot(rs.getBigDecimal("YSPOT"));
+            area.setX1Spot(rs.getBigDecimal("X1SPOT"));
+            area.setY1Spot(rs.getBigDecimal("Y1SPOT"));
+            area.setAreaName(rs.getString("AREANAME"));
+            area.setFloorNo(rs.getBigDecimal("FLOORNO"));
+            area.setCategoryId(rs.getInt("CATEGORYID"));
+            area.setId(rs.getString("ID"));
+            area.setZoneId(rs.getInt("ZONEID"));
+            area.setStatus(rs.getInt("STATUS"));
+            area.setStatus(rs.getInt("STATUS"));
+            return area;
+        }
+    }
+
     public int checkByName(String name)
     {
         String sql = "SELECT count(*) res FROM area where areaName = ?";
@@ -262,6 +285,14 @@ public class AreaDao
     public List<String> getAreaNameByAreaId(String areaId)
     {
         String sql = "select areaName from area where id=?";
+        // JdbcTemplate tem = this.getJdbcTemplate();
+        String[] params = {areaId};
+        return this.jdbcTemplate.queryForList(sql, params, String.class);
+    }
+
+    public List<String> getZoneId(String areaId)
+    {
+        String sql = "select zoneid from area where id=?";
         // JdbcTemplate tem = this.getJdbcTemplate();
         String[] params = {areaId};
         return this.jdbcTemplate.queryForList(sql, params, String.class);
@@ -527,10 +558,10 @@ public class AreaDao
         String[] params = {floorNo, String.valueOf(bzTime)};
         return this.jdbcTemplate.queryForObject(sql, params, Integer.class);
     }
-    
-    public Integer getAllArea(String areaId )
+
+    public Integer getAllArea(String areaId)
     {
-        String sql = "select count(distinct userID) from district_during where district_id=? " ;
+        String sql = "select count(distinct userID) from district_during where district_id=? ";
         String[] params = {areaId};
         return this.jdbcTemplate.queryForObject(sql, params, Integer.class);
     }
@@ -600,4 +631,58 @@ public class AreaDao
         }
         return timestamp;
     }
+
+    public Collection<AreaModel> geofencingByLocation(LocationModel loc)
+    {
+        String sql = "select a.* from area a left join locationphone b on a.floorNo = "
+                + loc.getZ()
+                + " where a.status = 1 "
+                + " and (a.xSpot) < "
+                + loc.getX().doubleValue()
+                / 10
+                + " and (a.x1Spot) > "
+                + loc.getX().doubleValue()
+                / 10
+                + " and (a.ySpot) < "
+                + loc.getY().doubleValue()
+                / 10
+                + " and (a.y1Spot) > "
+                + loc.getY().doubleValue() / 10;
+        // JdbcTemplate tem = this.getJdbcTemplate();
+        return this.jdbcTemplate.query(sql, new AreaMapper4());
+    }
+    
+	public Map<String, Object> getAverageTimeByAreaId1(String areaId, long time) {
+		// String sql =
+		// "SELECT averageTime,number FROM staticvisitbashow where areaId = ? and time=?";
+		// String[] params = {areaId, time};
+		// return this.jdbcTemplate.queryForList(sql, params);
+		String sql = "select * from district_during where district_id=? and timestamp>?";
+		Object[] params = { areaId, time };
+		List<Map<String, Object>> res = this.jdbcTemplate.queryForList(sql,
+				params);
+		long timePeriod = 0;
+		long tempTime = 0;
+		for (int i = 0; i < res.size(); i++) {
+			long timeNow = Long.parseLong( res.get(i).get("timestamp").toString());
+			long timeBegin = Long.parseLong(res.get(i).get("time_begin").toString());
+			if (timeBegin>time) {
+				tempTime = timeBegin;
+			}else
+			{
+				tempTime = time;
+			}
+			/** 添加需求当每个人统计的时长超过2小时则按两小时计算*/
+			long timePeriodTemp = timeNow - tempTime;
+			if(timePeriodTemp > 7200000 )
+			{
+				timePeriodTemp = 7200000;
+			}
+			timePeriod += timePeriodTemp;
+		}
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("timePeriod", timePeriod);
+		result.put("count", res.size());
+		return result;
+	}
 }

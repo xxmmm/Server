@@ -56,18 +56,18 @@
 			<div class="clearfix"></div>
 			<div style="width:80%;margin:auto;text-align:center; margin-top:10%">
 				<div class="row-fluid">
-					<div class="span12">
+					<div class="span6">
 						<div>
 							<img id="pictureid" style="">
 						</div>
 						<a id="url" ><font color="blue">APK download</font></a>
 					</div>
-				<!--  	<div class="span6">
+					<div class="span6">
 						<div>
 							<img id="iosPictureid" style="">
 						</div>	
 						<a id="iosurl"><font color="blue">IOS download</font></a>
-					</div>	-->
+					</div>	
 				</div>
 			</div>
 		</div>	
