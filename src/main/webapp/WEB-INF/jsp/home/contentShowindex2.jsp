@@ -49,12 +49,25 @@
 	    color:#76d3d8;
 	}
 	
+	.logoType{
+	    position: fixed;
+	    z-index: 2;
+	    width: 18%;
+	    height: 18%;
+	    right: 1%;
+	    top: -5%;
+	}
+	
 </style>
 
 </head>
 <body>
 	<!-- Swiper -->
 	<div class="">
+		<div class="logoType">
+			<img alt="" src="../images/LOGO2.png">
+		</div>
+		
 		<div class="row-fluid" id="huawei">
 			<div class="span5">
 				<div class="row-fluid">

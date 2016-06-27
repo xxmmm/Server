@@ -53,7 +53,7 @@ class GetSvaData():
                 print timestamp
                 selectTime = timestamp-differenceTime
                 print selectTime
-                message = "{\"locationstreamanonymous\":[{\"IdType\":\"IP\",\"Timestamp\":"+str(timestamp)+",\"datatype\":\"coordinates\",\"location\":{\"x\":1133.0,\"y\":492.0,\"z\":2},\"userid\":[\"c20a820a69\"]}"
+                message = "{\"locationstreamanonymous\":[{\"IdType\":\"IP\",\"Timestamp\":"+str(timestamp)+",\"datatype\":\"coordinates\",\"location\":{\"x\":1133.0,\"y\":492.0,\"z\":2333},\"userid\":[\"c20a820a69\"]}"
                 #print message
   #              for i in range(1):
  #                   x = random.randint(122, 1321)
@@ -67,30 +67,24 @@ class GetSvaData():
                     cursor = conn.cursor()   
                     conn.select_db('sva')
                     #select * from location20150822 where z = 3 and timestamp=(select max(timestamp) from location20150822 where timestamp < %s)
-                    cursor.execute ("select * from location20160615 where z = 40003 and timestamp=(select max(timestamp) from location20160615 where timestamp < %s)",[selectTime]) 
+                    cursor.execute ("select * from location20160615 where z = 40001 and timestamp=(select max(timestamp) from location20160615 where timestamp < %s and z = 40001)",[selectTime]) 
                     results=cursor.fetchall()
-                    cursor.close()                    
-                    conn.close()
                     for r in results:
                         IdType1 = r[0]
                         Timestamp1 = r[1]
                         datatype1 = r[2]
                         x1 = r[3] * multi1x /10
                         y1 = r[4] * multi1y / 10
-                        z1 = 7
+                        z1 = 2
                         x2 = r[3] * multi2x / 10
                         y2 = r[4] * multi2y / 10
-                        z2 = 8
+                        z2 = 3
                         userid1 = r[6]
                         message = message + ',{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x1)+',"y":'+str(y1)+',"z":'+str(z1)+'},"userid":["'+str(userid1)+'"]},{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x2)+',"y":'+str(y2)+',"z":'+str(z2)+'},"userid":["'+str(userid1)+'"]}'
                     message = message + "]}"
                     #print message
                     #print repr(message)					
-                    jsonData = json.loads(message, encoding="utf-8")
-                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3306)
-                    cursor = conn.cursor()   
-                    conn.select_db('sva')
-                    jsonData = json.loads(message)                    
+                    jsonData = json.loads(message, encoding="utf-8")                  
                     if jsonData.keys()[0] == 'locationstreamanonymous':
                         jsonList = jsonData["locationstreamanonymous"]
                         dataStr = ""

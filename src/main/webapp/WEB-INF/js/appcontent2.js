@@ -7,9 +7,6 @@ function timerFunction()
 	
 	$.post("/sva/api/getShDate", function(item){
 		if(!item.error){
-			$("#numbern-data-item1").text(item.User1);
-			$("#numbern-data-item4").text(item.User2);
-			$("#numbern-data-item7").text(item.User3);
 			$("#numbern-data-item2").html(item.allUser1);
 			$("#numbern-data-item3").text(item.allTime1);
 			$("#numbern-data-item5").html(item.allUser2);
