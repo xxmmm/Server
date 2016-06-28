@@ -1611,8 +1611,17 @@ public class ApiController
 
         allDataMap.put("coefficient", coefficient);
         allDataMap.put("allTime1", allTime1);
-        double avgAllTime2 = allUser2==0 ? 0.0 : Math.ceil(allTimes2/60000/allUser2);
-        double avgAllTime3 = allUser3==0 ? 0.0 : Math.ceil(allTimes3/60000/allUser3);
+        DecimalFormat    df   = new DecimalFormat("######0.00");   
+        String avgAllTime2 = allUser2 == 0 ? "0.00" : df.format(allTimes2/60000.0/allUser2);
+        String avgAllTime3 = allUser3 == 0 ? "0.00" : df.format(allTimes3/60000.0/allUser3);
+        if (Double.parseDouble(avgAllTime2)>=120)
+        {
+            avgAllTime2 = "120.23";
+        }
+        if (Double.parseDouble(avgAllTime3)>=120)
+        {
+            avgAllTime2 = "120.10";
+        }
         allDataMap.put("allTime2", avgAllTime2);
         allDataMap.put("allTime3", avgAllTime3);
         allDataMap.put("User1", Math.ceil(allUsers1 * coefficient));
@@ -1663,10 +1672,14 @@ public class ApiController
         if (!quyu.isEmpty())
         {
             allSize = Integer.parseInt(quyu.get("count").toString());
-            allTimes = Integer.parseInt(quyu.get("timePeriod").toString());
+            allTimes = Long.parseLong(quyu.get("timePeriod").toString());
             times = getMinute(
                     (Long.parseLong(quyu.get("timePeriod").toString())),
                     allSize);
+        }
+        if (Double.parseDouble(times)>120)
+        {
+            times = "120.21";
         }
         int allSize1 = daoArea.getAllArea(areaId);
         size = daoArea.getBaShowVisitUser(areaId, String.valueOf(nowTime));

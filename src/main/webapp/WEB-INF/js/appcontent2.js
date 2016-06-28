@@ -10,9 +10,9 @@ function timerFunction()
 			$("#numbern-data-item2").html(item.allUser1);
 			$("#numbern-data-item3").text(item.allTime1);
 			$("#numbern-data-item5").html(item.allUser2);
-			$("#numbern-data-item6").text((item.allTime2).toFixed(2));
+			$("#numbern-data-item6").text((item.allTime2));
 			$("#numbern-data-item8").html(item.allUser3);
-			$("#numbern-data-item9").text(item.allTime3.toFixed(2));
+			$("#numbern-data-item9").text(item.allTime3);
 			BarJsonData = item.item;
 			var arr = new Array();
 			arr[0] = "#028be9";
@@ -42,7 +42,8 @@ function timerFunction()
 					       '<div class="bar-slide1-listItem"><ul><li>' + item.name + '</li>' + 
 						   '<li><span class="slide1-bar"style="background-color:#d38a23;width:' + _current + '%"><span>'+ item.current +'</span></span></li>'+
 		                 '<li><span class="slide1-bar"style="background-color:#e9643b;width:' + _cumulative + '%"><span>'+ item.cumulative +'</span></span></li>'+
-						  '<li>'+item.average +'</li></ul></div>'
+						  '<li><span class="slide1-bar"style="background-color:#e03d28;width:' + _cumulative + '%"><span>'+ item.average +'</span></span></li>'
+//		                 '<li>'+item.average +'</li></ul></div>'
 						  );
 		        });
 			}
@@ -77,7 +78,8 @@ function timerFunction()
 					       '<div class="bar-slide1-listItem"><ul><li>' + item.name + '</li>' + 
 						   '<li><span class="slide1-bar"style="background-color:#d38a23;width:' + _current + '%"><span>'+ item.current +'</span></span></li>'+
 		                 '<li><span class="slide1-bar"style="background-color:#e9643b;width:' + _cumulative + '%"><span>'+ item.cumulative +'</span></span></li>'+
-						  '<li>'+item.average +'</li></ul></div>'
+		                 '<li><span class="slide1-bar"style="background-color:#e03d28;width:' + _cumulative + '%"><span>'+ item.average +'</span></span></li>'						  
+//		                 '<li>'+item.average +'</li></ul></div>'
 						  );
 		        });
 			}
@@ -112,7 +114,8 @@ function timerFunction()
 					       '<div class="bar-slide1-listItem"><ul><li>' + item.name + '</li>' + 
 						   '<li><span class="slide1-bar"style="background-color:#d38a23;width:' + _current + '%"><span>'+ item.current +'</span></span></li>'+
 		                 '<li><span class="slide1-bar"style="background-color:#e9643b;width:' + _cumulative + '%"><span>'+ item.cumulative +'</span></span></li>'+
-						  '<li>'+item.average +'</li></ul></div>'
+		                 '<li><span class="slide1-bar"style="background-color:#e03d28;width:' + _cumulative + '%"><span>'+ item.average +'</span></span></li>'						  
+//		                 '<li>'+item.average +'</li></ul></div>'
 						  );
 		        });
 			}
