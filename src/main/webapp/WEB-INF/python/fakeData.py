@@ -41,8 +41,8 @@ class GetSvaData():
             while True:
             	multi1x = 43
             	multi1y = 34
-            	multi2x = 20
-            	multi2y = 42
+            	#multi2x = 20
+            	#multi2y = 42
                 startTime = datetime(2016,6,15)
                 endtime = datetime.now()
                 chaDays = (endtime-startTime).days
@@ -75,12 +75,9 @@ class GetSvaData():
                         datatype1 = r[2]
                         x1 = r[3] * multi1x /10
                         y1 = r[4] * multi1y / 10
-                        z1 = 2
-                        x2 = r[3] * multi2x / 10
-                        y2 = r[4] * multi2y / 10
-                        z2 = 3
+                        z1 = 7
                         userid1 = r[6]
-                        message = message + ',{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x1)+',"y":'+str(y1)+',"z":'+str(z1)+'},"userid":["'+str(userid1)+'"]},{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x2)+',"y":'+str(y2)+',"z":'+str(z2)+'},"userid":["'+str(userid1)+'"]}'
+                        message = message + ',{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x1)+',"y":'+str(y1)+',"z":'+str(z1)+'},"userid":["'+str(userid1)+'"]}'
                     message = message + "]}"
                     #print message
                     #print repr(message)					

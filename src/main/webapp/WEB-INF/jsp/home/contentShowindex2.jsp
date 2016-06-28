@@ -50,12 +50,9 @@
 	}
 	
 	.logoType{
-	    position: fixed;
-	    z-index: 2;
-	    width: 18%;
-	    height: 18%;
-	    right: 1%;
-	    top: -5%;
+        text-align: right;
+	    margin: -3% -4% -3% 0;
+	    width: 19%;
 	}
 	
 </style>
@@ -63,11 +60,7 @@
 </head>
 <body>
 	<!-- Swiper -->
-	<div class="">
-		<div class="logoType">
-			<img alt="" src="../images/LOGO2.png">
-		</div>
-		
+	<div class="">		
 		<div class="row-fluid" id="huawei">
 			<div class="span5">
 				<div class="row-fluid">
@@ -112,7 +105,7 @@
 										<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="445px">
 										    <param name="movie" value="../images/flvplayer.swf" />
 										    <param name="allowFullScreen" value="true" />
-										    <param name="FlashVars" value="flv=../images/videoShow.flv&startimage=../images/startimage_en.jpg&showtime=1&showstop=1&showfullscreen=1&bgcolor1=864319&bgcolor2=864319&playercolor=A55E22" />
+										    <param name="FlashVars" value="flv=../images/videoShow.flv&startimage=../images/startimage_en.jpg&&autoplay=1&showtime=1&showstop=1&showfullscreen=1&bgcolor1=864319&bgcolor2=864319&playercolor=A55E22" />
 										</object>
 									</div>
 								</div>
@@ -122,9 +115,16 @@
 				</div>
 			</div>
 
-			<div id="sp7" class="span7">
+			<div id="sp7" class="span7" style="padding-right:3%;">
 				<div class="row-fluid">
-					<div class="span12" style="padding: 7% 5% 0 0;">
+					<div class="span12">
+						<div class="logoType pull-right">
+							<img alt="" src="../images/LOGO2.png">
+						</div>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
 						<div class="swiper-container">
 							<div id="wrapper" class="swiper-wrapper">
 							<!-- 
@@ -398,7 +398,7 @@
 		//var tooltip = document.querySelector('.tip');
 		jQuery(document).ready(function() {
 			var mySwiper = new Swiper('.swiper-container', {
-				autoplay : 2000,
+				autoplay : 60000,
 				direction : 'horizontal',
 				//loop : true,
 				pagination : '.swiper-pagination',
