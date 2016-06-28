@@ -63,10 +63,15 @@ function timerFunction()
 			maxcumulativeArr = _.pluck(BarJsonData, 'cumulative');
 			cumulativeMax = _.max(maxcumulativeArr,function(d){return parseInt(d);});
 			var maxcumulativeMax = parseInt(cumulativeMax)*1.5;
+			
+			maxcumulTime1 = _.pluck(BarJsonData, 'average');
+			cumulTimeMax1 = _.max(maxcumulTime1,function(d){return parseFloat(d);});
+			var maxcumulTimeMax1 = (cumulTimeMax1)*1.5;
 			if(BarJsonData){
 				$("#bar-slide2-list").html("");
 				$.each(BarJsonData, function(i, item) {
 					var _current = 0;
+					var _times1 = 0;
 					if(intcurrentMax > 0){
 						_current = item.current/intcurrentMax * 100;
 					}
@@ -74,11 +79,14 @@ function timerFunction()
 					if(maxcumulativeMax > 0){
 						_cumulative = item.cumulative/maxcumulativeMax * 100;
 					}
+					if(maxcumulTimeMax1 > 0){
+						_times1 = item.average/maxcumulTimeMax1 * 100;
+					}
 		            $("#bar-slide2-list").append(
 					       '<div class="bar-slide1-listItem"><ul><li>' + item.name + '</li>' + 
 						   '<li><span class="slide1-bar"style="background-color:#d38a23;width:' + _current + '%"><span>'+ item.current +'</span></span></li>'+
 		                 '<li><span class="slide1-bar"style="background-color:#e9643b;width:' + _cumulative + '%"><span>'+ item.cumulative +'</span></span></li>'+
-		                 '<li><span class="slide1-bar"style="background-color:#e03d28;width:' + _cumulative + '%"><span>'+ item.average +'</span></span></li>'						  
+		                 '<li><span class="slide1-bar"style="background-color:#e03d28;width:' + _times1 + '%"><span>'+ item.average +'</span></span></li>'						  
 //		                 '<li>'+item.average +'</li></ul></div>'
 						  );
 		        });
@@ -99,10 +107,15 @@ function timerFunction()
 			maxcumulativeArr = _.pluck(BarJsonData, 'cumulative');
 			cumulativeMax = _.max(maxcumulativeArr,function(d){return parseInt(d);});
 			var maxcumulativeMax = parseInt(cumulativeMax)*1.5;
+			
+			maxcumulTime = _.pluck(BarJsonData, 'average');
+			cumulTimeMax = _.max(maxcumulTime,function(d){return parseFloat(d);});
+			var maxcumulTimeMax = (cumulTimeMax)*1.5;
 			if(BarJsonData){
 				$("#bar-slide3-list").html("");
 				$.each(BarJsonData, function(i, item) {
 					var _current = 0;
+					var _times = 0;
 					if(intcurrentMax > 0){
 						_current = item.current/intcurrentMax * 100;
 					}
@@ -110,11 +123,14 @@ function timerFunction()
 					if(maxcumulativeMax > 0){
 						_cumulative = item.cumulative/maxcumulativeMax * 100;
 					}
+					if(maxcumulTimeMax > 0){
+						_times = item.average/maxcumulTimeMax * 100;
+					}
 		            $("#bar-slide3-list").append(
 					       '<div class="bar-slide1-listItem"><ul><li>' + item.name + '</li>' + 
 						   '<li><span class="slide1-bar"style="background-color:#d38a23;width:' + _current + '%"><span>'+ item.current +'</span></span></li>'+
 		                 '<li><span class="slide1-bar"style="background-color:#e9643b;width:' + _cumulative + '%"><span>'+ item.cumulative +'</span></span></li>'+
-		                 '<li><span class="slide1-bar"style="background-color:#e03d28;width:' + _cumulative + '%"><span>'+ item.average +'</span></span></li>'						  
+		                 '<li><span class="slide1-bar"style="background-color:#e03d28;width:' + _times + '%"><span>'+ item.average +'</span></span></li>'						  
 //		                 '<li>'+item.average +'</li></ul></div>'
 						  );
 		        });
