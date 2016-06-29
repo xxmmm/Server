@@ -1507,7 +1507,7 @@ public class ApiController
         List<AreaModel> ResultList2 = daoArea.selectAeareBaShow(floorNo2);
         List<AreaModel> ResultList3 = daoArea.selectAeareBaShow(floorNo3);
         long nowTime = System.currentTimeMillis()
-                - (Integer.parseInt(periodSel)) * 60 * 1000;
+                - (Integer.parseInt(periodSel)+1) * 60 * 1000;
         List<Object> areaData = new ArrayList<Object>();
         List<Object> areaData2 = new ArrayList<Object>();
         List<Object> areaData3 = new ArrayList<Object>();
