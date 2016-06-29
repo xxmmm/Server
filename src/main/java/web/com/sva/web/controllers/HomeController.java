@@ -407,12 +407,10 @@ public class HomeController
     return "home/contentShowindex1";
     }
     
-    @AuthPassport
     @RequestMapping(value = "/content3", method = {RequestMethod.GET})
     public String Contentshow3 (Model model)
     {
     model.addAttribute("content3", true);
-    model.addAttribute("infoMng", true);
     model.addAttribute("contentshow3", true);
     return "home/contentShowindex2";
     }

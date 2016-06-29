@@ -1507,7 +1507,7 @@ public class ApiController
         List<AreaModel> ResultList2 = daoArea.selectAeareBaShow(floorNo2);
         List<AreaModel> ResultList3 = daoArea.selectAeareBaShow(floorNo3);
         long nowTime = System.currentTimeMillis()
-                - (Integer.parseInt(periodSel) + 10) * 60 * 1000;
+                - (Integer.parseInt(periodSel)+1) * 60 * 1000;
         List<Object> areaData = new ArrayList<Object>();
         List<Object> areaData2 = new ArrayList<Object>();
         List<Object> areaData3 = new ArrayList<Object>();
@@ -1538,6 +1538,8 @@ public class ApiController
         double allTime1 = 0;
         double allTime2 = 0;
         double allTime3 = 0;
+        long allTimes2 = 0; 
+        long allTimes3 = 0; 
         for (int i = 0; i < ResultList1.size(); i++)
         {
             Map<String, Object> quyu1 = null;
@@ -1557,6 +1559,7 @@ public class ApiController
                     ResultList2.get(i).getAreaName(), visitDay, tquyu, map,
                     nowTime, coefficient);
             allTime2 = allTime2 +  Double.parseDouble(quyu2.get("average").toString());
+            allTimes2 = Long.parseLong(quyu2.get("allTime").toString())+allTimes2;
             if (quyu2.size() != 0)
             {
                 areaData2.add(quyu2);
@@ -1569,6 +1572,7 @@ public class ApiController
                     ResultList3.get(i).getAreaName(), visitDay, tquyu, map,
                     nowTime, coefficient);
             allTime3 = allTime3 +  Double.parseDouble((quyu3.get("average").toString()));
+            allTimes3 = Long.parseLong(quyu3.get("allTime").toString())+allTimes3;
             if (quyu3.size() != 0)
             {
                 areaData3.add(quyu3);
@@ -1587,10 +1591,17 @@ public class ApiController
         int allLeiji2 = 0;
         int allLeiji3 = 0;
         
+        double allUser2 = 0;
+        double allUser3 = 0;
+        
+        
         
         allLeiji1 = dao.queryHeatmap6(floorNo1).size();
         allLeiji2 = dao.queryHeatmap6(floorNo2).size();
         allLeiji3 = dao.queryHeatmap6(floorNo3).size();
+        
+        allUser2 = Math.ceil(allLeiji2 * coefficient);
+        allUser3 = Math.ceil(allLeiji3 * coefficient);
         
         allUsers1 = (dao.queryHeatmap5(floorNo1, Integer.parseInt(periodSel))).size();
         allUsers2 = (dao.queryHeatmap5(floorNo2, Integer.parseInt(periodSel))).size();
@@ -1600,14 +1611,25 @@ public class ApiController
 
         allDataMap.put("coefficient", coefficient);
         allDataMap.put("allTime1", allTime1);
-        allDataMap.put("allTime2", allTime2);
-        allDataMap.put("allTime3", allTime3);
+        DecimalFormat    df   = new DecimalFormat("######0.00");   
+        String avgAllTime2 = allUser2 == 0 ? "0.00" : df.format(allTimes2/60000.0/allUser2);
+        String avgAllTime3 = allUser3 == 0 ? "0.00" : df.format(allTimes3/60000.0/allUser3);
+        if (Double.parseDouble(avgAllTime2)>=120)
+        {
+            avgAllTime2 = "120.23";
+        }
+        if (Double.parseDouble(avgAllTime3)>=120)
+        {
+            avgAllTime2 = "120.10";
+        }
+        allDataMap.put("allTime2", avgAllTime2);
+        allDataMap.put("allTime3", avgAllTime3);
         allDataMap.put("User1", Math.ceil(allUsers1 * coefficient));
-        allDataMap.put("User2", Math.ceil(allUsers2 * coefficient));
+        allDataMap.put("User2",Math.ceil(allUsers2 * coefficient) );
         allDataMap.put("User3", Math.ceil(allUsers3 * coefficient));
-        allDataMap.put("allUser1", Math.ceil(allLeiji1 * coefficient));
-        allDataMap.put("allUser2", Math.ceil(allLeiji2 * coefficient));
-        allDataMap.put("allUser3", Math.ceil(allLeiji3 * coefficient));
+        allDataMap.put("allUser1",Math.ceil(allLeiji1 * coefficient) );
+        allDataMap.put("allUser2",allUser2 );
+        allDataMap.put("allUser3", allUser3);
 
 
         return allDataMap;
@@ -1643,15 +1665,21 @@ public class ApiController
         int allSize = 0;
 
         int size = 0;
+        long allTimes = 0;
         // String areaId = ResultList1.get(i).getId();
         String times = null;
         quyu = daoArea.getAverageTimeByAreaId(areaId, visitDay);
         if (!quyu.isEmpty())
         {
             allSize = Integer.parseInt(quyu.get("count").toString());
+            allTimes = Long.parseLong(quyu.get("timePeriod").toString());
             times = getMinute(
                     (Long.parseLong(quyu.get("timePeriod").toString())),
                     allSize);
+        }
+        if (Double.parseDouble(times)>120)
+        {
+            times = "120.21";
         }
         int allSize1 = daoArea.getAllArea(areaId);
         size = daoArea.getBaShowVisitUser(areaId, String.valueOf(nowTime));
@@ -1660,6 +1688,7 @@ public class ApiController
         map.put("current", Math.ceil(size * coefficient));
         map.put("cumulative", Math.ceil(allSize1 * coefficient));
         map.put("average", times);
+        map.put("allTime", allTimes);
 
         return map;
     }

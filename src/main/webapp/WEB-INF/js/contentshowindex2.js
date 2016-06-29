@@ -71,7 +71,8 @@ var refreshHeatmapData2 = function() {
 				ctx.clearRect(0,0,bgImgWidth2,bgImgHeight2);
 			}
 			responeData2 = data;
-			$("#number2").text(data.data.length*coefficient);
+//			$("#number2").text(data.data.length*coefficient);
+			$("#numbern-data-item4").text(data.data.length*coefficient);
 			//$("#numbern-data-item1").text(data.data.length);
 		}
 		 timer2 = setTimeout("refreshHeatmapData2();", 4000);
@@ -92,13 +93,14 @@ var refreshHeatmapData3 = function() {
 					data : points3
 				};
 				heatmap3.setData(dataObj3);
+				$("#numbern-data-item7").text(data.data.length*coefficient);
 			}else{
 				var canvas=$("#heatmap3 canvas")[0];
 				var ctx=canvas.getContext('2d');
 				ctx.clearRect(0,0,bgImgWidth3,bgImgHeight3);
 			}
 			responeData3 = data;
-			$("#number3").text(data.data.length*coefficient);
+//			$("#number3").text(data.data.length*coefficient);
 			//$("#numbern-data-item1").text(data.data.length);
 		}
 		 timer3 = setTimeout("refreshHeatmapData3();", 4000);
@@ -444,7 +446,8 @@ var Heatmap = function() {
 								heatmap2.setData(dataObj2);
 							}
 							responeData2 = data;
-							$("#number2").text(data.data.length*coefficient);
+							$("#numbern-data-item4").text(data.data.length*coefficient);
+//							$("#number2").text(data.data.length*coefficient);
 						}
 					});
 					clearTimeout(timer2);
@@ -508,7 +511,8 @@ var Heatmap = function() {
 							}
 							$(".countInfo").show();
 							responeData3 = data;
-							$("#number3").text(data.data.length*coefficient);
+//							$("#number3").text(data.data.length*coefficient);
+							$("#numbern-data-item7").text(data.data.length*coefficient);
 						}
 					});
 					clearTimeout(timer3);
@@ -550,7 +554,7 @@ var Heatmap = function() {
 					if (coefficient==0) {
 						coefficient = 1;
 					}
-					initHeatmap(floorNo, period);
+//					initHeatmap(floorNo, period);
 					initHeatmap2(floorNo2, period);
 					initHeatmap3(floorNo3, period);
 
