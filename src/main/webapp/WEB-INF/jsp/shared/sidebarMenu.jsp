@@ -104,7 +104,7 @@
                             </a>
                             </li>
                         </c:if>
-                        <c:if test = "${fn:contains(menu,'key_sellerInfo') or menu eq 'all' }" >
+                        <%-- <c:if test = "${fn:contains(menu,'key_sellerInfo') or menu eq 'all' }" >
                             <c:choose>  
                                 <c:when test="${sellerMng}">  
                                     <li class="active">
@@ -118,7 +118,7 @@
                                 <span><spring:message code="menu_info_manage_seller" /></span>
                             </a>
                             </li>
-                        </c:if>
+                        </c:if> --%>
                         <c:if test = "${fn:contains(menu,'key_areaCategory') or menu eq 'all' }" >
                             <c:choose>
                                 <c:when test="${categoryMng}">  
@@ -148,8 +148,7 @@
                                 <span><spring:message code="shop_name" /></span>
                             </a>
                             </li>
-                        </c:if> 
-                        <!--                       
+                        </c:if>                     
                         <c:choose>  
                                 <c:when test="${showElectronic}">  
                                     <li class="active">
@@ -162,8 +161,7 @@
                                 <i class="round" style="background-color: #159FE4;"></i>
                                 <span><spring:message code="Electronic_info" /></span>
                             </a>
-                            </li> 
-                            -->                     
+                            </li>                   
                         <c:if test = "${fn:contains(menu,'key_role') or menu eq 'all' }" >
                             <c:choose>
                                 <c:when test="${role}">  

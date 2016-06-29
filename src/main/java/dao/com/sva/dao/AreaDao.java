@@ -104,10 +104,10 @@ public class AreaDao
 
     public void saveAreaInfo(AreaModel area) throws SQLException
     {
-        String sql = "INSERT INTO area(placeId,areaName,xSpot,ySpot,x1Spot,y1Spot,floorNo,categoryId) VALUES(?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO area(placeId,areaName,xSpot,ySpot,x1Spot,y1Spot,floorNo,categoryId,isVip) VALUES(?,?,?,?,?,?,?,?,?)";
         this.jdbcTemplate.update(sql, area.getPlaceId(), area.getAreaName(),
                 area.getxSpot(), area.getySpot(), area.getX1Spot(),
-                area.getY1Spot(), area.getFloorNo(), area.getCategoryId());
+                area.getY1Spot(), area.getFloorNo(), area.getCategoryId(),area.getIsVip());
     }
 
     public int deleteArea(String xSpot, String ySpot, String x1Spot,
@@ -121,10 +121,10 @@ public class AreaDao
 
     public void updateAreaInfo(AreaModel mmm) throws SQLException
     {
-        String sql = "UPDATE area SET placeId=?,areaName = ?,xSpot=?,ySpot=?,x1Spot=?,y1Spot=?,floorNo=?,categoryId=? where id=?";
+        String sql = "UPDATE area SET placeId=?,areaName = ?,xSpot=?,ySpot=?,x1Spot=?,y1Spot=?,floorNo=?,categoryId=?,isVip=? where id=?";
         this.jdbcTemplate.update(sql, mmm.getPlaceId(), mmm.getAreaName(),
                 mmm.getxSpot(), mmm.getySpot(), mmm.getX1Spot(),
-                mmm.getY1Spot(), mmm.getFloorNo(), mmm.getCategoryId(),
+                mmm.getY1Spot(), mmm.getFloorNo(), mmm.getCategoryId(),mmm.getIsVip(),
                 mmm.getId());
     }
 
@@ -206,6 +206,7 @@ public class AreaDao
             area.setId(rs.getString("ID"));
             area.setStatus(rs.getInt("STATUS"));
             area.setZoneId(rs.getInt("ZONEID"));
+            area.setIsVip(rs.getString("ISVIP"));
             return area;
         }
     }

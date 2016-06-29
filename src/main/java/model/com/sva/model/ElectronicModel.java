@@ -33,6 +33,10 @@ public class ElectronicModel
     private BigDecimal x1Spot;
 
     private BigDecimal y1Spot;
+    
+    private int status;
+    
+    private String isVip;
 
     public BigDecimal getxSpot()
     {
@@ -184,4 +188,19 @@ public class ElectronicModel
         this.id = id;
     }
 
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getIsVip() {
+		return isVip;
+	}
+
+	public void setIsVip(String isVip) {
+		this.isVip = isVip;
+	}
 }

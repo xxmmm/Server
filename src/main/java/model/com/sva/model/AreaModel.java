@@ -31,6 +31,8 @@ public class AreaModel
     private int status;
 
     private int zoneId;
+    
+    private String isVip;
 
     public int getStatus()
     {
@@ -172,4 +174,12 @@ public class AreaModel
         this.areaName = areaName;
     }
 
+	public String getIsVip() {
+		return isVip;
+	}
+
+	public void setIsVip(String isVip) {
+		this.isVip = isVip;
+	}
+    
 }

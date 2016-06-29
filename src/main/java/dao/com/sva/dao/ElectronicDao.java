@@ -22,26 +22,26 @@ public class ElectronicDao
 {
     private JdbcTemplate jdbcTemplate;
 
-    // 注入DataSource
+    // 娉ㄥ叆DataSource
     public void setDataSource(DataSource dataSource)
     {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    // 此方法把表对应的字段查询出来依次放入model中
+    // 姝ゆ柟娉曟妸琛ㄥ搴旂殑瀛楁鏌ヨ鍑烘潵渚濇鏀惧叆model涓�
     public Collection<ElectronicModel> doquery()
     {
-        String sql = "SELECT a.*,b.floor,c.name place,d.areaName shopName FROM electronic a left join maps b on a.floorNo = b.floorNo left join store c on a.placeId = c.id left join area d on a.shopId = d.id;";
+        String sql = "SELECT a.*,b.floor,c.name place,d.id areaId,d.status status,d.areaName shopName FROM electronic a left join maps b on a.floorNo = b.floorNo left join store c on a.placeId = c.id left join area d on a.shopId = d.id;";
         // JdbcTemplate tem = this.getJdbcTemplate();
         return this.jdbcTemplate.query(sql, new MessageMapper());
     }
 
     /*
-     * 通过用户名获取相对应的商场权限
+     * 閫氳繃鐢ㄦ埛鍚嶈幏鍙栫浉瀵瑰簲鐨勫晢鍦烘潈闄�
      */
     public Collection<ElectronicModel> doqueryByStoreid(int storeid)
     {
-        String sql = "SELECT a.*,b.floor,c.name place,d.areaName shopName FROM electronic a left join maps b on a.floorNo = b.floorNo left join store c on a.placeId = c.id left join area d on a.shopId = d.id where a.placeId ="
+        String sql = "SELECT a.*,b.floor,c.name place,d.id areaId,d.status status,d.areaName shopName FROM electronic a left join maps b on a.floorNo = b.floorNo left join store c on a.placeId = c.id left join area d on a.shopId = d.id where a.placeId ="
                 + storeid;
         // JdbcTemplate tem = this.getJdbcTemplate();
         return this.jdbcTemplate.query(sql, new MessageMapper());
@@ -49,7 +49,7 @@ public class ElectronicDao
 
     public void saveElectronic(ElectronicModel mmm) throws SQLException
     {
-        String sql = "INSERT INTO electronic(placeId,electronicName,floorNo,message,pictruePath,moviePath,shopId) VALUES(?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO electronic(placeId,electronicName,floorNo,message,pictruePath,moviePath,shopId) VALUES(?,?,?,?,?,?,?,)";
         this.jdbcTemplate.update(sql, mmm.getPlaceId(),
                 mmm.getElectronicName(), mmm.getFloorNo(), mmm.getMessage(),
                 mmm.getPictruePath(), mmm.getMoviePath(), mmm.getAreaId());
@@ -158,7 +158,7 @@ public class ElectronicDao
 
     public Collection<MessageModel> getAllMessageData()
     {
-        String sql = "SELECT a.*,b.floor,c.name place FROM message a left join maps b on a.floorNo = b.floorNo left join store c on a.placeId = c.id where a.isEnable='开启'";
+        String sql = "SELECT a.*,b.floor,c.name place FROM message a left join maps b on a.floorNo = b.floorNo left join store c on a.placeId = c.id where a.isEnable='寮�鍚�'";
         // JdbcTemplate tem = this.getJdbcTemplate();
         return this.jdbcTemplate.query(sql, new MessageMapper());
     }

@@ -486,12 +486,14 @@ var MsgMng = function () {
 	           	var rowObj = $(this)[0].parentNode.parentNode;
 	           	var row = $(this).parent().parent();
 	        	var data1 = oTable.fnGetData(row[0]);
+	        	console.log(rowObj);
 	           	var floor = rowObj.childNodes[1].innerHTML,
 	           		areaName = $(rowObj.childNodes[3].childNodes[0]).attr("title"),
-	           	    xSpot = rowObj.childNodes[4].innerHTML,
-	           	 	ySpot = rowObj.childNodes[5].innerHTML,
-	           	 	x1Spot = rowObj.childNodes[6].innerHTML,
-	           	 	y1Spot = rowObj.childNodes[7].innerHTML
+	           		isVipId = rowObj.childNodes[4].innerHTML,
+	           	    xSpot = rowObj.childNodes[5].innerHTML,
+	           	 	ySpot = rowObj.childNodes[6].innerHTML,
+	           	 	x1Spot = rowObj.childNodes[7].innerHTML,
+	           	 	y1Spot = rowObj.childNodes[8].innerHTML
 	           	//MapMng.deleteMap(xSpot, ySpot, zSpot, place);
 	           	$("#placeSel").val(placeId);
 				$.post("/sva/heatmap/api/getFloorsByMarket",{placeId:placeId}, function(data){
@@ -507,6 +509,12 @@ var MsgMng = function () {
 	           	$("input[name='ySpot']").val(ySpot);
 	           	$("input[name='x1Spot']").val(x1Spot);
 	           	$("input[name='y1Spot']").val(y1Spot);
+	           	if(isVipId=="是"){
+	           		isVipId = "Y";
+	           	}else {
+	           		isVipId = "N";
+	           	}
+	           	$("#isVipId").val(isVipId);
 	           	$("#category").val(category);
 	           	$("#editBox").show();
            	 
@@ -547,30 +555,12 @@ var MsgMng = function () {
 	           	$("#editBox").show();
            	 
             });
-            
-            
-            $("input[data-type='dingyue']").live("click",function(e){
-            	var areaId = $(this).data("id");
-            	
-            	$.post("/sva/input/api/enableData",{areaId:areaId}, function(data){
-            		MsgMng.initMsgTable();
-            	});
-            	
-            });
-            $("input[data-type='undingyue']").live("click",function(e){
-            	var areaId = $(this).data("id");
-            	$.post("/sva/input/api/disableData",{areaId:areaId}, function(data){
-            		MsgMng.initMsgTable();
-            });
-            	
-            });
-            
-            
     	},
         
         initMsgTable:function(){
         	$.get("/sva/input/api/getTableData?t="+Math.random(),function(data){
         		if(!data.error){
+        			console.log(data);
         			if(oTable){oTable.fnDestroy();};
         			oTable = $('#table').dataTable({
         				"bProcessing": true,
@@ -614,38 +604,40 @@ var MsgMng = function () {
         					},
         					{ 
         						"aTargets": [4],
-        						"mData": "xSpot"
+        						"mData": "isVip",
+        						"mRender": function ( data, type, full ) {
+    								if (data=="Y") {
+										return "是";
+    								}else {
+    									return "否";
+    								}
+    							}
         					},
         					{ 
         						"aTargets": [5],
-        						"mData": "ySpot"
+        						"mData": "xSpot"
         					},
         					{ 
         						"aTargets": [6],
-        						"mData": "x1Spot"
+        						"mData": "ySpot"
         					},
         					{ 
         						"aTargets": [7],
+        						"mData": "x1Spot"
+        					},
+        					{ 
+        						"aTargets": [8],
         						"mData": "y1Spot"
         					},
         					{
-        	                    "aTargets": [8],
+        	                    "aTargets": [9],
         	                    "bSortable": false,
         	                    "bFilter": false,
         	                    "mData": function(source, type, val) {
         	                        return "";
         	                    },
         	                    "mRender": function ( data, type, full ) {
-        	                    	var htm11  ;
-        	                    	if (full.status=="0") {
-										
-        	                    		htm11 = '<input type="button" style="width: 63px;height:30px;font-size: 13px;font-family:inherit;" data-type="dingyue" data-placeid="'+full.placeId+'" data-categoryid="'+full.Id+'" id="'+full.id+'" data-id="'+full.id+'" value="'+i18n_dingyue+'">' ;
-									}else
-									{
-										htm11 = '<input type="button" style="width: 63px;height:30px;font-size: 13px;font-family:inherit;" data-type="undingyue" data-placeid="'+full.placeId+'" data-categoryid="'+full.categoryId+'" id="'+full.id+'" data-id="'+full.id+'" value="'+i18n_undingyue+'">' ;
-									}
         	                    	var html = "" +
-        	                    		htm11 +
         	                    		'<input type="button" style="width: 53px;height:30px;font-size: 13px;font-family:inherit;" data-type="fuzhi" data-placeid="'+full.placeId+'" data-categoryid="'+full.categoryId+'" data-id="'+full.floorid+'" value="'+i18n_fuzhi+'">' +
         	                    		'<input type="button" data-type="edt" style="width: 54px;height:30px;font-size: 13px;font-family:inherit;" data-placeid="'+full.placeId+'" data-categoryid="'+full.categoryId+'" data-xSpot="'+full.xSpot+'" data-x1Spot="'+full.x1Spot+'"data-ySpot="'+full.ySpot+'" data-y1Spot="'+full.y1Spot+'"data-floorno="'+full.floorNo+'" value="'+i18n_edit+'" id="'+full.id+' ">' +
         	                    		'<input type="button" data-type="del" style="width: 54px;height:30px;font-size: 13px;font-family:inherit;" data-floorNo="'+full.floorNo+'" data-categoryid="'+full.categoryId+'" id="'+full.id+'" data-id="'+full.id+'" data-xSpot="'+full.xSpot+'"data-x1Spot="'+full.x1Spot+'" data-ySpot="'+full.ySpot+'" data-y1Spot="'+full.y1Spot+'" value="'+i18n_delete+'">';
