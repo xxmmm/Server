@@ -36,7 +36,7 @@
 	
 	.fullImg{
 		margin:0 auto;
-		height:900px;
+		height:720px;
 	}
 	
 	.expand{
@@ -51,8 +51,7 @@
 	
 	.logoType{
         text-align: right;
-	    margin: -3% -4% -3% 0;
-	    width: 19%;
+    	margin: -20% -20% -30% 0;
 	}
 	
 </style>
@@ -60,293 +59,216 @@
 </head>
 <body>
 	<!-- Swiper -->
-	<div class="">		
+	<div class="" style="padding:1% 6%;">
+		<div class="row-fluid" style="margin-bottom: 1%;">
+			<div class="span2"></div>
+			<div class="span8">
+				<img alt="" src="../images/7.png" style="height:50px;">
+			</div>
+			<div class="span2">
+				<div class="logoType pull-right">
+					<img alt="" src="../images/LOGO2.png">
+				</div>
+			</div>
+		</div>
 		<div class="row-fluid" id="huawei">
-			<div class="span5">
+			<div class="span5" style="width:44%">
 				<div class="row-fluid">
-					<div class="span12" style="padding: 3% 7%;">
-						<div class="row-fluid" style="margin-bottom:3%;">
-							<div class="span12">
-								<img alt="" src="../images/7.png">
-							</div>
-						</div>
-						<div class="row-fluid">
-							<div class="span12" >
-								<div class="row-fluid">
-									<div class="span12" style="border: 5px solid #864319;">
-										<i id="expand" class="icon-resize-full icon-2x expand"></i>
-										
-										<div id="myCarousel" class="carousel slide" style="margin-bottom:0 !important;">
-											<ol class="carousel-indicators">
-											    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-											    <li data-target="#myCarousel" data-slide-to="1"></li>
-											    <li data-target="#myCarousel" data-slide-to="2"></li>
-										  	</ol>
-											<!-- Carousel items -->
-											<div class="carousel-inner">
-											    <div class="active item nomargin">
-											    	<img alt="" src="../images/ppt1.png">
-												</div>
-											    <div class="item nomargin">
-											    	<img alt="" src="../images/ppt2.png">
-											    </div>
-											    <div class="item nomargin">
-											    	<img alt="" src="../images/ppt3.png">
-											    </div>
-											</div>
-											<!-- Carousel nav -->
-											<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-											<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
-										</div>
-									</div>
+					<div class="span12" style="border: 5px solid #864319;">
+						<i id="expand" class="icon-resize-full icon-2x expand"></i>
+						
+						<div id="myCarousel" class="carousel slide" style="margin-bottom:0 !important;">
+							<ol class="carousel-indicators">
+							    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+							    <li data-target="#myCarousel" data-slide-to="1"></li>
+							    <li data-target="#myCarousel" data-slide-to="2"></li>
+						  	</ol>
+							<!-- Carousel items -->
+							<div class="carousel-inner">
+							    <div class="active item nomargin">
+							    	<img alt="" src="../images/ppt1.png">
 								</div>
-								<div class="row-fluid">
-									<div class="span12">
-										<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="445px">
-										    <param name="movie" value="../images/flvplayer.swf" />
-										    <param name="allowFullScreen" value="true" />
-										    <param name="FlashVars" value="flv=../images/videoShow.flv&startimage=../images/startimage_en.jpg&&autoplay=1&showtime=1&showstop=1&showfullscreen=1&bgcolor1=864319&bgcolor2=864319&playercolor=A55E22" />
-										</object>
-									</div>
-								</div>
+							    <div class="item nomargin">
+							    	<img alt="" src="../images/ppt2.png">
+							    </div>
+							    <div class="item nomargin">
+							    	<img alt="" src="../images/ppt3.png">
+							    </div>
 							</div>
+							<!-- Carousel nav -->
+							<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+							<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
 						</div>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
+						<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="355px">
+						    <param name="movie" value="../images/flvplayer.swf" />
+						    <param name="allowFullScreen" value="true" />
+						    <param name="FlashVars" value="flv=../images/videoShow.flv&startimage=../images/startimage_en.jpg&&autoplay=1&showtime=1&showstop=1&showfullscreen=1&loop=1&bgcolor1=864319&bgcolor2=864319&playercolor=A55E22" />
+						</object>
 					</div>
 				</div>
 			</div>
 
-			<div id="sp7" class="span7" style="padding-right:3%;">
-				<div class="row-fluid">
-					<div class="span12">
-						<div class="logoType pull-right">
-							<img alt="" src="../images/LOGO2.png">
-						</div>
-					</div>
-				</div>
-				<div class="row-fluid">
-					<div class="span12">
-						<div class="swiper-container">
-							<div id="wrapper" class="swiper-wrapper">
-							<!-- 
-								<div class="swiper-slide">
-									<div id="sb1" class="slide-box">
-										<div class="heatmap-slide1">
+			<div id="sp7" class="span7" style="width:53%">
+				<div class="swiper-container">
+					<div id="wrapper" class="swiper-wrapper">
+						<div class="swiper-slide">
+							<div id="sb2" class="slide-box">
+								<div class="row-fluid">
+									<div class="span12">
+										<div class="heatmap-slide2">
 											<div class="heatmapTitle">
-												<spring:message code="shanghai_title" />
+												大悦城热力图和客流统计
 											</div>
-											<div id="heatmap-slide1-graphic">
-												<div id="heatmap" class="heatmap"></div>
-											</div>
-										</div>
-										
-										<div class="row-fluid" style="margin:3% 0;">
-											<div class="span4" style="text-align: center;line-height: 2.5em;">
-												<div class="row-fluid">
-													<span class="number-value" id="numbern-data-item1"></span>
-												</div>
-												<div class="row-fluid">
-													<span
-													class="numbern-data-item">Current Visitor Number</span>
-												</div>
-											</div>
-											<div class="span4" style="text-align: center;line-height: 2.5em;">
-												<div class="row-fluid">
-													<span class="number-value" id="numbern-data-item2"></span>
-												</div>
-												<div class="row-fluid">
-													<span
-													class="numbern-data-item">Cumulative Visitor Number</span>
-												</div>
-											</div>
-											<div class="span4" style="text-align: center;line-height: 2.5em;">
-												<div class="row-fluid">
-													<span class="number-value" id="numbern-data-item3"></span>
-												</div>
-												<div class="row-fluid">
-													<span
-													class="numbern-data-item">Average Visit Time(Min)</span>
-												</div>
-											</div>
-										</div>		
-		
-										<div class="bar-slide1">
-											<div class="bar-slide1-title">
-												<ul>
-													<li>
-															<spring:message code="hangzhou_booth" />
-														</li>
-													<li>
-															<spring:message code="hangzhou_visiter1" />
-														</li>
-													<li>
-															<spring:message code="hangzhou_visiterall" />
-														</li>
-													<li>
-															<spring:message code="hangzhou_visitertime" />
-														</li>
-												</ul>
-											</div>
-											<div class="bar-slide1-list" id="bar-slide1-list"></div>
 										</div>
 									</div>
 								</div>
-								 -->
-								<div class="swiper-slide">
-									<div id="sb2" class="slide-box">
-										<div class="row-fluid">
+								<div class="row-fluid">
+									<div class="span12" style="background-color: rgba(0,0,0,0.7);">	
+										<div class="row-fluid" >
 											<div class="span12">
-												<div class="heatmap-slide2">
-													<div class="heatmapTitle">
-														<spring:message code="dayuecheng_titile" />
-													</div>
+												<div id="heatmap-slide2-graphic">
+													<div id="heatmap2" class="heatmap2"></div>
 												</div>
 											</div>
 										</div>
-										<div class="row-fluid">
-											<div class="span12" style="background-color: rgba(0,0,0,0.7);">	
-												<div class="row-fluid" >
-													<div class="span12">
-														<div id="heatmap-slide2-graphic">
-															<div id="heatmap2" class="heatmap2"></div>
-														</div>
-													</div>
+		
+										<div class="row-fluid" style="margin:2% 0;">
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item4"></span>
 												</div>
-				
-												<div class="row-fluid" style="margin:3.5% 0;">
-													<div class="span4" style="text-align: center;line-height: 2.5em;">
-														<div class="row-fluid">
-															<span class="number-value" id="numbern-data-item4"></span>
-														</div>
-														<div class="row-fluid">
-															<span
-															class="numbern-data-item">Current Visitor Number</span>
-														</div>
-													</div>
-													<div class="span4" style="text-align: center;line-height: 2.5em;">
-														<div class="row-fluid">
-															<span class="number-value" id="numbern-data-item5"></span>
-														</div>
-														<div class="row-fluid">
-															<span
-															class="numbern-data-item">Cumulative Visitor Number</span>
-														</div>
-													</div>
-													<div class="span4" style="text-align: center;line-height: 2.5em;">
-														<div class="row-fluid">
-															<span class="number-value" id="numbern-data-item6"></span>
-														</div>
-														<div class="row-fluid">
-															<span
-															class="numbern-data-item">Average Visit Time(Min)</span>
-														</div>
-													</div>
-												</div>	
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">当前访客数量</span>
+												</div>
+											</div>
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item5"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">累计访客数量</span>
+												</div>
+											</div>
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item6"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">平均驻留时长（分）</span>
+												</div>
 											</div>
 										</div>	
-		
-										<div class="bar-slide1">
-											<div class="bar-slide1-title">
-												<ul>
-													<li>
-															<spring:message code="hangzhou_booth" />
-														</li>
-													<li>
-															<spring:message code="hangzhou_visiter1" />
-														</li>
-													<li>
-															<spring:message code="hangzhou_visiterall" />
-														</li>
-													<li>
-															<spring:message code="hangzhou_visitertime" />
-														</li>
-												</ul>
-											</div>
-											<div class="bar-slide1-list" id="bar-slide2-list"></div>
-										</div>
 									</div>
-								</div>
-								<div class="swiper-slide">
-		
-									<div id="sb3" class="slide-box">
-										<div class="row-fluid">
-											<div class="span12">
-												<div class="heatmapTitle">
-													<spring:message code="dayuecheng_titile" />
-												</div>
-											</div>
-										</div>
-										<div class="row-fluid" style="background-color: rgba(0,0,0,0.7);">
-											<div class="span7" id="imge3">	
-												<div id="heatmap-slide3-graphic">
-													<div id="heatmap3" class="heatmap3"></div>
-												</div>
-											</div>
-											
-											<div class="span5">			
-												<div class="row-fluid" style="margin-top:25%;">
-													<div class="span12" style="text-align: center;line-height: 2.5em;">
-														<div class="row-fluid">
-															<span class="number-value" id="numbern-data-item7"></span>
-														</div>
-														<div class="row-fluid">
-															<span
-															class="numbern-data-item">Current Visitor Number</span>
-														</div>
-													</div>
-												</div>
-												<div class="row-fluid" style="margin-top:25%;">
-													<div class="span12" style="text-align: center;line-height: 2.5em;">
-														<div class="row-fluid">
-															<span class="number-value" id="numbern-data-item8"></span>
-														</div>
-														<div class="row-fluid">
-															<span
-															class="numbern-data-item">Cumulative Visitor Number</span>
-														</div>
-													</div>
-												</div>
-												<div class="row-fluid" style="margin-top:25%;">
-													<div class="span12" style="text-align: center;line-height: 2.5em;">
-														<div class="row-fluid">
-															<span class="number-value" id="numbern-data-item9"></span>
-														</div>
-														<div class="row-fluid">
-															<span
-															class="numbern-data-item">Average Visit Time(Min)</span>
-														</div>
-													</div>
-												</div>	
-	
-											</div>
-										</div>
-		
-										<div class="bar-slide1">
-											<div class="bar-slide1-title">
-												<ul>
-													<li>
-															<spring:message code="hangzhou_booth" />
-														</li>
-													<li>
-															<spring:message code="hangzhou_visiter1" />
-														</li>
-													<li>
-															<spring:message code="hangzhou_visiterall" />
-														</li>
-													<li>
-															<spring:message code="hangzhou_visitertime" />
-														</li>
-												</ul>
-											</div>
-											<div class="bar-slide1-list" id="bar-slide3-list"></div>
-										</div>
+								</div>	
+
+								<div class="bar-slide1">
+									<div class="bar-slide1-title">
+										<ul>
+											<li>
+													<spring:message code="hangzhou_booth" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visiter1" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visiterall" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visitertime" />
+												</li>
+										</ul>
 									</div>
+									<div class="bar-slide1-list" id="bar-slide2-list"></div>
 								</div>
 							</div>
-							<div class="swiper-pagination"></div>
-							<div class="swiper-button-prev"></div>
-							<div class="swiper-button-next"></div>
+						</div>
+						<div class="swiper-slide">
+
+							<div id="sb3" class="slide-box">
+								<div class="row-fluid">
+									<div class="span12">
+										<div class="heatmapTitle">
+											包头万达热力图和客流统计
+										</div>
+									</div>
+								</div>
+								<div class="row-fluid" style="background-color: rgba(0,0,0,0.7);">
+									<div class="span7" id="imge3">	
+										<div id="heatmap-slide3-graphic">
+											<div id="heatmap3" class="heatmap3"></div>
+										</div>
+									</div>
+									
+									<div class="span5">			
+										<div class="row-fluid" style="margin-top:15%;">
+											<div class="span12" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item7"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">当前访客数量</span>
+												</div>
+											</div>
+										</div>
+										<div class="row-fluid" style="margin-top:25%;">
+											<div class="span12" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item8"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">累计访客数量</span>
+												</div>
+											</div>
+										</div>
+										<div class="row-fluid" style="margin-top:25%;">
+											<div class="span12" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item9"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">平均驻留时长（分）</span>
+												</div>
+											</div>
+										</div>	
+
+									</div>
+								</div>
+
+								<div class="bar-slide1">
+									<div class="bar-slide1-title">
+										<ul>
+											<li>
+													<spring:message code="hangzhou_booth" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visiter1" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visiterall" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visitertime" />
+												</li>
+										</ul>
+									</div>
+									<div class="bar-slide1-list" id="bar-slide3-list"></div>
+								</div>
+							</div>
 						</div>
 					</div>
+					<div class="swiper-pagination"></div>
+					<div class="swiper-button-prev"></div>
+					<div class="swiper-button-next"></div>
 				</div>
 
 			</div>
@@ -407,7 +329,7 @@
 				// 如果需要前进后退按钮
 				nextButton : '.swiper-button-next',
 				prevButton : '.swiper-button-prev',
-				spaceBetween: 20
+				spaceBetween: 5
 
 			// 如果需要滚动条
 			//   scrollbar: '.swiper-scrollbar'
@@ -434,7 +356,7 @@
 			},1000);
 			
 			$('.carousel').carousel({
-				  interval: 2000,
+				  interval: 5000,
 				  pause:"hover"
 			});
 			

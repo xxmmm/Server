@@ -39,16 +39,16 @@ class GetSvaData():
         
         try:
             while True:
-            	multi1x = 43
-            	multi1y = 34
-            	#multi2x = 20
-            	#multi2y = 42
+                multi1x = 38
+                multi1y = 32
+                multi2x = 22
+                multi2y = 44
                 startTime = datetime(2016,6,15)
                 endtime = datetime.now()
                 chaDays = (endtime-startTime).days
                 print chaDays
                 differenceTime = chaDays*86400000
-                print differenceTime		
+                print differenceTime        
                 timestamp = int(time.time())* 1000
                 print timestamp
                 selectTime = timestamp-differenceTime
@@ -63,7 +63,7 @@ class GetSvaData():
                #message = ',{"geofencing":[{"IdType": "IP", "userid": ["bea80202"], "mapid": 2, "zoneid": 0, "zone_event": "exit", "Timestamp":1461054031000}]}'
                 #{"locationstream":[{"IdType":"IP","Timestamp":1427560872000,"datatype":"coordinates","location":{"x":1133.0,"y":492.0,"z":1},"userid":["c0a80a69"]}]}
                 try:             
-                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3306)
+                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3307)
                     cursor = conn.cursor()   
                     conn.select_db('sva')
                     #select * from location20150822 where z = 3 and timestamp=(select max(timestamp) from location20150822 where timestamp < %s)
@@ -78,9 +78,23 @@ class GetSvaData():
                         z1 = 7
                         userid1 = r[6]
                         message = message + ',{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x1)+',"y":'+str(y1)+',"z":'+str(z1)+'},"userid":["'+str(userid1)+'"]}'
+                    
+                    cursor.execute ("select * from location20160615 where z = 40003 and timestamp=(select max(timestamp) from location20160615 where timestamp < %s and z = 40003)",[selectTime]) 
+                    results=cursor.fetchall()
+                    for r in results:
+                        IdType1 = r[0]
+                        Timestamp1 = r[1]
+                        datatype1 = r[2]
+                        x1 = r[3] * multi2x /10
+                        y1 = r[4] * multi2y / 10
+                        z1 = 8
+                        userid1 = r[6]
+                        message = message + ',{"IdType":"'+str(IdType1)+'","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x1)+',"y":'+str(y1)+',"z":'+str(z1)+'},"userid":["'+str(userid1)+'"]}'
+                    
+                    
                     message = message + "]}"
                     #print message
-                    #print repr(message)					
+                    #print repr(message)                    
                     jsonData = json.loads(message, encoding="utf-8")                  
                     if jsonData.keys()[0] == 'locationstreamanonymous':
                         jsonList = jsonData["locationstreamanonymous"]
