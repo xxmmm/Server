@@ -133,5 +133,15 @@ public class Params
     public static final String triggerIp = "触发者";
     
     public static final String Detail = "详情";
+    
+    /**
+     * @Fields POST http请求方式post
+     */
+    public static final String POST = "POST";
+    
+    /**
+     * @Fields GET http请求方式get
+     */
+    public static final String GET = "GET";
 
 }

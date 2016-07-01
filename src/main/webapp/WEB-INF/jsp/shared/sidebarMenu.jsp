@@ -323,6 +323,21 @@
                         </a>
                         </li>
                     </c:if>
+                    <c:if test = "${fn:contains(menu,'key_positionMap') or menu eq 'all' }" >
+                        <c:choose>  
+                            <c:when test="${positionmap}">  
+                                <li class="active">
+                            </c:when>  
+                            <c:otherwise>  
+                                <li class="">
+                            </c:otherwise>  
+                        </c:choose>
+                        <a href="<c:url value='/home/showPositionmap' />">
+                            <i class="round" style="background-color: #FFAB00;"></i>
+                            <span><spring:message code="menu_customer_analyse_positionmap" /></span>
+                        </a>
+                        </li>
+                    </c:if>
                     <!--  
                     <c:if test = "${fn:contains(menu,'key_CustomerFlowRangeLinemap') or menu eq 'all' }" >
                         <c:choose>  

@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -376,6 +378,23 @@ public class LocationDao
                 return user;
             }
         });
+    }
+    
+    /** 
+     * @Title: queryLocationForPosition 
+     * @Description: 查询指定日期当天的顾客数据
+     * @param time 指定日期，形如YYYYMMDD
+     * @return Collection<LocationModel>   
+     * @throws 
+     */
+    public List<Map<String,Object>> queryLocationForPosition(String floorNo, String time)
+    {
+    	String tableName = Params.LOCATION + time;
+        String sql = "select userID,enbs1 from " + tableName + " where z = ?";
+        
+        String[] params = {String.valueOf(floorNo)};
+
+        return this.jdbcTemplate.queryForList(sql,params);
     }
 
 }

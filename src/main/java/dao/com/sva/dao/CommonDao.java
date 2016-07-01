@@ -41,6 +41,9 @@ public class CommonDao
                 + "z DECIMAL(10,0) NULL DEFAULT NULL, "
                 + "loc_count BIGINT(20) NOT NULL DEFAULT 1, "
                 + "userID VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8_general_ci',"
+                + "mmes1 VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8_unicode_ci',"
+                + "enbs1 VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8_unicode_ci',"
+                + "enbid VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8_unicode_ci',"
                 + "INDEX `Index 1` (`userID`), "
                 + "INDEX `Index 2` (`timestamp`) "
                 + ")COLLATE='utf8_unicode_ci' ENGINE=InnoDB;";

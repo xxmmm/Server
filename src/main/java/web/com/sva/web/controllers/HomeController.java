@@ -22,6 +22,13 @@ import com.sva.web.models.CodeMngModel;
 import com.sva.web.models.MsgMngModel;
 import com.sva.web.models.SellerMngModel;
 
+/**
+ * <p>Title:HomeController</p>
+ * <p>Description:页面菜单跳转controller</p>
+ * <p>Company: ICS</p>
+ * @author label
+ * @date 2016年6月30日 下午2:59:26
+ */
 @Controller
 @RequestMapping(value = "/home")
 public class HomeController
@@ -180,6 +187,13 @@ public class HomeController
         return "home/scattermap";
     }
 
+    /** 
+     * @Title: showLinemap 
+     * @Description: 历史客流分析图
+     * @param model
+     * @return String   
+     * @throws 
+     */
     @AuthPassport
     @RequestMapping(value = "/showLinemap", method = {RequestMethod.GET})
     public String showLinemap(Model model)
@@ -216,6 +230,22 @@ public class HomeController
         return "home/areamap";
     }
 
+    /** 
+     * @Title: showChinamap 
+     * @Description: 归属地分布图
+     * @param model
+     * @return String   
+     * @throws 
+     */
+    @AuthPassport
+    @RequestMapping(value = "/showPositionmap", method = {RequestMethod.GET})
+    public String showChinamap(Model model)
+    {
+        model.addAttribute("customerStat", true);
+        model.addAttribute("positionmap", true);
+        return "home/positionMap";
+    }
+    
     @AuthPassport
     @RequestMapping(value = "/showCodeMng", method = {RequestMethod.GET})
     public String showCodeMng(Model model,
