@@ -200,22 +200,144 @@ var MapMng = function () {
         					},
         					{ 
         						"aTargets": [8],
-        						"mData": "path"
+        						"mData": "path",
+        						"mRender": function ( data, type, full ) {
+        							if (data!=null) {
+        								if (data.length>6) {
+        									var html = data.substring(0,6)+"...";
+        									html = '<span title="'+data+'">'+HtmlDecode3(html)+'</span>';
+        									return html;
+        								}
+        								return '<span title="'+HtmlDecode3(data)+'">'+HtmlDecode3(data)+'</span>';
+									}else
+										{
+										return '<span></span>';
+										}
+    							}
         					},
         					{ 
         						"aTargets": [9],
-        						"mData": "svg"
+        						"mData": "svg",
+        						"mRender": function ( data, type, full ) {
+        							if (data!=null) {
+        								if (data.length>6) {
+        									var html = data.substring(0,6)+"...";
+        									html = '<span title="'+data+'">'+HtmlDecode3(html)+'</span>';
+        									return html;
+        								}
+        								return '<span title="'+HtmlDecode3(data)+'">'+HtmlDecode3(data)+'</span>';
+									}else
+										{
+										return '<span></span>';
+										}
+    							}
         					},
         					{ 
         						"aTargets": [10],
-        						"mData": "route"
+        						"mData": "route",
+        						"mRender": function ( data, type, full ) {
+        							if (data!=null) {
+        								if (data.length>6) {
+        									var html = data.substring(0,6)+"...";
+        									html = '<span title="'+data+'">'+HtmlDecode3(html)+'</span>';
+        									return html;
+        								}
+        								return '<span title="'+HtmlDecode3(data)+'">'+HtmlDecode3(data)+'</span>';
+									}else
+										{
+										return '<span></span>';
+										}
+    							}
         					},
         					{ 
         						"aTargets": [11],
-        						"mData": "pathFile"
+        						"mData": "pathFile",
+        						"mRender": function ( data, type, full ) {
+        							if (data!=null) {
+        								if (data.length>6) {
+        									var html = data.substring(0,6)+"...";
+        									html = '<span title="'+data+'">'+HtmlDecode3(html)+'</span>';
+        									return html;
+        								}
+        								return '<span title="'+HtmlDecode3(data)+'">'+HtmlDecode3(data)+'</span>';
+									}else
+										{
+										return '<span></span>';
+										}
+    							}       						
+        					},
+        					{ 
+        						"aTargets": [12],
+        						"mData": "zMap",
+        						"mRender": function ( data, type, full ) {
+        							if (data!=null) {
+        								if (data.length>6) {
+        									var html = data.substring(0,6)+"...";
+        									html = '<span title="'+data+'">'+HtmlDecode3(html)+'</span>';
+        									return html;
+        								}
+        								return '<span title="'+HtmlDecode3(data)+'">'+HtmlDecode3(data)+'</span>';
+									}else
+										{
+										return '<span></span>';
+										}
+    							}     						
+        							
+        					},
+        					{ 
+        						"aTargets": [13],
+        						"mData": "zIosMap",
+        						"mRender": function ( data, type, full ) {
+        							if (data!=null) {
+        								if (data.length>6) {
+        									var html = data.substring(0,6)+"...";
+        									html = '<span title="'+data+'">'+HtmlDecode3(html)+'</span>';
+        									return html;
+        								}
+        								return '<span title="'+HtmlDecode3(data)+'">'+HtmlDecode3(data)+'</span>';
+									}else
+										{
+										return '<span></span>';
+										}
+    							}      						
+        					},
+        					{ 
+        						"aTargets": [14],
+        						"mData": "zMapPathfile",
+        						"mRender": function ( data, type, full ) {
+        							if (data!=null) {
+        								if (data.length>6) {
+        									var html = data.substring(0,6)+"...";
+        									html = '<span title="'+data+'">'+HtmlDecode3(html)+'</span>';
+        									return html;
+        								}
+        								return '<span title="'+HtmlDecode3(data)+'">'+HtmlDecode3(data)+'</span>';
+									}else
+										{
+										return '<span></span>';
+										}
+    							}      						
+        							
+        					},
+        					{ 
+        						"aTargets": [15],
+        						"mData": "fMap",
+        						"mRender": function ( data, type, full ) {
+        							if (data!=null) {
+        								if (data.length>6) {
+        									var html = data.substring(0,6)+"...";
+        									html = '<span title="'+data+'">'+HtmlDecode3(html)+'</span>';
+        									return html;
+        								}
+        								return '<span title="'+HtmlDecode3(data)+'">'+HtmlDecode3(data)+'</span>';
+									}else
+										{
+										return '<span></span>';
+										}
+    							}      						
         					},
         					{
-        	                    "aTargets": [12],
+        	                    "aTargets": [16],
         	                    "bSortable": false,
         	                    "bFilter": false,
         	                    "mData": function(source, type, val) {
@@ -230,7 +352,7 @@ var MapMng = function () {
         	                      }
         	                },
         					{ 
-        						"aTargets": [13],
+        						"aTargets": [17],
         						"bVisible": false,
         						"mData": "mapid"
         					},
@@ -281,6 +403,22 @@ var MapMng = function () {
         	$("#pathFileId").on("change",function(e){
         		$('#pathFile1').val(this.value);
         		$('#pathFile1').blur();
+        	});
+        	$("#pathFileId4").on("change",function(e){
+        		$('#pathFile4').val(this.value);
+        		$('#pathFile4').blur();
+        	});
+        	$("#pathFileId5").on("change",function(e){
+        		$('#pathFile5').val(this.value);
+        		$('#pathFile5').blur();
+        	});
+        	$("#pathFileId6").on("change",function(e){
+        		$('#pathFile6').val(this.value);
+        		$('#pathFile6').blur();
+        	});
+        	$("#pathFileId7").on("change",function(e){
+        		$('#pathFile7').val(this.value);
+        		$('#pathFile7').blur();
         	});
         	
         	$('a[href="#myModal"]').on("click",function(e){
@@ -466,19 +604,31 @@ var MapMng = function () {
             	var data = oTableMap.fnGetData(row[0]);
             	$("#placeIdId").val(data.placeId);
             	$("#svgfield").val(data.svg);
+            	$("#svgId").val(data.svg);
         		$("#floorNoId").val(data.floor);
         		$("#routefield").val(data.route);
+        		$("#routeId").val(data.route);
         		$("#floorNameId").val(data.floorid);
         		$("#scaleId").val(data.scale);
         		$("#xId").val(data.xo);
         		$("#yId").val(data.yo);
         		$("#textfield").val(data.path);
+        		$("#pathId").val(data.path);
         		$("#coorSel").val(data.coordinate);
         		$("#angleId").val(data.angle);
         		$("#idid").val(data.id);
         		$("#mapId").val(data.mapid);
         		$("#editBox").show();
         		$('#pathFile1').val(data.pathFile);
+        		$('#pathFile4').val(data.zMap);
+        		$('#zMapId').val(data.zMap);
+        		$('#pathFile5').val(data.zIosMap);
+        		$('#zIosMapId').val(data.zIosMap);
+        		$('#pathFile6').val(data.zMapPathfile);
+        		$('#zMapPathfileId').val(data.zMapPathfile);
+        		$('#pathFile7').val(data.fMap);
+        		$('#fMapId').val(data.fMap);
+        		$("#pathFileIds").val(data.pathFile);
         		$(".sameInfo").removeClass("Validform_wrong");
         		$(".sameInfo").text("");
         		//
@@ -534,43 +684,7 @@ var MapMng = function () {
     };
 
 }();
-function checkInfoname()
-{
-	var placeId=$("input[name='placeId']").val();
-	var floor=$("input[name='floor']").val();
-	var floorNo=$("input[name='floorid']").val();
-	var x=$("input[name='x']").val();
-	var y=$("input[name='y']").val();
-	var scale=$("input[name='scale']").val();
-	var coorSel = $("#coorSel").val();
-	var textfiled = $("#textfield").val();
-	var file =$("input[name='file']").val();
-	var angle = $("#angleId").val();
-	var fi =file.split(".")[file.split(".").length-1];
-	var placeId=$("select[name='placeId']").find("option:selected").text();
-	if (textfiled==""&&file=="") 
-	{
-		alert(i18n_info);
-		return false;
-	}	
-	if(scale < 0 || scale == 0)
-	{
-		alert(i18n_isscale);
-		return false;
-	}
-	if (placeId==""||floor==""||floorNo==""||x==""||y==""||scale==""||coorSel==""||placeId=="")
-	{
-		alert(i18n_info);
-		return false;
-	}
-	if (fi!=""&&fi!="jpg"&&fi!="png"&&fi!="PNG"&&fi!="JPG") {
-		alert(i18n_format);
-		return false;
-	}
-	if(angle == ""){
-		$("#angleId").val(0);
-	}
-	}
+
  function hanshu(str){
 	 var scalevalue = str.value;	
 	 if(scalevalue == 0 || scalevalue <0){
@@ -692,17 +806,6 @@ function estimateOnkeyupOne(str)
 }
  
 
-
-//function show_coords(event){
-//	 var x = event.clientX;
-//	 var y = event.clientY;
-//	 var say = document.all("divhead");
-//	 say.innerHTML = "X:"+x+" Y:"+y;
-//	 say.style.position = "absolute";
-//	 say.style.left = x + 30;
-//	 say.style.top = y;
-//	}
-//onmousemove='show_coords(event)'
 function mapinfo(str)
 {
 	document.getElementById("mapImage").src = str.getAttribute("id");
@@ -746,12 +849,21 @@ function clearinfo()
 	$("#routefield").val("");	
 	$("#idid").val("");	
 	$('#pathFile1').val("");
+	$('#pathFile4').val("");
+	$('#pathFile5').val("");
+	$('#pathFile4').val("");
+	$('#zMapId').val("");
+	$('#pathFile5').val("");
+	$('#zIosMapId').val("");
+	$('#pathFile6').val("");
+	$('#zMapPathfileId').val("");
+	$('#pathFile7').val("");
+	$('#fMapId').val("");
+	$("#pathFileIds").val("");
+	$("#svgId").val("");
+	$("#routeId").val("");
 	$('a[href="#myModal"]').attr("disabled","disabled");
    	$(".sameInfo").removeClass("Validform_wrong");
    	$(".sameInfo").text("");
+	$("#pathId").val("");
 }
-//function clickFile(str)
-//{
-//	var file = str.value;
-//	$('#textfield').val(file);
-//}
