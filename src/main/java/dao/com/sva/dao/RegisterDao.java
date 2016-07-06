@@ -33,7 +33,7 @@ public class RegisterDao
     }
     public void refreshRegister(RegisterModel register)
     {
-    	String sql = "update register set ip=1 where phoneNumber = ?";
+    	String sql = "update register set ip=?,status=0,isTrue=0 where phoneNumber = ?";
     	this.jdbcTemplate.update(sql,register.getIp(),register.getPhoneNumber());
     }
 

@@ -1,14 +1,18 @@
 package com.sva.web.controllers;
 
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,9 +32,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.support.RequestContext;
 
+import com.sva.common.Util;
 import com.sva.common.conf.Params;
 import com.sva.dao.StaticAccuracyDao;
 import com.sva.model.StaticAccuracyModel;
@@ -51,6 +57,19 @@ public class StaticAccuracyController
     public Map<String, Object> getTableData(HttpServletRequest request,
             @RequestBody AccuracyTableModel atm)
     {
+        
+        RequestContext requestContext = new RequestContext(request);
+        Locale myLocale = requestContext.getLocale();
+        String avgeOffsetName = Params.avgeOffset;
+        String maxOffsetName = Params.maxOffset;
+        String staicAccuracyName = Params.staicAccuracy;
+        String offsetCenterName = Params.offsetCenter;
+        String offsetNumberName = Params.offsetNumber;
+        String stabilityName = Params.stability;
+        String total = Params.total;;
+        List<String> listName = new ArrayList<>();
+        
+        
         String echo = atm.getsEcho();
         int start = atm.getiDisplayStart();
         int length = atm.getiDisplayLength();
@@ -102,14 +121,143 @@ public class StaticAccuracyController
                 }
             }
         }
-
-        int resLength = dao.getDataLength();
-
+        if (!Locale.CHINA.equals(myLocale))
+        {
+            avgeOffsetName = "avgeOffset";
+            maxOffsetName = "max Offset";
+            staicAccuracyName = "staic Accuracy";
+            offsetCenterName = "Offset center of gravity ";
+            offsetNumberName = "The offset";
+            stabilityName = "stability";  
+            total = "total";
+        }
+        listName.add(avgeOffsetName);
+        listName.add(maxOffsetName);
+        listName.add(staicAccuracyName);
+        listName.add(offsetCenterName);
+        listName.add(offsetNumberName);
+        listName.add(stabilityName);
+        
         Map<String, Object> modelMap = new HashMap<String, Object>(4);
+        int resLength = dao.getDataLength();
+        modelMap = Util.getCDF(listName, res,total);
+        modelMap.put("data", res);
+        modelMap.put("CDFName", listName);
         modelMap.put("sEcho", echo);
         modelMap.put("iTotalRecords", resLength);
         modelMap.put("iTotalDisplayRecords", resLength);
         modelMap.put("aaData", res);
+
+        return modelMap;
+    }
+    
+    @RequestMapping(value = "/api/getTableDataNew", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> getTableDataNew(HttpServletRequest request,
+            @RequestParam("placeId") String placeId,
+            @RequestParam("startTime") String startTime,
+            @RequestParam("endTime") String endTime)
+    {
+        RequestContext requestContext = new RequestContext(request);
+        Locale myLocale = requestContext.getLocale();
+        String avgeOffsetName = Params.avgeOffset;
+        String maxOffsetName = Params.maxOffset;
+        String staicAccuracyName = Params.staicAccuracy;
+        String offsetCenterName = Params.offsetCenter;
+        String offsetNumberName = Params.offsetNumber;
+        String stabilityName = Params.stability;
+        String total = Params.total;
+        Collection<StaticAccuracyModel> res = new ArrayList<StaticAccuracyModel>(
+                10);
+        Collection<StaticAccuracyModel> store = new ArrayList<StaticAccuracyModel>(
+                10);
+        List<String> listName = new ArrayList<>();
+        
+
+        
+        Object userName = request.getSession().getAttribute("username");
+        @SuppressWarnings("unchecked")
+        List<String> storeides = (List<String>) request.getSession()
+                .getAttribute("storeides");
+        if (("admin").equals(userName))
+        {
+            if (placeId!="")
+            {
+                res = dao.getDataByPlaceIdTime(startTime,endTime,placeId);
+            }else
+            {
+                res = dao.getAllData(startTime,endTime);
+            }
+        }
+        else
+        {
+            if (placeId!="")
+            {
+                if (storeides.size() > 0)
+                {
+                    String storeid = storeides.get(0);
+                    String[] stores = storeid.split(",");
+                    for (int i = 0; i < stores.length; i++)
+                    {
+                        store = dao.getDataByPlaceIdTime(startTime, endTime,stores[i]);
+                        if (store != null)
+                        {
+                            if (res == null)
+                            {
+                                res = store;
+                            }
+                            else if (!store.isEmpty())
+                            {
+                                res.addAll(store);
+                            }
+                        }
+                    }
+                }
+            }else
+            {
+                if (storeides.size() > 0)
+                {
+                    String storeid = storeides.get(0);
+                    String[] stores = storeid.split(",");
+                    for (int i = 0; i < stores.length; i++)
+                    {
+                        store = dao.getAllDataByPlaceIdTime(startTime,endTime,stores[i]);
+                        if (store != null)
+                        {
+                            if (res == null)
+                            {
+                                res = store;
+                            }
+                            else if (!store.isEmpty())
+                            {
+                                res.addAll(store);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (!Locale.CHINA.equals(myLocale))
+        {
+            avgeOffsetName = "avgeOffset";
+            maxOffsetName = "max Offset";
+            staicAccuracyName = "staic Accuracy";
+            offsetCenterName = "Offset center of gravity ";
+            offsetNumberName = "The offset";
+            stabilityName = "stability";  
+            total = "total";
+        }
+        listName.add(avgeOffsetName);
+        listName.add(maxOffsetName);
+        listName.add(staicAccuracyName);
+        listName.add(offsetCenterName);
+        listName.add(offsetNumberName);
+        listName.add(stabilityName);
+        
+        Map<String, Object> modelMap = new HashMap<String, Object>(4);
+        modelMap = Util.getCDF(listName, res,total);
+        modelMap.put("data", res);
+        modelMap.put("CDFName", listName);
 
         return modelMap;
     }

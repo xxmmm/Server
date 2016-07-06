@@ -3,8 +3,11 @@ package com.sva.common;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +16,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+
+import com.sva.model.DynamicAccuracyModel;
+import com.sva.model.LocationDelay;
+import com.sva.model.MessagePush;
+import com.sva.model.StaticAccuracyModel;
 
 public abstract class Util
 {
@@ -171,4 +179,406 @@ public abstract class Util
         }
         return result;
     }
+    
+    /** 
+     * @Title: getCDF 
+     * @Description: TODO 封装CDF图数据结构
+     * @param listName 曲线图名称
+     * @param res  原始数据
+     * @param total 曲线图Y中英文
+     * @return Map<String,Object>       
+     * @throws 
+     */
+    public static Map<String, Object> getCDF(List<String> listName,
+        Collection<StaticAccuracyModel> res,String total)
+    {
+        Map<String, Object> map  = new HashMap<>();
+        List<Map<String , Object>> allData = new ArrayList<>();
+        List<BigDecimal> avgeOffsetList = new ArrayList<>();
+        //最大误差集合
+        List<BigDecimal> maxOffsetList = new ArrayList<>();
+        //静态精度集合
+        List<BigDecimal> staicAccuracyList = new ArrayList<>();
+        //偏移重心集合
+        List<BigDecimal> offsetCenterList = new ArrayList<>();
+        //偏移量集合
+        List<BigDecimal> offsetNumberList = new ArrayList<>();
+        //稳定度集合
+        List<BigDecimal> stabilityList = new ArrayList<>();
+        
+        List<BigDecimal> allDataList = new ArrayList<>();
+        
+        List<Integer>  listx = new ArrayList<>();
+        
+        List<Integer> newAvgeOffsetList = new ArrayList<>();
+        List<Integer> newMaxOffsetList = new ArrayList<>();
+        List<Integer> newStaicAccuracyList = new ArrayList<>();
+        List<Integer> newOffsetCenterList = new ArrayList<>();
+        List<Integer> newOffsetNumberList = new ArrayList<>();
+        List<Integer> newStabilityList = new ArrayList<>();
+        
+        
+//        int minNumber = 0;
+        int maxNumber = 0;
+        
+        for (StaticAccuracyModel staModel:res)
+        {
+            avgeOffsetList.add(staModel.getAvgeOffset());
+            maxOffsetList.add(staModel.getMaxOffset());
+            staicAccuracyList.add(staModel.getStaicAccuracy());
+            offsetCenterList.add(staModel.getOffsetCenter());
+            offsetNumberList.add(staModel.getOffsetNumber());
+            stabilityList.add(staModel.getStability());
+            
+            allDataList.add(staModel.getAvgeOffset());
+            allDataList.add(staModel.getMaxOffset());
+            allDataList.add(staModel.getStaicAccuracy());
+            allDataList.add(staModel.getOffsetCenter());
+            allDataList.add(staModel.getOffsetNumber());
+            allDataList.add(staModel.getStability());
+        }
+        Collections.sort(allDataList);
+        Collections.sort(avgeOffsetList);
+        Collections.sort(maxOffsetList);
+        Collections.sort(staicAccuracyList);
+        Collections.sort(offsetCenterList);
+        Collections.sort(offsetNumberList);
+        Collections.sort(stabilityList);
+        
+        String avgeOffsetName = listName.get(0);
+        String maxOffsetName = listName.get(1);
+        String staicAccuracyName = listName.get(2);
+        String offsetCenterName = listName.get(3);
+        String offsetNumberName = listName.get(4);
+        String stabilityName = listName.get(5);
+        if (allDataList.size()>2)
+        {
+//            minNumber = allDataList.get(0).intValue();
+            maxNumber = allDataList.get(allDataList.size()-1).intValue();
+        }
+        int xSize = avgeOffsetList.size();
+        int avgeValue= 0 ;
+        if (maxNumber>15)
+        {
+             avgeValue =  maxNumber/15;
+        }else
+        {
+            avgeValue = 1;
+        }
+        for (int i = 0; i < 16; i++)
+        {
+            listx.add(i*avgeValue);
+        }
+        allData.add(getCDFDate(listx, xSize, avgeOffsetList,
+            newAvgeOffsetList, avgeOffsetName, total));
+        allData.add(getCDFDate(listx, xSize, maxOffsetList,
+            newMaxOffsetList, maxOffsetName, total));
+        allData.add(getCDFDate(listx, xSize, staicAccuracyList,
+            newStaicAccuracyList, staicAccuracyName, total));
+        allData.add(getCDFDate(listx, xSize, offsetCenterList,
+            newOffsetCenterList, offsetCenterName, total));
+        allData.add(getCDFDate(listx, xSize, offsetNumberList,
+            newOffsetNumberList, offsetNumberName, total));
+        allData.add(getCDFDate(listx, xSize, stabilityList,
+            newStabilityList, stabilityName, total));              
+      
+        map.put("CDFdata",allData);
+        map.put("xValue", listx);
+        return map;
+        
+    }
+    
+    public static Map<String, Object> getCDFDynamicAccuracy(List<String> listName,
+        Collection<DynamicAccuracyModel> res,String total)
+    {
+        Map<String, Object> map  = new HashMap<>();
+        List<Map<String , Object>> allData = new ArrayList<>();
+        List<BigDecimal> avgeOffsetList = new ArrayList<>();
+        //平均误差集合
+        List<BigDecimal> maxOffsetList = new ArrayList<>();
+        //最大误差集合
+        List<BigDecimal> OffsetList = new ArrayList<>();
+        //误差集合
+        
+        List<BigDecimal> allDataList = new ArrayList<>();
+        
+        List<Integer>  listx = new ArrayList<>();
+        
+        List<Integer> newAvgeOffsetList = new ArrayList<>();
+        List<Integer> newMaxOffsetList = new ArrayList<>();
+        List<Integer> newOffsetList = new ArrayList<>();
+
+        
+        
+//        int minNumber = 0;
+        int maxNumber = 0;
+        
+        for (DynamicAccuracyModel staModel:res)
+        {
+            avgeOffsetList.add(staModel.getAvgeOffset());
+            maxOffsetList.add(staModel.getMaxOffset());
+            OffsetList.add(staModel.getOffset());
+
+            allDataList.add(staModel.getAvgeOffset());
+            allDataList.add(staModel.getMaxOffset());
+            allDataList.add(staModel.getOffset());
+        }
+        Collections.sort(allDataList);
+        Collections.sort(avgeOffsetList);
+        Collections.sort(maxOffsetList);
+        Collections.sort(OffsetList);
+
+        
+        String avgeOffsetName = listName.get(0);
+        String maxOffsetName = listName.get(1);
+        String offsetName = listName.get(2);
+        if (allDataList.size()>2)
+        {
+//            minNumber = allDataList.get(0).intValue();
+            maxNumber = allDataList.get(allDataList.size()-1).intValue();
+        }
+        int xSize = avgeOffsetList.size();
+        int avgeValue= 0 ;
+        if (maxNumber>15)
+        {
+             avgeValue =  maxNumber/15;
+        }else
+        {
+            avgeValue = 1;
+        }
+        for (int i = 0; i < 16; i++)
+        {
+            listx.add(i*avgeValue);
+        }
+        allData.add(getCDFDate(listx, xSize, avgeOffsetList,
+            newAvgeOffsetList, avgeOffsetName, total));
+        allData.add(getCDFDate(listx, xSize, maxOffsetList,
+            newMaxOffsetList, maxOffsetName, total));
+        allData.add(getCDFDate(listx, xSize, OffsetList,
+            newOffsetList, offsetName, total));
+              
+      
+        map.put("CDFdata",allData);
+        map.put("xValue", listx);
+        return map;
+        
+    }
+    
+    public static Map<String, Object> getCDFLocationDelay(List<String> listName,
+        Collection<LocationDelay> res,String total)
+    {
+        Map<String, Object> map  = new HashMap<>();
+        List<Map<String , Object>> allData = new ArrayList<>();
+        //数据延时集合
+        List<Double> dataDelayList = new ArrayList<>();
+        //定位延时集合   
+        List<Double> positionDelayList = new ArrayList<>();
+
+        
+        List<Double> allDataList = new ArrayList<>();
+        
+        List<Integer>  listx = new ArrayList<>();
+        
+        List<Integer> newDataDelayList = new ArrayList<>();
+        List<Integer> newPositionDelayList = new ArrayList<>();
+        List<Integer> newOffsetList = new ArrayList<>();
+
+        
+        
+//        int minNumber = 0;
+        int maxNumber = 0;
+        
+        for (LocationDelay staModel:res)
+        {
+            dataDelayList.add(staModel.getDataDelay());
+            positionDelayList.add(staModel.getPositionDelay());
+
+            allDataList.add(staModel.getDataDelay());
+            allDataList.add(staModel.getPositionDelay());
+        }
+        Collections.sort(allDataList);
+        Collections.sort(dataDelayList);
+        Collections.sort(positionDelayList);
+
+        
+        String dataDelayName = listName.get(0);
+        String positionDelayName = listName.get(1);
+        if (allDataList.size()>2)
+        {
+//            minNumber = allDataList.get(0).intValue();
+            maxNumber = allDataList.get(allDataList.size()-1).intValue();
+        }
+        int xSize = dataDelayList.size();
+        int avgeValue = 0;
+        if (maxNumber>15)
+        {
+             avgeValue =  maxNumber/15;
+        }else
+        {
+            avgeValue = 1;
+        }
+        for (int i = 0; i < 16; i++)
+        {
+            listx.add(i*avgeValue);
+        }
+        allData.add(getCDFDate1(listx, xSize, dataDelayList,
+            newDataDelayList, dataDelayName, total));
+        allData.add(getCDFDate1(listx, xSize, positionDelayList,
+            newPositionDelayList, positionDelayName, total));
+
+              
+      
+        map.put("CDFdata",allData);
+        map.put("xValue", listx);
+        return map;
+        
+    }
+     
+    
+    public static Map<String, Object> getCDFMessagePush(List<String> listName,
+        Collection<MessagePush> res,String total)
+    {
+        Map<String, Object> map  = new HashMap<>();
+        List<Map<String , Object>> allData = new ArrayList<>();
+        //正确推送次数集合
+        List<Double> pushRightList = new ArrayList<>();
+        //错误推送次数集合
+        List<Double> notPushList = new ArrayList<>();
+        //为推送次数集合
+        List<Double> pushWrongList = new ArrayList<>();
+
+        
+        List<Double> allDataList = new ArrayList<>();
+        
+        List<Integer>  listx = new ArrayList<>();
+        
+        List<Integer> newPushRightList = new ArrayList<>();
+        List<Integer> newNotPushList = new ArrayList<>();
+        List<Integer> newPushWrongList = new ArrayList<>();
+
+        
+        
+//        int minNumber = 0;
+        int maxNumber = 0;
+        
+        for (MessagePush staModel:res)
+        {
+            pushRightList.add(staModel.getPushRight());
+            notPushList.add(staModel.getNotPush());
+            pushWrongList.add(staModel.getPushWrong());
+
+            allDataList.add(staModel.getPushRight());
+            allDataList.add(staModel.getNotPush());
+            allDataList.add(staModel.getPushWrong());
+        }
+        Collections.sort(allDataList);
+        Collections.sort(pushRightList);
+        Collections.sort(notPushList);
+        Collections.sort(pushWrongList);
+
+        
+        String pushRightName = listName.get(0);
+        String notPushName = listName.get(1);
+        String pushWrongName = listName.get(2);
+        if (allDataList.size()>2)
+        {
+            maxNumber = allDataList.get(allDataList.size()-1).intValue();
+        }
+        int xSize = pushRightList.size();
+        int avgeValue = 0;
+        if (maxNumber>15)
+        {
+             avgeValue =  maxNumber/15;
+        }else
+        {
+            avgeValue = 1;
+        }
+        for (int i = 0; i < 16; i++)
+        {
+            listx.add(i*avgeValue);
+        }
+        allData.add(getCDFDate1(listx, xSize, pushRightList,
+            newPushRightList, pushRightName, total));
+        allData.add(getCDFDate1(listx, xSize, notPushList,
+            newNotPushList, notPushName, total));
+        allData.add(getCDFDate1(listx, xSize, pushWrongList,
+            newPushWrongList, pushWrongName, total));
+
+      
+        map.put("CDFdata",allData);
+        map.put("xValue", listx);
+        return map;
+        
+    }
+        
+    
+    private static Map<String, Object> getCDFDate1(List<Integer> listx, int xSize, List<Double> dataDelayList,
+        List<Integer> newDataDelayList, String dataDelayName, String total)
+    {
+        Map<String, Object> map = new HashMap<>();
+        for (int j = 0; j < listx.size(); j++)
+       {
+            int avgeValue1 = 0;
+            int valuex = listx.get(j);
+            for (int i = 0; i < xSize; i++)
+            {
+                int valuey = dataDelayList.get(i).intValue();
+                    //判断数据是否小于等于X坐标，如果小于则新值加1
+                    if (valuey<=valuex)
+                    {
+                        avgeValue1++;
+                    }
+            }
+            newDataDelayList.add(avgeValue1);
+
+        }
+        map.put("name",dataDelayName);
+        map.put("type","line");
+        map.put("tiled",total);
+        map.put("data",newDataDelayList);
+        
+        return map;
+    }
+
+    /** 
+     * @Title: getCDFDate 
+     * @Description: TODO 封装CDF曲线数据结构
+     * @param listx X坐标集合
+     * @param xSize 原始数据大小
+     * @param setList 原始数据集合
+     * @param newSetList 新数据集合
+     * @param name  曲线图名称   
+     * @param total 曲线图Y中英文
+     * @return Map<String,Object>       
+     * @throws 
+     */
+    public static Map<String, Object> getCDFDate( List<Integer>  listx,int xSize,
+        List<BigDecimal> setList,List<Integer> newSetList,String name,String total)
+    {
+        Map<String, Object> map = new HashMap<>();
+        for (int j = 0; j < listx.size(); j++)
+       {
+            int avgeValue1 = 0;
+            int valuex = listx.get(j);
+            for (int i = 0; i < xSize; i++)
+            {
+                int valuey = setList.get(i).intValue();
+                    //判断数据是否小于等于X坐标，如果小于则新值加1
+                    if (valuey<=valuex)
+                    {
+                        avgeValue1++;
+                    }
+            }
+            newSetList.add(avgeValue1);
+
+        }
+        map.put("name",name);
+        map.put("type","line");
+        map.put("tiled",total);
+        map.put("data",newSetList);
+        
+        return map;
+        
+    }
+    
 }

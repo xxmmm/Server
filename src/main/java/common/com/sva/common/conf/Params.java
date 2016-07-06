@@ -133,5 +133,7 @@ public class Params
     public static final String triggerIp = "触发者";
     
     public static final String Detail = "详情";
+    
+    public static final String total = "总量";
 
 }
