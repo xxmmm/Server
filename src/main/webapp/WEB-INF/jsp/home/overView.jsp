@@ -173,7 +173,7 @@
 		type="text/javascript"></script>
 	<script src="<c:url value='/js/app.js'/>" type="text/javascript"></script>
 	<script src="<c:url value='/js/overView.js'/>" type="text/javascript"></script>
-	<script src="<c:url value='/plugins/echarts-2.2.5/build/source/echarts-all.js'/>"type="text/javascript"></script>
+	<script src="<c:url value='/plugins/echarts-2.2.5/build/dist/echarts.js'/>"type="text/javascript"></script>
 	<!-- END PAGE LEVEL SCRIPTS -->
 
 	<script type="text/javascript">

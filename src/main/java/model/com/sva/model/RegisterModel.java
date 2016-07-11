@@ -19,6 +19,18 @@ public class RegisterModel
     private long otherPhone;
 
     private int isTrue;
+    
+    private String loginStatus;
+
+    public String getLoginStatus()
+    {
+        return loginStatus;
+    }
+
+    public void setLoginStatus(String loginStatus)
+    {
+        this.loginStatus = loginStatus;
+    }
 
     public long getOtherPhone()
     {

@@ -1004,6 +1004,14 @@ public class ApiController
     public Map<String, Object> savaRegister(@RequestBody RegisterModel model)
     {
 
+        String phoneNumber = model.getPhoneNumber();
+        List<RegisterModel> lis = registerDao.getDataByPhoneNumber(phoneNumber); 
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        if (lis.size() > 0 )
+        {
+            modelMap.put("error", "0");
+            return modelMap;
+        }
         log.debug("api savaRegister:");
         long time = System.currentTimeMillis();
         model.setStatus(0);
@@ -1016,7 +1024,7 @@ public class ApiController
         {
             log.error(e.getMessage());
         }
-        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+
         modelMap.put("error", null);
         return modelMap;
     }
@@ -1048,14 +1056,25 @@ public class ApiController
     public Map<String, Object> loginCheck(@RequestBody RegisterModel model)
     {
 
+        String baseChart = "abcdefghijklmnopqrstuvwxyz0123456789";
+        int baseSize = baseChart.length();
+        StringBuffer strb = new StringBuffer();
+        Random ron = new Random();
+        for (int i = 0; i < 10; i++)
+        {
+            int val = ron.nextInt(baseSize);
+            strb.append(baseChart.charAt(val));
+        }
         log.debug("api loginCheck:");
         // int a = registerDao.checkLogin(userName, passWord);
         int b = registerDao.checkLogin1(model);
         log.debug("passWord:" + model.getPassWord() + " phoneNumber:"
-                + model.getPhoneNumber() + " b:" + b);
+                + model.getPhoneNumber() + " b:" + b +" token:"+strb);
         Map<String, Object> modelMap = new HashMap<String, Object>(2);
         if (b > 0)
         {
+            registerDao.setLoginStatus(strb, model.getPhoneNumber());
+            modelMap.put("loginStatus", strb);
             modelMap.put("error", "1");
             return modelMap;
         }
@@ -1189,6 +1208,13 @@ public class ApiController
         log.debug("api seekPeople:" + " myPhone:" + myPhone);
         // List<RegisterModel> lis = registerDao.getDataByUserName(userName);
         List<RegisterModel> lis1 = registerDao.getDataBy(myPhone);
+        List<RegisterModel> lis = registerDao.getDataByPhoneNumber(myPhone);
+        String loginStatus = null;
+        if (lis.size()>0)
+        {
+            loginStatus = lis.get(0).getLoginStatus();
+            modelMap.put("loginStatus",loginStatus);
+        }
         // if (lis.size() > 0)
         // {
         // long otherPhone = lis.get(0).getOtherPhone();

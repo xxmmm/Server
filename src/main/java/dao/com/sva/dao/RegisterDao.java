@@ -27,13 +27,13 @@ public class RegisterDao
     {
         String sql = "replace into register(role,ip,userName,password,status,phoneNumber,timestamp) values(?,?,?,?,?,?,?)";
         this.jdbcTemplate.update(sql, register.getRole(), register.getIp(),
-                register.getUserName(), register.getPassWord(),
+                register.getUserName(),register.getPassWord(),
                 register.getStatus(), register.getPhoneNumber(),
                 register.getTimes());
     }
     public void refreshRegister(RegisterModel register)
     {
-    	String sql = "update register set ip=?,status=0,isTrue=0 where phoneNumber = ?";
+    	String sql = "update register set ip=? where phoneNumber = ?";
     	this.jdbcTemplate.update(sql,register.getIp(),register.getPhoneNumber());
     }
 
@@ -175,6 +175,8 @@ public class RegisterDao
             phone.setIsTrue(rs.getInt("isTrue"));
             phone.setRole(rs.getInt("role"));
             phone.setOtherPhone(rs.getLong("otherPhone"));
+            phone.setLoginStatus(rs.getString("loginStatus"));
+            
             return phone;
         }
     }
@@ -194,5 +196,12 @@ public class RegisterDao
         return this.jdbcTemplate.queryForObject(sql,
                 new Object[]{model.getPhoneNumber(), model.getPassWord()},
                 Integer.class);
+    }
+    
+    public void setLoginStatus(StringBuffer strb,String phoneNumber)
+    {
+        String sql = "update register set loginStatus=? where phoneNumber = ? ";
+
+        this.jdbcTemplate.update(sql,strb,phoneNumber);
     }
 }

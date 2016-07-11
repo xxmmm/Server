@@ -516,6 +516,15 @@ public abstract class Util
         List<Integer> newDataDelayList, String dataDelayName, String total)
     {
         Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map1 = new HashMap<>();
+        List<Object> list1 = new ArrayList<>();
+        Map<String, Object> map2 = new HashMap<>();
+        List<Object> list2 = new ArrayList<>();
+        list1.add("type : 'max', name: 'max'");
+        list1.add("type : 'min', name: 'min'");
+        map1.put("data", list1);
+        list2.add("type : 'average', name: 'average'");
+        map2.put("data", list2);
         for (int j = 0; j < listx.size(); j++)
        {
             int avgeValue1 = 0;
@@ -534,8 +543,11 @@ public abstract class Util
         }
         map.put("name",dataDelayName);
         map.put("type","line");
+        map.put("smooth","true");
         map.put("tiled",total);
         map.put("data",newDataDelayList);
+        map.put("markPoint", map1);
+        map.put("markLine", map2);
         
         return map;
     }
@@ -556,6 +568,15 @@ public abstract class Util
         List<BigDecimal> setList,List<Integer> newSetList,String name,String total)
     {
         Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map1 = new HashMap<>();
+        List<Object> list1 = new ArrayList<>();
+        Map<String, Object> map2 = new HashMap<>();
+        List<Object> list2 = new ArrayList<>();
+        list1.add("type : 'max', name: 'max'");
+        list1.add("type : 'min', name: 'min'");
+        map1.put("data", list1);
+        list2.add("type : 'average', name: 'average'");
+        map2.put("data", list2);
         for (int j = 0; j < listx.size(); j++)
        {
             int avgeValue1 = 0;
@@ -572,10 +593,13 @@ public abstract class Util
             newSetList.add(avgeValue1);
 
         }
+        map.put("smooth","true");
         map.put("name",name);
         map.put("type","line");
         map.put("tiled",total);
         map.put("data",newSetList);
+        map.put("markPoint", map1);
+        map.put("markLine", map2);
         
         return map;
         
