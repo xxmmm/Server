@@ -96,8 +96,8 @@ var Positionmap = function() {
 	var initBarmap = function(data){
 		//-------数据预处理------start
 		// 单独获取新疆和西藏的数据
-		var xj = data["新疆"],
-			xz = data["西藏"];
+		var xj = data["新疆"]?data["新疆"]:0,
+			xz = data["西藏"]?data["西藏"]:0;
 		// json转数组
 		var arrayData = _.pairs(data);
 		// 数组降序排列
@@ -186,15 +186,22 @@ var Positionmap = function() {
 	var initChinamap = function(data){
 		
 		//-------数据预处理------start
-		var datas = [];
+		// 出发数据
+		var dataGo = [];
+		// 到达数据
+		var dataCome = [];
 		var keys = _.keys(data);
 		for(var i in keys){
 			var k = keys[i];
-			var item = [{name:'四川'}];
-			var obj = {name:k, value:data[k]};
-			item.push(obj);
-			datas.push(item);
+			var itemGo = [{name:'四川'},{name:k, value:data[k]}];
+			var itemCome = [{name:k, value:data[k]},{name:'四川'}];
+
+			dataGo.push(itemGo);
+			dataCome.push(itemCome);
 		}
+		
+		// 最大值
+		var max = _.max(_.values(data));
 		//-------数据预处理------end
 		
 		//-------图形渲染------start
@@ -256,15 +263,17 @@ var Positionmap = function() {
 		
 		// 渲染数据
 		var series = [];
+		// 四个元素依次对应：尾翼、飞机和线、涟漪标签、省份
+		[['出发', dataGo], ['到达', dataCome]].forEach(function (item, i) {
 	    series.push({
-	        name: '省份',
+	        name: item[0],
 	        type: 'lines',
 	        zlevel: 3,
 	        effect: {
 	            show: true,
 	            period: 6,
 	            trailLength: 0.7,
-	            color: '#fff',
+	            color: '#4343fd',
 	            symbolSize: 3
 	        },
 	        lineStyle: {
@@ -274,10 +283,10 @@ var Positionmap = function() {
 	                curveness: 0.2
 	            }
 	        },
-	        data: convertData(datas)
+	        data: convertData(item[1])
 	    },
 	    {
-	        name: '省份',
+	        name: item[0],
 	        type: 'lines',
 	        zlevel: 4,
 	        effect: {
@@ -289,16 +298,16 @@ var Positionmap = function() {
 	        },
 	        lineStyle: {
 	            normal: {
-	                color: '#a6c84c',
+	                color: '#4343fd',
 	                width: 1,
 	                opacity: 0.4,
 	                curveness: 0.2
 	            }
 	        },
-	        data: convertData(datas)
+	        data: convertData(item[1])
 	    },
 	    {
-	        name: '省份',
+	        name: item[0],
 	        type: 'effectScatter',
 	        coordinateSystem: 'geo',
 	        zlevel: 2,
@@ -310,76 +319,88 @@ var Positionmap = function() {
 	                show: true,
 	                position: 'top',
 	                formatter: function(param){
-	                	return param.data.value[2];
+	                	return param.data.name + ":" +param.data.value[2];
 	                },
 	                textStyle:{
-                    	color: '#a6c84c',
+                    	color: '#4343fd',
                     	fontSize:10
                 	}
 	            }
 	        },
 	        symbolSize: function (val) {
 	        	// todo：控制涟漪大小
-	            return val[2] * 8;
+	            return 1;
 	        },
 	        itemStyle: {
 	            normal: {
-	                color: '#a6c84c'
+	                color: '#4343fd'
 	            }
 	        },
-	        data: datas.map(function (dataItem) {
-	            return {
-	                name: dataItem[1].name,
-	                value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
-	            };
+	        data: item[1].map(function (dataItem) {
+	        	// 区分出发和到达
+	        	if(dataItem[1].value){
+		            return {
+		                name: dataItem[1].name,
+		                value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
+		            };	        		
+	        	}else{
+	        		return {
+		                name: dataItem[0].name,
+		                value: geoCoordMap[dataItem[0].name].concat([dataItem[0].value])
+		            };	
+	        	}
 	        })
 	    },
 	    {
-            name: '省份',
+            name: item[0],
             type: 'map',
             mapType: 'china',
-            zlevel: 2,
+            zlevel: 1,
             roam: true,
+	        scaleLimit:{
+	        	min:0.5,
+	        	max:4
+	        },
             itemStyle:{
 	            normal: {
-	                areaColor: '#323c48',
+	                areaColor: 'lightskyblue',
 	                borderColor: '#404a59'
 	            },
 	            emphasis: {
-	                areaColor: '#2a333d'
+	                areaColor: '#fddd31'
 	            }
             },
             label: {
                 normal: {
-                	show: true,
-                	textStyle:{
-                    	color: '#5fafd6'                		
-                	}
+                	show: false
                 },
                 emphasis: {
-                	show: true,
-                	textStyle:{
-                    	color: '#5fafd6'                		
-                	}
+                	show: false
                 }
             },
-            data:datas.map(function (dataItem) {
-	            return {
-	                name: dataItem[1].name,
-	                value: [dataItem[1].value]
-	            };
+            data:item[1].map(function (dataItem) {
+	            // 区分出发和到达
+	        	if(dataItem[1].value){
+		            return {
+		                name: dataItem[1].name,
+		                value: [dataItem[1].value]
+		            };	        		
+	        	}else{
+	        		return {
+		                name: dataItem[0].name,
+		                value: [dataItem[0].value]
+		            };	
+	        	}
             })
-        });
+        })
+		});
 
 	    // 选项
 		option = {
-		    backgroundColor: '#404a59',
+		    backgroundColor: '#ececf5',
 		    title : {
 		        text: '归属地分布图',
-		        left: 'center',
-		        textStyle : {
-		            color: '#fff'
-		        }
+		        left: 'center'
 		    },
 		    tooltip : {
 		        trigger: 'item'
@@ -393,18 +414,22 @@ var Positionmap = function() {
 		    		}
 		    	}
 		    },
-		    /*
+		    visualMap: {
+		        type: 'continuous',
+		        min: 0,
+		        max: max,
+		        text:['High','Low'],
+		        realtime: false,
+		        calculable : true,
+		        color: ['orangered','yellow','lightskyblue']
+		    },
 		    legend: {
 		        orient: 'vertical',
 		        top: 'bottom',
 		        left: 'right',
-		        data:[' Top10'],
-		        textStyle: {
-		            color: '#fff'
-		        },
+		        data:['出发','到达'],
 		        selectedMode: 'single'
 		    },
-		    */
 		    geo: {
 		        map: 'china',
 		        label: {
@@ -412,7 +437,11 @@ var Positionmap = function() {
 		                show: false
 		            }
 		        },
-		        roam: true
+		        roam: true,
+		        scaleLimit:{
+		        	min:0.5,
+		        	max:4
+		        }
 		    },
 		    series: series
 		};

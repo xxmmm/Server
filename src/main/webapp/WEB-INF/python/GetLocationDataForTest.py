@@ -41,11 +41,11 @@ class GetSvaData():
             while True:
                 timestamp = int(time.time())* 1000
                 print timestamp
-                arrPhone = [15680067296,13838792076,13661999904,17199916700]
+                arrPhone = [15680067296,13838792076,13661999904,17199916700,18381335216,13540465828,13838330007]
 
                 message = "{\"locationstreamanonymous\":[{\"IdType\":\"IP\",\"Timestamp\":"+str(timestamp)+",\"datatype\":\"coordinates\",\"location\":{\"x\":1133.0,\"y\":492.0,\"z\":3},\"userid\":[\"0a26d23d\"]}"
                 #print message
-                for i in range(4):
+                for i in range(7):
                     x = random.randint(300, 400)
                     y = random.randint(350, 520)
                     message = message + ',{"IdType":"S1APID","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x)+',"y":'+str(y)+',"z":3},"extid":{"mmes1":'+str(arrPhone[i])+',"enbs1":'+str(arrPhone[i])+',"enbid":'+str(arrPhone[i])+'},"userid":["'+str(arrPhone[i])+'"]}'

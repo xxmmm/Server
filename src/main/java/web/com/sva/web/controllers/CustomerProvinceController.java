@@ -75,22 +75,31 @@ public class CustomerProvinceController {
 		String phoneNo = "";
 		String province = "";
 		
-		// 遍历用户，获取其电话所属的省份
-		for(Map<String,Object> r : result){
-			phoneNo = r.get("enbs1").toString();
-			// 如果该用户没有电话信息，则不作处理
-			if("".equals(phoneNo)){
-				continue;
+		try
+		{
+			// 遍历用户，获取其电话所属的省份
+			for(Map<String,Object> r : result)
+			{
+				phoneNo = r.get("enbs1").toString();
+				// 如果该用户没有电话信息，则不作处理
+				if("".equals(phoneNo)){
+					continue;
+				}
+				// 调用获取省份信息服务
+				province = positionService.sendRequest(phoneNo);
+				
+				// 如果该省份已存在，则计数加1；否则添加该省份，初始值为1
+				if(data.containsKey(province)){
+					data.put(province, data.get(province)+1);
+				}else{
+					data.put(province, 1);
+				}
 			}
-			// 调用获取省份信息服务
-			province = positionService.sendRequest(phoneNo);
-			
-			// 如果该省份已存在，则计数加1；否则添加该省份，初始值为1
-			if(data.containsKey(province)){
-				data.put(province, data.get(province)+1);
-			}else{
-				data.put(province, 1);
-			}
+		}
+		catch(Exception e)
+		{
+			log.error(e.getMessage());
+			modelMap.put("error", e.getMessage());
 		}
 		
 		modelMap.put("data", data);
