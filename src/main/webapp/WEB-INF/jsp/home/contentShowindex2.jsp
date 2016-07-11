@@ -62,17 +62,14 @@
 	<div class="" style="padding:1% 6%;">
 		<div class="row-fluid" style="margin-bottom: 1%;">
 			<div class="span2"></div>
-			<div class="span8">
+			<div class="span8" style="text-align: center;">
 				<img alt="" src="../images/7.png" style="height:50px;">
 			</div>
 			<div class="span2">
-				<div class="logoType pull-right">
-					<img alt="" src="../images/LOGO2.png">
-				</div>
 			</div>
 		</div>
 		<div class="row-fluid" id="huawei">
-			<div class="span5" style="width:44%">
+			<div class="span5" style="width:40%">
 				<div class="row-fluid">
 					<div class="span12" style="border: 5px solid #864319;">
 						<i id="expand" class="icon-resize-full icon-2x expand"></i>
@@ -103,7 +100,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="355px">
+						<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="322px">
 						    <param name="movie" value="../images/flvplayer.swf" />
 						    <param name="allowFullScreen" value="true" />
 						    <param name="FlashVars" value="flv=../images/videoShow.flv&startimage=../images/startimage_en.jpg&&autoplay=1&showtime=1&showstop=1&showfullscreen=1&loop=1&bgcolor1=864319&bgcolor2=864319&playercolor=A55E22" />
@@ -112,7 +109,7 @@
 				</div>
 			</div>
 
-			<div id="sp7" class="span7" style="width:53%">
+			<div id="sp7" class="span7" style="width:55%">
 				<div class="swiper-container">
 					<div id="wrapper" class="swiper-wrapper">
 						<div class="swiper-slide">
