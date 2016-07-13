@@ -167,9 +167,12 @@ public class BZPramesController
             @RequestParam("radiusSel1") int radiusSel1,
             @RequestParam("densitySel2") int densitySel2,
             @RequestParam("radiusSel2") int radiusSel2,
+            @RequestParam("densitySel4") int densitySel4,
+            @RequestParam("radiusSel4") int radiusSel4,
             @RequestParam("floorNo") String floorNo,
             @RequestParam("floorNo2") String floorNo2,
             @RequestParam("floorNo3") String floorNo3,
+            @RequestParam("floorNo4") String floorNo4,
             @RequestParam("periodSel") int periodSel,
             @RequestParam("coefficient") Double coefficient,
             @RequestParam("startTime") String startTime)
@@ -178,6 +181,7 @@ public class BZPramesController
         BigDecimal bd = new BigDecimal(floorNo);
         BigDecimal bd2 = new BigDecimal(floorNo2);
         BigDecimal bd3 = new BigDecimal(floorNo3);
+        BigDecimal bd4 = new BigDecimal(floorNo4);
         BZPramesModel sm = new BZPramesModel();
         sm.setDensitySel(densitySel);
         sm.setRadiusSel(radiusSel);
@@ -185,9 +189,12 @@ public class BZPramesController
         sm.setRadiusSel1(radiusSel1);
         sm.setDensitySel2(densitySel2);
         sm.setRadiusSel2(radiusSel2);
+        sm.setDensitySel4(densitySel4);
+        sm.setRadiusSel4(radiusSel4);
         sm.setFloorNo(bd);
         sm.setFloorNo2(bd2);
         sm.setFloorNo3(bd3);
+        sm.setFloorNo4(bd4);
         sm.setPeriodSel(periodSel);
         sm.setCoefficient(coefficient);
         startTime = "2016-02-15 " + startTime;

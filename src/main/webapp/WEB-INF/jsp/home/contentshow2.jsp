@@ -202,20 +202,9 @@
                                                     <option value="200">200</option>
                                                 </select>
                                                 </div>
-                                        </div>              										
-	
-										<div class="control-group">
-											<div class="controls">
-												<input type="hidden" name = "id" id="idid" style="width: 56%; height: 15%;">
-											</div>
-										</div>
-									</div>
-								</div>	
-							</div>
-							<div class="span6" style="padding:10px;">
-                  				<div class="row-fluid">
-                      				<div class="span12" style="outline:0px solid #E6E4E4;padding:20px 0;">	
-
+                                        </div>  
+                                        
+                                        
 										<div class="control-group">
 											<label class="control-label" for=placeSel><spring:message code="mwc_zhanguan3" /></label>
 											<div class="controls">
@@ -266,7 +255,73 @@
                                                     <option value="200">200</option>
                                                 </select>
                                                 </div>
-                                        </div>                                                                                 
+                                        </div>                                                    										
+	
+										<div class="control-group">
+											<div class="controls">
+												<input type="hidden" name = "id" id="idid" style="width: 56%; height: 15%;">
+											</div>
+										</div>
+									</div>
+								</div>	
+							</div>
+							<div class="span6" style="padding:10px;">
+                  				<div class="row-fluid">
+                      				<div class="span12" style="outline:0px solid #E6E4E4;padding:20px 0;">	
+
+                                        
+										<div class="control-group">
+											<label class="control-label" for=placeSel><spring:message code="mwc_zhanguan3" /></label>
+											<div class="controls">
+												<select datatype="*"  id="placeSel4"  nullmsg='<spring:message code="map_store_name" />' style="width: 59%;height: 15%;" >
+													<option value=" "></option>
+												</select>
+											</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="zSel"><spring:message code="message_table_title_floor" /></label>
+											<div class="controls">
+												<select datatype="*" id="zSel4"  nullmsg='<spring:message code="all_floor_choose" />'  style="width: 59%;height: 15%;"  >
+													<option value=" "></option>
+												</select>
+											</div>
+										</div>
+                                        <!-- 密度 -->
+                                        <div class="control-group">
+                                            <label class="control-label" for="zSel1"><spring:message code="heatmap_density" /></label>
+                                                <div class="controls">
+                                                <select id="densitySel4" style="height: 32px;width: 82px" datatype="xzsc" data-placeholder="<spring:message code="heatmap_density" />"
+                                                class="">
+                                                <option value="1"></option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                </select>
+                                                </div>
+                                         </div>
+                                        <!-- 扩散度 -->
+                                        <div class="control-group">
+                                            <label class="control-label" for="zSel1"><spring:message code="heatmap_diffusance" /></label>
+                                                <div class="controls">
+                                                <select id="radiusSel4" style="height: 32px;width: 82px"  datatype="xzsc" data-placeholder="<spring:message code="heatmap_diffusance" />"
+                                                    class="">
+                                                    <option value="20"></option>
+                                                    <option value="20">20</option>
+                                                    <option value="30">30</option>
+                                                    <option value="40">40</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                    <option value="150">150</option>
+                                                    <option value="200">200</option>
+                                                </select>
+                                                </div>
+                                        </div>                                        
+                                                                                                                         
 										<div class="control-group">
 											<label class="control-label" for="zSel"><spring:message code="bz_shijian" /></label>
 											<div class="controls">

@@ -62,6 +62,11 @@ var contentshow = function() {
 					updateList("placeSel3",data.data);
 				}
 			});
+			$.get("/sva/store/api/getData?t="+Math.random(),function(data){
+				if(!data.error){
+					updateList("placeSel4",data.data);
+				}
+			});
 
 			var options = '';
     		for ( var i = 1; i <= 60; i++) {
@@ -121,6 +126,14 @@ var contentshow = function() {
     				}
     			});
     		});
+    		$("#placeSel4").on("change", function(){
+    			var placeIdSp = $("#placeSel4").val();
+    			$.post("/sva/heatmap/api/getFloorsByMarket",{placeId:placeIdSp}, function(data){
+    				if(!data.error){
+    					updateFloorList1("zSel4",data.data);
+    				}
+    			});
+    		});
  
    		
     		//  确认按钮点击  触发热力图刷新    		
@@ -132,6 +145,7 @@ var contentshow = function() {
     			var floorSel = $("#zSel").val();
     			var floorSel2 = $("#zSel2").val();
     			var floorSel3 = $("#zSel3").val();
+    			var floorSel4 = $("#zSel4").val();
     			var periodSel = $("#periodSel").val();
     			var	coefficient = $("#coefficient").val();
     			
@@ -142,6 +156,8 @@ var contentshow = function() {
     			var radiusSel1 = $("#radiusSel1").val();
     			var densitySel2 = $("#densitySel2").val();
     			var radiusSel2 = $("#radiusSel2").val();
+    			var densitySel4 = $("#densitySel4").val();
+    			var radiusSel4 = $("#radiusSel4").val();
 
 
 
@@ -153,9 +169,12 @@ var contentshow = function() {
     					radiusSel1:radiusSel1,
     					densitySel2:densitySel2,
     					radiusSel2:radiusSel2,
+    					densitySel4:densitySel4,
+    					radiusSel4:radiusSel4,
     					floorNo : floorSel,
     					floorNo2 :floorSel2,
     					floorNo3 : floorSel3,   				
+    					floorNo4 : floorSel4,   				
     					periodSel : periodSel,
     					coefficient : coefficient,
     					startTime : $("#select_time_begin_tab1").val()
@@ -204,17 +223,21 @@ function clearinfo()
 	 $("#densitySel").val("");
 	 $("#densitySel1").val("");
 	 $("#densitySel2").val("");
+	 $("#densitySel4").val("");
 
 	 $("#radiusSel").val("");
 	 $("#radiusSel1").val("");
 	 $("#radiusSel2").val("");
+	 $("#radiusSel4").val("");
 
 	$("#placeSel").val("");
 	$("#placeSel2").val("");
 	$("#placeSel3").val("");
+	$("#placeSel4").val("");
 	$("#zSel").val("");	
 	$("#zSel2").val("");	
 	$("#zSel3").val("");		
+	$("#zSel4").val("");		
 	$("#periodSel").val("");	
 	$("#coefficient").val("");	
 	//$("#select_time_begin_tab1").val("");	
@@ -249,13 +272,23 @@ function paramValue(){
 					$("#zSel3").val(a[0].floorNo3);	
 				}
 			});
+			$("#placeSel4").val(Math.floor(a[0].floorNo4/10000));
+			var placeId4 = $("#placeSel4").val();
+			$.post("/sva/heatmap/api/getFloorsByMarket",{placeId:placeId3}, function(data){
+				if(!data.error){
+					contentshow.updateFloorList1("zSel4",data.data);
+					$("#zSel4").val(a[0].floorNo3);	
+				}
+			});
 			$("#radiusSel").val(a[0].radiusSel);
 			$("#radiusSel1").val(a[0].radiusSel1);
 			$("#radiusSel2").val(a[0].radiusSel2);
+			$("#radiusSel4").val(a[0].radiusSel4);
 
 			$("#densitySel").val(a[0].densitySel);
 			$("#densitySel1").val(a[0].densitySel1);
 			$("#densitySel2").val(a[0].densitySel2);
+			$("#densitySel4").val(a[0].densitySel4);
 
 
 			$("#periodSel").val(a[0].periodSel);

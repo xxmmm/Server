@@ -1,28 +1,34 @@
 var responeData = "";
 var responeData2= "";
 var responeData3 = "";
+var responeData4 = "";
 
 var floorNo = "";
 var floorNo2 = "";
 var floorNo3 = "";
+var floorNo4 = "";
 
 var floorNo8 = "";
 var radiusSel1 = "";
 var radiusSel2 = "";
 var radiusSel = "";
+var radiusSe14 = "";
 
 var maxValue = "";
 var maxValue1 = "";
 var maxValue2 = "";
+var maxValue4 = "";
 var imgHeight, imgWidth, imgScale;
 var imgHeight2, imgWidth2, imgScale2;
 var imgHeight3, imgWidth3, imgScale3;
+var imgHeight4, imgWidth4, imgScale4;
 
 //var floorNo3sp = "";
 var period  = "";
 var timer;
 var timer2;
 var timer3;
+var timer4;
 var currentWidth = screen.width;
 var coefficient;
 var refreshHeatmapData = function() {
@@ -45,8 +51,8 @@ var refreshHeatmapData = function() {
 				ctx.clearRect(0,0,bgImgWidth,bgImgHeight);
 			}
 			responeData = data;
-			$("#number1").text(data.data.length*coefficient);
-			//$("#numbern-data-item1").text(data.data.length);
+			$("#numbern-data-item1").text(data.data.length);
+//			$("#number1").text(data.data.length*coefficient);
 		}
 		timer = setTimeout("refreshHeatmapData();", 4000);
 	});
@@ -93,12 +99,12 @@ var refreshHeatmapData3 = function() {
 					data : points3
 				};
 				heatmap3.setData(dataObj3);
-				$("#numbern-data-item7").text(data.data.length*coefficient);
 			}else{
 				var canvas=$("#heatmap3 canvas")[0];
 				var ctx=canvas.getContext('2d');
 				ctx.clearRect(0,0,bgImgWidth3,bgImgHeight3);
 			}
+			$("#numbern-data-item7").text(data.data.length*coefficient);
 			responeData3 = data;
 //			$("#number3").text(data.data.length*coefficient);
 			//$("#numbern-data-item1").text(data.data.length);
@@ -107,6 +113,33 @@ var refreshHeatmapData3 = function() {
 	});
 };
 
+var refreshHeatmapData4 = function() {
+	clearTimeout(timer4);
+	$.post("/sva/heatmap/api/getData5?t="+Math.random(), {floorNo :floorNo4,period:period}, function(data) {
+		if (!data.error) {
+			if (data.data && data.data.length > 0) {
+				// var points = {max:1,data:dataFilter(data)};
+				var points4 = dataFilter2(data.data, origX4, origY4, scale4,
+						imgWidth4, imgHeight4, coordinate4, imgScale4);
+				var dataObj4 = {
+					max : maxValue4,
+					min : 1,
+					data : points4
+				};
+				heatmap4.setData(dataObj4);
+			}else{
+				var canvas=$("#heatmap4 canvas")[0];
+				var ctx=canvas.getContext('2d');
+				ctx.clearRect(0,0,bgImgWidth4,bgImgHeight4);
+			}
+			$("#numbern-data-item10").text(data.data.length*coefficient);
+			responeData4 = data;
+//			$("#number3").text(data.data.length*coefficient);
+//			$("#numbern-data-item1").text(data.data.length);
+		}
+		 timer4 = setTimeout("refreshHeatmapData4();", 4000);
+	});
+};
 
 
 var dataFilter = function(data, xo, yo, scale, width, height, coordinate,
@@ -291,6 +324,7 @@ var calImgSize3 = function(width, height) {
 var countTime;
 var countTime2;
 var countTime3;
+var countTime4;
 
 function count(coefficient){
 	clearTimeout(countTime);
@@ -320,6 +354,15 @@ function count3(){
 	}else{
 //		$("#user3").text(responeData3.data.length);
 		countTime3 = setTimeout("count3()",60000);
+	}
+}
+function count4(){
+	clearTimeout(countTime4);
+	if(responeData4 == ""){
+		countTime4 = setTimeout("count4()",1000);
+	}else{
+//		$("#user3").text(responeData3.data.length);
+		countTime4 = setTimeout("count4()",60000);
 	}
 }
 
@@ -360,9 +403,9 @@ var Heatmap = function() {
 						"margin" : "0% auto"
 					});
 					
-					configObj.onExtremaChange = function(data) {
-						updateLegend(data);
-					};
+//					configObj.onExtremaChange = function(data) {
+//						updateLegend(data);
+//					};
 					
 					heatmap = h337.create(configObj);
 					$.post("/sva/heatmap/api/getData5?t="+Math.random(), {
@@ -385,7 +428,7 @@ var Heatmap = function() {
 							$(".countInfo").show();
 							responeData = data;
 						}
-						$("#number1").text(data.data.length*coefficient);
+						$("#numbern-data-item1").text(data.data.length*coefficient);
 					});
 					clearTimeout(timer);
 					timer = setTimeout("refreshHeatmapData();", 4000);
@@ -476,7 +519,7 @@ var Heatmap = function() {
 					coordinate3 = data.coordinate;
 					// 设置背景图片
 					var bgImgStr3 = "url(../upload/" + bgImg3 + ")";
-					var imgInfo = calImgSize3(bgImgWidth3, bgImgHeight3);
+					var imgInfo = calImgSize(bgImgWidth3, bgImgHeight3);
 					imgScale3 = imgInfo[0];
 					imgWidth3 = imgInfo[1];
 					imgHeight3 = imgInfo[2];
@@ -487,9 +530,9 @@ var Heatmap = function() {
 						"background-size" : imgWidth3 + "px " + imgHeight3 + "px",
 						"margin" : "0% auto"
 					});
-					configObj3.onExtremaChange = function(data) {
-						updateLegend(data);
-					};
+//					configObj3.onExtremaChange = function(data) {
+//						updateLegend(data);
+//					};
 					
 					heatmap3 = h337.create(configObj3);
 					$.post("/sva/heatmap/api/getData5?t="+Math.random(), {
@@ -522,6 +565,70 @@ var Heatmap = function() {
 			}
 		});
 	};
+	var initHeatmap4 = function(floorNo4,periodSel) {
+		$("#heatmap-slide4-graphic").css("background-image","");
+		$("#heatmap4").empty();
+		$.post("/sva/heatmap/api/getMapInfoByPosition", {
+			floorNo : floorNo4
+		}, function(data) {
+			if (!data.error) {
+				if (data.bg) {
+					// 全局变量赋值
+					origX4 = data.xo;
+					origY4 = data.yo;
+					bgImg4 = data.bg;
+					bgImgWidth4 = data.bgWidth;
+					bgImgHeight4 = data.bgHeight;
+					scale4 = data.scale;
+					coordinate4 = data.coordinate;
+					// 设置背景图片
+					var bgImgStr4 = "url(../upload/" + bgImg4 + ")";
+					var imgInfo = calImgSize(bgImgWidth4, bgImgHeight4);
+					imgScale4 = imgInfo[0];
+					imgWidth4 = imgInfo[1];
+					imgHeight4 = imgInfo[2];
+					$("#heatmap-slide4-graphic").css({
+						"width" : imgWidth4 + "px",
+						"height" : imgHeight4 + "px",
+						"background-image" : bgImgStr4,
+						"background-size" : imgWidth4 + "px " + imgHeight4 + "px",
+						"margin" : "0% auto"
+					});
+//					configObj4.onExtremaChange = function(data) {
+//						updateLegend(data);
+//					};
+					
+					heatmap4 = h337.create(configObj4);
+					$.post("/sva/heatmap/api/getData5?t="+Math.random(), {
+						floorNo : floorNo4,period:periodSel
+					}, function(data) {
+						if (!data.error) {
+							if (data.data && data.data.length > 0) {
+								// var points = {max:1,data:dataFilter(data)};
+								var points = dataFilter2(data.data, origX4,
+										origY4, scale4, imgWidth4, imgHeight4,
+										coordinate4, imgInfo[0]);
+								var dataObj4 = {
+										max : maxValue4,
+										min : 1,
+										data : points
+								};
+								heatmap4.setData(dataObj4);
+//								$("#legend").show();
+							}
+							$(".countInfo").show();
+							responeData4 = data;
+//							$("#number3").text(data.data.length*coefficient);
+							$("#numbern-data-item10").text(data.data.length*coefficient);
+						}
+					});
+					clearTimeout(timer4);
+					timer4 = setTimeout("refreshHeatmapData4();", 4000);
+					// refreshHeatmapData();
+				}
+			}
+		});
+	};
 	
 	var updateLegend = function(data) {
 	};
@@ -535,33 +642,39 @@ var Heatmap = function() {
 					maxValue =  data.data[0].densitySel;
 					maxValue1 =  data.data[0].densitySel1;
 					maxValue2 =  data.data[0].densitySel2;
+					maxValue4 =  data.data[0].densitySel4;
 			
 					radiusSel =  data.data[0].radiusSel;
 					radiusSel1 =  data.data[0].radiusSel1;
 					radiusSel2 =  data.data[0].radiusSel2;
+					radiusSel4 =  data.data[0].radiusSel4;
 					
 					
 					configObj.radius = parseInt(radiusSel); 
 					configObj2.radius = parseInt(radiusSel1); 
 					configObj3.radius = parseInt(radiusSel2); 
+					configObj4.radius = parseInt(radiusSel4); 
 					
 					floorNo = data.data[0].floorNo;
 					floorNo2 = data.data[0].floorNo2;
 					floorNo3 = data.data[0].floorNo3;
+					floorNo4 = data.data[0].floorNo4;
 				
 					period = data.data[0].periodSel;
 					coefficient = data.data[0].coefficient;
 					if (coefficient==0) {
 						coefficient = 1;
 					}
-//					initHeatmap(floorNo, period);
+					initHeatmap(floorNo, period);
 					initHeatmap2(floorNo2, period);
 					initHeatmap3(floorNo3, period);
+					initHeatmap4(floorNo4, period);
 
 					 
 					 count();
 					 count2();
 					 count3();
+					 count4();
 
 				}
 			});

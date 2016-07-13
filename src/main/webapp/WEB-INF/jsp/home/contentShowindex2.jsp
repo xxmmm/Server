@@ -112,6 +112,83 @@
 			<div id="sp7" class="span7" style="width:55%">
 				<div class="swiper-container">
 					<div id="wrapper" class="swiper-wrapper">
+
+						<div class="swiper-slide">
+							<div id="sb1" class="slide-box">
+								<div class="row-fluid">
+									<div class="span12">
+										<div class="heatmap-slide1">
+											<div class="heatmapTitle">
+												大悦城热力图和客流统计
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="span12" style="background-color: rgba(0,0,0,0.7);">	
+										<div class="row-fluid" >
+											<div class="span12">
+												<div id="heatmap-slide1-graphic">
+													<div id="heatmap" class="heatmap"></div>
+												</div>
+											</div>
+										</div>
+		
+										<div class="row-fluid" style="margin:2% 0;">
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item1"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">当前访客数量</span>
+												</div>
+											</div>
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item2"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">累计访客数量</span>
+												</div>
+											</div>
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item3"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">平均驻留时长（分）</span>
+												</div>
+											</div>
+										</div>	
+									</div>
+								</div>	
+
+								<div class="bar-slide1">
+									<div class="bar-slide1-title">
+										<ul>
+											<li>
+													<spring:message code="hangzhou_booth" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visiter1" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visiterall" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visitertime" />
+												</li>
+										</ul>
+									</div>
+									<div class="bar-slide1-list" id="bar-slide1-list"></div>
+								</div>
+							</div>
+						</div>									
+					
+					
 						<div class="swiper-slide">
 							<div id="sb2" class="slide-box">
 								<div class="row-fluid">
@@ -186,26 +263,30 @@
 								</div>
 							</div>
 						</div>
+						
 						<div class="swiper-slide">
-
 							<div id="sb3" class="slide-box">
 								<div class="row-fluid">
 									<div class="span12">
-										<div class="heatmapTitle">
-											包头万达热力图和客流统计
+										<div class="heatmap-slide2">
+											<div class="heatmapTitle">
+												大悦城热力图和客流统计
+											</div>
 										</div>
 									</div>
 								</div>
-								<div class="row-fluid" style="background-color: rgba(0,0,0,0.7);">
-									<div class="span7" id="imge3">	
-										<div id="heatmap-slide3-graphic">
-											<div id="heatmap3" class="heatmap3"></div>
+								<div class="row-fluid">
+									<div class="span12" style="background-color: rgba(0,0,0,0.7);">	
+										<div class="row-fluid" >
+											<div class="span12">
+												<div id="heatmap-slide3-graphic">
+													<div id="heatmap3" class="heatmap3"></div>
+												</div>
+											</div>
 										</div>
-									</div>
-									
-									<div class="span5">			
-										<div class="row-fluid" style="margin-top:15%;">
-											<div class="span12" style="text-align: center;line-height: 2.5em;">
+		
+										<div class="row-fluid" style="margin:2% 0;">
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
 												<div class="row-fluid">
 													<span class="number-value" id="numbern-data-item7"></span>
 												</div>
@@ -214,9 +295,7 @@
 													class="numbern-data-item">当前访客数量</span>
 												</div>
 											</div>
-										</div>
-										<div class="row-fluid" style="margin-top:25%;">
-											<div class="span12" style="text-align: center;line-height: 2.5em;">
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
 												<div class="row-fluid">
 													<span class="number-value" id="numbern-data-item8"></span>
 												</div>
@@ -225,9 +304,7 @@
 													class="numbern-data-item">累计访客数量</span>
 												</div>
 											</div>
-										</div>
-										<div class="row-fluid" style="margin-top:25%;">
-											<div class="span12" style="text-align: center;line-height: 2.5em;">
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
 												<div class="row-fluid">
 													<span class="number-value" id="numbern-data-item9"></span>
 												</div>
@@ -237,9 +314,8 @@
 												</div>
 											</div>
 										</div>	
-
 									</div>
-								</div>
+								</div>	
 
 								<div class="bar-slide1">
 									<div class="bar-slide1-title">
@@ -261,13 +337,88 @@
 									<div class="bar-slide1-list" id="bar-slide3-list"></div>
 								</div>
 							</div>
-						</div>
-					</div>
+						</div>	
+				
+						<div class="swiper-slide">
+							<div id="sb4" class="slide-box">
+								<div class="row-fluid">
+									<div class="span12">
+										<div class="heatmap-slide2">
+											<div class="heatmapTitle">
+												大悦城热力图和客流统计
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row-fluid">
+									<div class="span12" style="background-color: rgba(0,0,0,0.7);">	
+										<div class="row-fluid" >
+											<div class="span12">
+												<div id="heatmap-slide4-graphic">
+													<div id="heatmap4" class="heatmap4"></div>
+												</div>
+											</div>
+										</div>
+		
+										<div class="row-fluid" style="margin:2% 0;">
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item10"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">当前访客数量</span>
+												</div>
+											</div>
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item11"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">累计访客数量</span>
+												</div>
+											</div>
+											<div class="span4" style="text-align: center;line-height: 2.5em;">
+												<div class="row-fluid">
+													<span class="number-value" id="numbern-data-item12"></span>
+												</div>
+												<div class="row-fluid">
+													<span
+													class="numbern-data-item">平均驻留时长（分）</span>
+												</div>
+											</div>
+										</div>	
+									</div>
+								</div>	
+
+								<div class="bar-slide1">
+									<div class="bar-slide1-title">
+										<ul>
+											<li>
+													<spring:message code="hangzhou_booth" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visiter1" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visiterall" />
+												</li>
+											<li>
+													<spring:message code="hangzhou_visitertime" />
+												</li>
+										</ul>
+									</div>
+									<div class="bar-slide1-list" id="bar-slide4-list"></div>
+								</div>
+							</div>
+						</div>	
+									
+				</div>
+				
 					<div class="swiper-pagination"></div>
 					<div class="swiper-button-prev"></div>
-					<div class="swiper-button-next"></div>
-				</div>
-
+					<div class="swiper-button-next"></div>	
 			</div>
 
 		</div>
@@ -300,6 +451,13 @@
 		};
 		var configObj3 = {
 			container : document.getElementById("heatmap3"),
+			maxOpacity : .6,
+			radius : 20,
+			blur : .90,
+			backgroundColor : 'rgba(0, 0, 58, 0.1)'
+		};
+		var configObj4 = {
+			container : document.getElementById("heatmap4"),
 			maxOpacity : .6,
 			radius : 20,
 			blur : .90,
@@ -348,7 +506,7 @@
 						return parseInt(el.slice(0, -2));
 					});
 					*/
-				var height = $("#huawei").css("height");
+				var height = "800px";
 				$("#wrapper").css("height",height);
 			},1000);
 			

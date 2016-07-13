@@ -70,11 +70,11 @@ public class BZPramesDao
     
     public void updateSHInfo(BZPramesModel mmm) throws SQLException
     {
-        String sql = "REPLACE INTO shprames(densitySel1,radiusSel1,densitySel2,radiusSel2,densitySel3,radiusSel3,floorNo1,floorNo2,floorNo3,periodSel,startTime,coefficient,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "REPLACE INTO shprames(densitySel1,radiusSel1,densitySel2,radiusSel2,densitySel3,radiusSel3,densitySel4,radiusSel4,floorNo1,floorNo2,floorNo3,floorNo4,periodSel,startTime,coefficient,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         this.jdbcTemplate.update(sql, mmm.getDensitySel(), mmm.getRadiusSel(),
                 mmm.getDensitySel1(), mmm.getRadiusSel1(), mmm.getDensitySel2(),
-                mmm.getRadiusSel2(),mmm.getFloorNo(), mmm.getFloorNo2(),
-                mmm.getFloorNo3(), mmm.getPeriodSel(), mmm.getStartTime(),
+                mmm.getRadiusSel2(),mmm.getDensitySel4(),mmm.getRadiusSel4(),
+                mmm.getFloorNo(), mmm.getFloorNo2(),mmm.getFloorNo3(),mmm.getFloorNo4(), mmm.getPeriodSel(), mmm.getStartTime(),
                 mmm.getCoefficient(), mmm.getId());
     }
 
@@ -130,9 +130,12 @@ public class BZPramesDao
             bzPramesModel.setRadiusSel1(rs.getInt("radiusSel2"));
             bzPramesModel.setDensitySel2(rs.getInt("densitySel3"));
             bzPramesModel.setRadiusSel2(rs.getInt("radiusSel3"));
+            bzPramesModel.setDensitySel4(rs.getInt("densitySel4"));
+            bzPramesModel.setRadiusSel4(rs.getInt("radiusSel4"));
             bzPramesModel.setFloorNo(rs.getBigDecimal("FLOORNO1"));
             bzPramesModel.setFloorNo2(rs.getBigDecimal("FLOORNO2"));
             bzPramesModel.setFloorNo3(rs.getBigDecimal("FLOORNO3"));
+            bzPramesModel.setFloorNo4(rs.getBigDecimal("FLOORNO4"));
             bzPramesModel.setPeriodSel(rs.getInt("periodSel"));
             bzPramesModel.setCoefficient(rs.getDouble("coefficient"));
             bzPramesModel.setStartTime(rs.getTimestamp("startTime"));
@@ -171,7 +174,7 @@ public class BZPramesDao
     
     public List<Map<String, Object>> getAllFloorNo2(String id)
     {
-        String sql = "select floorNo1,startTime,floorNo2,floorNo3,periodSel,coefficient from shprames where id=?";
+        String sql = "select floorNo1,startTime,floorNo2,floorNo3,floorNo4,periodSel,coefficient from shprames where id=?";
         // JdbcTemplate tem = this.getJdbcTemplate();
         String[] params = {id};
         return this.jdbcTemplate.queryForList(sql, params);
