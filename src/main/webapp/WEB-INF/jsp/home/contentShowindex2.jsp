@@ -36,7 +36,7 @@
 	
 	.fullImg{
 		margin:0 auto;
-		height:1000px;
+		height:700px;
 	}
 	
 	.expand{
@@ -100,7 +100,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="455px">
+						<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="325px">
 						    <param name="movie" value="../images/flvplayer.swf" />
 						    <param name="allowFullScreen" value="true" />
 						    <param name="FlashVars" value="flv=../images/videoShow.flv&startimage=../images/startimage_en.jpg&&autoplay=1&showtime=1&showstop=1&showfullscreen=1&loop=1&bgcolor1=864319&bgcolor2=864319&playercolor=A55E22" />

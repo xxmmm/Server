@@ -310,7 +310,7 @@ var calImgSize = function(width, height) {
 	newHeight = height / imgScale;
 	*/
 	
-	var fixHeight = 580;
+	var fixHeight = 330;
 	imgScale = height / fixHeight;
 	newHeight = fixHeight;
 	newWidth = width / imgScale;
