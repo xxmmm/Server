@@ -301,12 +301,19 @@ var dataFilter3 = function(data, xo, yo, scale, width3, height3, coordinate,
 
 
 var calImgSize = function(width, height) {
+	/*
 	var newWidth, newHeight, imgScale;
 	var divWidth = parseInt($("#wrapper").css("width").slice(0, -2));
 
 	imgScale = width / divWidth;
 	newWidth = divWidth;
 	newHeight = height / imgScale;
+	*/
+	
+	var fixHeight = 580;
+	imgScale = height / fixHeight;
+	newHeight = fixHeight;
+	newWidth = width / imgScale;
 
 	return [ imgScale, newWidth, newHeight ];
 };

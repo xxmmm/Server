@@ -13,7 +13,7 @@ function timerFunction()
 			$("#numbern-data-item6").text((item.allTime2));
 			$("#numbern-data-item8").html(item.allUser3);
 			$("#numbern-data-item9").text(item.allTime3);
-			$("#numbern-data-item11").text(item.allTime4);
+			$("#numbern-data-item11").text(item.allUser4);
 			$("#numbern-data-item12").text(item.allTime4);
 			BarJsonData = item.item;
 

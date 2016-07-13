@@ -36,7 +36,7 @@
 	
 	.fullImg{
 		margin:0 auto;
-		height:720px;
+		height:1000px;
 	}
 	
 	.expand{
@@ -59,7 +59,7 @@
 </head>
 <body>
 	<!-- Swiper -->
-	<div class="" style="padding:1% 6%;">
+	<div class="" style="padding:1% 2%;">
 		<div class="row-fluid" style="margin-bottom: 1%;">
 			<div class="span2"></div>
 			<div class="span8" style="text-align: center;">
@@ -69,7 +69,7 @@
 			</div>
 		</div>
 		<div class="row-fluid" id="huawei">
-			<div class="span5" style="width:40%">
+			<div id="leftDiv" class="span5" style="width:37%">
 				<div class="row-fluid">
 					<div class="span12" style="border: 5px solid #864319;">
 						<i id="expand" class="icon-resize-full icon-2x expand"></i>
@@ -100,7 +100,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="322px">
+						<object type="application/x-shockwave-flash" data="../images/flvplayer.swf" width="100%" height="455px">
 						    <param name="movie" value="../images/flvplayer.swf" />
 						    <param name="allowFullScreen" value="true" />
 						    <param name="FlashVars" value="flv=../images/videoShow.flv&startimage=../images/startimage_en.jpg&&autoplay=1&showtime=1&showstop=1&showfullscreen=1&loop=1&bgcolor1=864319&bgcolor2=864319&playercolor=A55E22" />
@@ -109,7 +109,7 @@
 				</div>
 			</div>
 
-			<div id="sp7" class="span7" style="width:55%">
+			<div id="sp7" class="span7" style="width:60.8%">
 				<div class="swiper-container">
 					<div id="wrapper" class="swiper-wrapper">
 
@@ -119,7 +119,7 @@
 									<div class="span12">
 										<div class="heatmap-slide1">
 											<div class="heatmapTitle">
-												大悦城热力图和客流统计
+												王府井1F热力图和客流统计
 											</div>
 										</div>
 									</div>
@@ -195,7 +195,7 @@
 									<div class="span12">
 										<div class="heatmap-slide2">
 											<div class="heatmapTitle">
-												大悦城热力图和客流统计
+												王府井2F热力图和客流统计
 											</div>
 										</div>
 									</div>
@@ -270,7 +270,7 @@
 									<div class="span12">
 										<div class="heatmap-slide2">
 											<div class="heatmapTitle">
-												大悦城热力图和客流统计
+												王府井3F热力图和客流统计
 											</div>
 										</div>
 									</div>
@@ -345,7 +345,7 @@
 									<div class="span12">
 										<div class="heatmap-slide2">
 											<div class="heatmapTitle">
-												大悦城热力图和客流统计
+												王府井4F热力图和客流统计
 											</div>
 										</div>
 									</div>
@@ -506,7 +506,7 @@
 						return parseInt(el.slice(0, -2));
 					});
 					*/
-				var height = "800px";
+				var height = $("#leftDiv").css("height")//"800px";
 				$("#wrapper").css("height",height);
 			},1000);
 			
