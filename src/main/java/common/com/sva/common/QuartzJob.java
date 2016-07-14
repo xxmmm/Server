@@ -172,10 +172,16 @@ public class QuartzJob {
 
 	}
 
+
+	/** 
+	 * @Title: doStatisticDataPerHalfHour 
+	 * @Description: 每个小时按小时统计、按天统计、按楼层统计预处理    
+	 * @throws 
+	 */
 	public void doStatisticDataPerHalfHour() {
 		// 获取一个小时之前的时间戳
-		long startTime = System.currentTimeMillis() - 3600000;
-        long insertTime = System.currentTimeMillis() - 1800000;
+		long startTime = System.currentTimeMillis() - Params.ONE_HOUR;
+        long insertTime = System.currentTimeMillis() - Params.HALF_HOUR;
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:00:00");
         String times = sdf.format(insertTime);
 		Calendar cal = Calendar.getInstance();
@@ -185,7 +191,7 @@ public class QuartzJob {
 		String sqlHour = "insert into statistichour "
 				+ "(SELECT b.placeId placeId,'"+times+"' time,COUNT(distinct a.userID) number "
 				+ "FROM " + tableName + " a join maps b on a.z = b.floorNo and a.timestamp> " + startTime
-				+ " GROUP BY b.placeId,time)";
+				+ " GROUP BY b.placeId)";
 
 		String sqlDay = "replace into statisticday " + "(SELECT b.placeId placeId,"
 				+ ConvertUtil.dateFormat(cal.getTime(), Params.YYYYMMDD) + " time,COUNT(distinct a.userID) number "
