@@ -175,12 +175,15 @@ public class QuartzJob {
 	public void doStatisticDataPerHalfHour() {
 		// 获取一个小时之前的时间戳
 		long startTime = System.currentTimeMillis() - 3600000;
+        long insertTime = System.currentTimeMillis() - 1800000;
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:00:00");
+        String times = sdf.format(insertTime);
 		Calendar cal = Calendar.getInstance();
 		String time = ConvertUtil.dateFormat(cal.getTime(), Params.YYYYMMDD);
 		String tableName = Params.LOCATION + time;
 		log.info("doStatisticDataPerHalfHour:" + ConvertUtil.dateFormat(cal.getTime(), "yyyyMMddHHmmSS"));
 		String sqlHour = "insert into statistichour "
-				+ "(SELECT b.placeId placeId,FROM_UNIXTIME(a.timestamp/1000,'%Y%m%d%H0000') time,COUNT(distinct a.userID) number "
+				+ "(SELECT b.placeId placeId,'"+times+"' time,COUNT(distinct a.userID) number "
 				+ "FROM " + tableName + " a join maps b on a.z = b.floorNo and a.timestamp> " + startTime
 				+ " GROUP BY b.placeId,time)";
 
