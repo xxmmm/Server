@@ -167,7 +167,7 @@
 	
 	<bean id="doTime2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="jobtask2" />
-		<property name="cronExpression" value="01 55 00 * * ?" />
+		<property name="cronExpression" value="01 59 23 * * ?" />
 	</bean> 
 	 
     <bean id="doTime3" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -182,7 +182,7 @@
     
     <bean id="doTime5" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="jobtask5" />
-        <property name="cronExpression" value="30 01 * * * ?" />
+        <property name="cronExpression" value="00 59 * * * ?" />
     </bean>
     
     <bean id="doTime6" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -230,7 +230,7 @@
 		<property name="triggers">
 			<list>
 				<ref bean="doTime1" />
-				<ref bean="doTime2" />
+			<!--<ref bean="doTime2" />-->
 				<ref bean="doTime3" />
 				<ref bean="doTime5" />
 				<ref bean="doTime6" />

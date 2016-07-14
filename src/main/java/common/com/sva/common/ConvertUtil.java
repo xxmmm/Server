@@ -118,6 +118,23 @@ public abstract class ConvertUtil
         String dateString = formatter.format(date);
         return dateString;
     }
+    
+    
+    /**
+     * 时间戳转指定格式字符型
+     * 
+     * @param timestamp
+     *            时间戳
+     * @param format
+     *            格式，如：yyyy-MM-dd HH:mm:ss
+     * @return
+     */
+    public static String dateFormat(long timestamp, String format)
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        String dateString = formatter.format(timestamp);
+        return dateString;
+    }
 
     /**
      * 字符型日期转指定格式字符型
