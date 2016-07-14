@@ -42,7 +42,7 @@
 	.expand{
 	    cursor: pointer;
 	    float: left;
-	    position: fixed;
+	    position: absolute;
 	    z-index: 2;
 	    background: none !important;
 	    margin: 10px 0 0 5px;
@@ -439,29 +439,29 @@
 			container : document.getElementById("heatmap"),
 			maxOpacity : .6,
 			radius : 20,
-			blur : .90,
-			backgroundColor : 'rgba(0, 0, 58, 0.1)'
+			blur : .90
+			//backgroundColor : 'rgba(0, 0, 58, 0.1)'
 		};
 		var configObj2 = {
 			container : document.getElementById("heatmap2"),
 			maxOpacity : .6,
 			radius : 20,
-			blur : .90,
-			backgroundColor : 'rgba(0, 0, 58, 0.1)'
+			blur : .90
+			//backgroundColor : 'rgba(0, 0, 58, 0.1)'
 		};
 		var configObj3 = {
 			container : document.getElementById("heatmap3"),
 			maxOpacity : .6,
 			radius : 20,
-			blur : .90,
-			backgroundColor : 'rgba(0, 0, 58, 0.1)'
+			blur : .90
+			//backgroundColor : 'rgba(0, 0, 58, 0.1)'
 		};
 		var configObj4 = {
 			container : document.getElementById("heatmap4"),
 			maxOpacity : .6,
 			radius : 20,
-			blur : .90,
-			backgroundColor : 'rgba(0, 0, 58, 0.1)'
+			blur : .90
+			//backgroundColor : 'rgba(0, 0, 58, 0.1)'
 		};
 		var legendCanvas = document.createElement('canvas');
 		legendCanvas.width = 100;
