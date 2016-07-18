@@ -42,25 +42,21 @@ class GetSvaData():
                 timestamp = int(time.time())* 1000
                 print timestamp
                 arrPhone = [15680067296,13838792076,13661999904,17199916700,18381335216,13540465828,13838330007]
-
                 message = "{\"locationstreamanonymous\":[{\"IdType\":\"IP\",\"Timestamp\":"+str(timestamp)+",\"datatype\":\"coordinates\",\"location\":{\"x\":1133.0,\"y\":492.0,\"z\":3},\"userid\":[\"0a26d23d\"]}"
                 #print message
                 for i in range(7):
                     x = random.randint(300, 400)
                     y = random.randint(350, 520)
-                    message = message + ',{"IdType":"S1APID","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x)+',"y":'+str(y)+',"z":3},"extid":{"mmes1":'+str(arrPhone[i])+',"enbs1":'+str(arrPhone[i])+',"enbid":'+str(arrPhone[i])+'},"userid":["'+str(arrPhone[i])+'"]}'
+                    message = message + ',{"IdType":"MSISDN","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x)+',"y":'+str(y)+',"z":2},"userid":["'+str(arrPhone[i])+'"]}'
                 message = message + "]}"
                 #message = '{"geofencing":[{"IdType": "IP", "userid": ["bea80202"], "mapid": 2, "zoneid": 0, "zone_event": "exit", "Timestamp":1461054031000}]}'
                 #{"locationstream":[{"IdType":"IP","Timestamp":1427560872000,"datatype":"coordinates","location":{"x":1133.0,"y":492.0,"z":1},"userid":["0a26d23d"]}]}
-
                 try:             
                     print message
                     jsonData = json.loads(message)
-                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3306)
+                    conn=MySQLdb.connect(host='127.0.0.1',user='root',passwd='123456',port=3307)
                     cursor = conn.cursor()   
-
                     conn.select_db('sva')
-
                     if jsonData.keys()[0] == 'locationstream':
                         jsonList = jsonData["locationstream"]
                         for index in range(len(jsonList)):                            
@@ -70,16 +66,6 @@ class GetSvaData():
                             x = jsonList[index]["location"]["x"]
                             y = jsonList[index]["location"]["y"]
                             z = jsonList[index]["location"]["z"]
-
-                            #add vuic {extid:{mmes1:"",enbs1:"",enbid:""}}
-                            mmes1 = ''
-                            enbs1 = ''
-                            enbid = ''
-                            if IdType == 'S1APID':
-                                mmes1 = jsonList[index]["extid"]["mmes1"]
-                                enbs1 = jsonList[index]["extid"]["enbs1"]
-                                enbid = jsonList[index]["extid"]["enbid"]
-                            
                             if z > 0:
                                 z = z + int(self.companyid)*10000
                             else:
@@ -96,13 +82,11 @@ class GetSvaData():
                             cursor.execute ("select loc_count, time_begin,timestamp,userid  from locationPhone where userid=%s",[userid])  
                             row = cursor.fetchone ()
                             if row != None:
-
-                                sqlparam = [IdType,Timestamp,time_local,datatype,x,y,z,mmes1,enbs1,enbid,userid] 
-                                cursor.execute("update locationphone set IdType=%s, Timestamp = %s,time_local= %s,datatype= %s,x=%s, y =%s, z = %s, mmes1 = %s, enbs1 = %s, enbid = %s where userid = %s",sqlparam)
+                                sqlparam = [IdType,Timestamp,time_local,datatype,x,y,z,userid] 
+                                cursor.execute("update locationphone set IdType=%s, Timestamp = %s,time_local= %s,datatype= %s,x=%s, y =%s, z = %s where userid = %s",sqlparam)
                             else:
-                                sqlparam = [IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,mmes1,enbs1,enbid,userid] 
-                                cursor.execute("replace into locationPhone (IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,mmes1,enbs1,enbid,userid) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",sqlparam)
-
+                                sqlparam = [IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,userid] 
+                                cursor.execute("replace into locationPhone (IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,userid) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",sqlparam)
                             #cursor.execute("replace into locationPhone (IdType,Timestamp,datatype,x,y,z,userid) values (%s,%s,%s,%s,%s,%s,%s)",sqlparam)
                     if jsonData.keys()[0] == 'locationstreamanonymous':
                         jsonList = jsonData["locationstreamanonymous"]
@@ -114,16 +98,6 @@ class GetSvaData():
                             x = jsonList[index]["location"]["x"]
                             y = jsonList[index]["location"]["y"]
                             z = jsonList[index]["location"]["z"]
-
-                            #add vuic
-                            mmes1 = ''
-                            enbs1 = ''
-                            enbid = ''
-                            if IdType == 'S1APID':
-                                mmes1 = jsonList[index]["extid"]["mmes1"]
-                                enbs1 = jsonList[index]["extid"]["enbs1"]
-                                enbid = jsonList[index]["extid"]["enbid"]
-                            
                             if z > 0:
                                 z = z + int(self.companyid)*10000
                             else:
@@ -149,10 +123,8 @@ class GetSvaData():
                                 print sqlparam
                                 cursor.execute("update location"+dataStr+" set IdType=%s, Timestamp = %s,time_local=%s,loc_count=%s, during=%s,datatype=%s,x=%s, y =%s where z = %s and userid = %s ",sqlparam)
                             else:
-                                sqlparam = [IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,mmes1,enbs1,enbid,userid] 
-
-                                cursor.execute("insert into location"+dataStr+" (IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,mmes1,enbs1,enbid,userid) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",sqlparam)
-
+                                sqlparam = [IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,userid] 
+                                cursor.execute("insert into location"+dataStr+" (IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,userid) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",sqlparam)
                             #cursor.execute("insert into location"+dataStr+" (IdType,Timestamp,datatype,x,y,z,userid) values (%s,%s,%s,%s,%s,%s,%s)",sqlparam)
                     if jsonData.keys()[0] == 'networkinfo':
                         jsonList = jsonData["networkinfo"][0]["lampsiteinfo"]["prrusignal"]
@@ -162,7 +134,6 @@ class GetSvaData():
                             sqlparam = [gpp,self.brokeip,rsrp]                       
                             print sqlparam
                             cursor.execute("replace into prrusignal (gpp,svaIp,rsrp) values (%s,%s,%s)",sqlparam)
-
                     if jsonData.keys()[0] == 'geofencing':
                         jsonList = jsonData["geofencing"]
                         for index in range(len(jsonList)):                            
@@ -178,7 +149,6 @@ class GetSvaData():
                             sqlparam = [IdType,userid,mapid,zoneid,zone_event,Timestamp,time_local]                       
                             print sqlparam
                             cursor.execute("insert into geofencing (IdType,userid,mapid,zoneid,enter,Timestamp,time_local) values (%s,%s,%s,%s,%s,%s,%s)",sqlparam)
-
                     conn.commit() 
                     self.nowTime = datetime.now()
                     cursor.close()  
@@ -209,9 +179,7 @@ if __name__ == "__main__":
     brokeIP = "182.138.104.35"
     brokerPort = 4703
     queueID = "app0.7ce75a30c6184ef08b20994bdcb53dcb.66fc8841"
-
     companyID = 1
-
     getSvaData = GetSvaData(appName,brokeIP,brokerPort,queueID,companyID)
     try:
         thread1 = threading.Thread(target=getSvaData.Run)

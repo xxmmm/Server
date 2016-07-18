@@ -80,7 +80,7 @@ public class CustomerProvinceController {
 			// 遍历用户，获取其电话所属的省份
 			for(Map<String,Object> r : result)
 			{
-				phoneNo = r.get("enbs1").toString();
+				phoneNo = r.get("userID").toString();
 				// 如果该用户没有电话信息，则不作处理
 				if("".equals(phoneNo)){
 					continue;

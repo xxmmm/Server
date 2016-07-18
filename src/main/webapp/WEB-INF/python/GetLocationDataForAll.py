@@ -83,16 +83,6 @@ class GetSvaData():
                             x = jsonList[index]["location"]["x"]
                             y = jsonList[index]["location"]["y"]
                             z = jsonList[index]["location"]["z"]
-
-                            #add vuic
-                            mmes1 = ''
-                            enbs1 = ''
-                            enbid = ''
-                            if IdType == 'S1APID':
-                            	mmes1 = jsonList[index]["extid"]["mmes1"]
-                            	enbs1 = jsonList[index]["extid"]["enbs1"]
-                            	enbid = jsonList[index]["extid"]["enbid"]
-                            	
                             if z > 0:
                                 z = z + int(self.companyid)*10000
                             else:
@@ -114,14 +104,11 @@ class GetSvaData():
                             if row != None:
                                 loc_count = loc_count + int(row[0])
                                 during = Timestamp - int(row[1]);
-
-                                sqlparam = [IdType,Timestamp,time_local,loc_count,during,datatype,x,y,z,mmes1,enbs1,enbid,userid]
-                                print sqlparam
-                                cursor.execute("update location"+dataStr+" set IdType=%s, Timestamp = %s,time_local=%s,loc_count=%s, during=%s,datatype=%s,x=%s, y =%s,mmes1=%s,enbs1=%s,enbid=%s where z = %s and userid = %s ",sqlparam)
+                                sqlparam = [IdType,Timestamp,time_local,loc_count,during,datatype,x,y,z,userid]
+                                cursor.execute("update location"+dataStr+" set IdType=%s, Timestamp = %s,time_local=%s,loc_count=%s, during=%s,datatype=%s,x=%s, y =%s where z = %s and userid = %s ",sqlparam)
                             else:
-                                sqlparam = [IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,mmes1,enbs1,enbid,userid] 
-                                cursor.execute("insert into location"+dataStr+" (IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,mmes1,enbs1,enbid,userid) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",sqlparam)
-
+                                sqlparam = [IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,userid] 
+                                cursor.execute("insert into location"+dataStr+" (IdType,Timestamp,time_begin,time_local,loc_count,during,datatype,x,y,z,userid) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",sqlparam)
                             #cursor.execute("insert into location"+dataStr+" (IdType,Timestamp,datatype,x,y,z,userid) values (%s,%s,%s,%s,%s,%s,%s)",sqlparam)
                     if jsonData.keys()[0] == 'networkinfo':
                         jsonList = jsonData["networkinfo"][0]["lampsiteinfo"]["prrusignal"]
@@ -135,21 +122,17 @@ class GetSvaData():
                         jsonList = jsonData["geofencing"]
                         for index in range(len(jsonList)):                            
                             IdType = jsonList[index]["IdType"]
-
                             if len(jsonList[index]["userid"]) < 1:
                                 continue
                             userid = jsonList[index]["userid"][0] 
                             mapid = jsonList[index]["mapid"]    
                             zoneid = jsonList[index]["zoneid"] 
                             zone_event = jsonList[index]["zone_event"]
-
                             Timestamp = jsonList[index]["Timestamp"]
                             time_local = time.time() * 1000
                             sqlparam = [IdType,userid,mapid,zoneid,zone_event,Timestamp,time_local]                       
                             LOG.info(sqlparam)
-
                             cursor.execute("insert into geofencing (IdType,userid,mapid,zoneid,enter,Timestamp,time_local) values (%s,%s,%s,%s,%s,%s,%s)",sqlparam)
-
                     conn.commit() 
                     self.nowTime = datetime.now()
                     cursor.close()  
