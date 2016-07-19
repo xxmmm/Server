@@ -373,6 +373,31 @@ public class ApiController
         return modelMap;
 
     }
+ 
+    @RequestMapping(value = "/getNewTikectData", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> getNewTikectData(
+            @RequestParam("messageId") String messageId
+            )
+    {
+
+        String areaId =daoMsg.getAreaIdByMessage(messageId);
+        List<String> list = daoMsg.getTiketPathByAreaId(areaId);
+        Map<String, Object> modelMap = new HashMap<String, Object>(3);  
+        String tikePath = null;
+        int size = list.size();
+        if (size>0)
+        {
+            Random rand = new Random();
+            int randNum = rand.nextInt(size);
+            tikePath = list.get(randNum);
+            
+        }
+        modelMap.put("tikectPath",tikePath);
+        return modelMap;
+
+    }    
+    
 
     @RequestMapping(value = "/getLocationData", method = {RequestMethod.POST})
     @ResponseBody
@@ -644,18 +669,60 @@ public class ApiController
         // }
 
         Collection<MapsModel> ResultList = null;
+        Collection<AreaModel> areaList = daoArea.doquery();
         ResultList = daoMaps.doquery();
         Map<String, Object> modelMap = new HashMap<String, Object>(2);
 
         modelMap.put("error", null);
         modelMap.put("data", ResultList);
+        modelMap.put("areaData", areaList);
 
         return modelMap;
     }
+    
+    /** 
+     * @Title: getMessages 
+     * @Description: TODO 同通过店铺Id获取店铺范围的消息推送以及电子围栏消息
+     * @param areaId 店铺Id
+     * @return Map<String,Object>       
+     * @throws 
+     */
+    @RequestMapping(value = "/getMessages", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> getMessages(@RequestBody HashMap<String,List<String>> map)
+    {
+        Collection<MessageModel> messageList = new ArrayList<MessageModel>(10);
+        Collection<GeofencingModel> GeofencingList = new ArrayList<GeofencingModel>(10);
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        try
+        {
+            List<String> areaList = map.get("areaId");
+            if (areaList.size()>0)
+            {
+                
+                for (int i = 0; i < areaList.size(); i++)
+                {
+                    String areaId = areaList.get(i);
+                    messageList.addAll(daoMsg.getAllMessageDataByAreaId(areaId));
+                    String zoneId = daoArea.getZoneIdByAreaId(areaId);
+                    log.debug("getMessage: areaId:"+areaId+" zoneId"+zoneId);
+                    GeofencingList.addAll(geofencingDao.getGeofencingByZoneId(zoneId)); 
+                }
+            }
+            
+        }
+        catch (Exception e)
+        {
+            log.error("getMessage error:"+e.getMessage());
+        }
+        modelMap.put("message", messageList);
+        modelMap.put("geoFence", GeofencingList);
+        return modelMap;
+    }    
 
     @RequestMapping(value = "/getMapData", method = {RequestMethod.GET})
     @ResponseBody
-    public Map<String, Object> getMapData(Model model)
+    public Map<String, Object> getMapData(String model)
     {
         List<MapMngModel> list = new ArrayList<MapMngModel>(10);
         Collection<MapsModel> ResultList = new ArrayList<MapsModel>(10);
@@ -2115,5 +2182,8 @@ public class ApiController
 
         return allDataMap;
     }
+    
+    
+    
 
 }

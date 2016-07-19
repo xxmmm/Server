@@ -49,5 +49,13 @@ public class GeofencingDao
         String[] params = {zoneid, userid};
         return this.jdbcTemplate.query(sql, params, new AreaMapper3());
     }
+    
+    public Collection<GeofencingModel> getGeofencingByZoneId(String zoneid
+         )
+{
+    String sql = "SELECT * FROM geofencing where zoneid = ? order by timestamp asc ";
+    String[] params = {zoneid};
+    return this.jdbcTemplate.query(sql, params, new AreaMapper3());
+}
 
 }
