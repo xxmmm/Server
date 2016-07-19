@@ -142,6 +142,10 @@ public class MapController
             @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "svgfile", required = false) MultipartFile svg,
             @RequestParam(value = "pathroutefile", required = false) MultipartFile pathFile,
+            @RequestParam(value = "pathroutefile4", required = false) MultipartFile zMap,
+            @RequestParam(value = "pathroutefile5", required = false) MultipartFile iosMap,
+            @RequestParam(value = "pathroutefile6", required = false) MultipartFile zPathFile,
+            @RequestParam(value = "pathroutefile7", required = false) MultipartFile fMap,
             @RequestParam(value = "routefile", required = false) MultipartFile route,
             HttpServletRequest request, ModelMap model, MapMngModel mapMngModel)
             throws Exception
@@ -178,6 +182,10 @@ public class MapController
             String svgName = svg.getOriginalFilename();
             String routeName = route.getOriginalFilename();
             String pathfileName = pathFile.getOriginalFilename();
+            String fMapName = fMap.getOriginalFilename();
+            String zMapName = zMap.getOriginalFilename();
+            String zPathFileName = zPathFile.getOriginalFilename();
+            String  iosMapName = iosMap.getOriginalFilename();
             if (!fileName.equals(nu))
             {
                 String path = request.getSession().getServletContext()
@@ -281,8 +289,110 @@ public class MapController
                     Logger.getLogger(MapController.class).info(e.getMessage());
                 }
             }
+            if (!zMapName.equals(nu))
+            {
+                String path = request.getSession().getServletContext()
+                    .getRealPath("/WEB-INF/upload");
+                String _ext = zMapName.substring(zMapName.lastIndexOf('.'));
+                zMapName =System.currentTimeMillis() + "_"
+                    + mapMngModel.getFloor() + _ext;
+                mapMngModel.setzMap(zMapName);
+                Logger.getLogger(MapController.class).debug(zMapName);
+                File targetFile = new File(path, zMapName);
+                if (!targetFile.exists())
+                {
+                    targetFile.mkdirs();
+                }
+                // 修改
+                try
+                {
+                    zMap.transferTo(targetFile);
+                }
+                catch (Exception e)
+                {
+                    Logger.getLogger(MapController.class).info(e.getMessage());
+                }
+            }
+            if (!iosMapName.equals(nu))
+            {
+                String path = request.getSession().getServletContext()
+                    .getRealPath("/WEB-INF/upload");
+                String _ext = iosMapName.substring(iosMapName.lastIndexOf('.'));
+                iosMapName =System.currentTimeMillis() + "_"
+                    + mapMngModel.getFloor() + _ext;
+                mapMngModel.setzIosMap(iosMapName);
+                Logger.getLogger(MapController.class).debug(iosMapName);
+                File targetFile = new File(path, iosMapName);
+                if (!targetFile.exists())
+                {
+                    targetFile.mkdirs();
+                }
+                // 修改
+                try
+                {
+                    iosMap.transferTo(targetFile);
+                }
+                catch (Exception e)
+                {
+                    Logger.getLogger(MapController.class).info(e.getMessage());
+                }
+            }
+            if (!zPathFileName.equals(nu))
+            {
+                String path = request.getSession().getServletContext()
+                    .getRealPath("/WEB-INF/upload");
+                String _ext = zPathFileName.substring(zPathFileName.lastIndexOf('.'));
+                zPathFileName = System.currentTimeMillis() + "_"
+                    + mapMngModel.getFloor() + _ext;
+                mapMngModel.setzMapPathfile(zPathFileName);
+                Logger.getLogger(MapController.class).debug(zPathFileName);
+                File targetFile = new File(path, zPathFileName);
+                if (!targetFile.exists())
+                {
+                    targetFile.mkdirs();
+                }
+                // 修改
+                try
+                {
+                    zPathFile.transferTo(targetFile);
+                }
+                catch (Exception e)
+                {
+                    Logger.getLogger(MapController.class).info(e.getMessage());
+                }
+            }
+            if (!fMapName.equals(nu))
+            {
+                String path = request.getSession().getServletContext()
+                    .getRealPath("/WEB-INF/upload");
+                String _ext = fMapName.substring(fMapName.lastIndexOf('.'));
+                fMapName = System.currentTimeMillis() + "_"
+                    + mapMngModel.getFloor() + _ext;
+                mapMngModel.setfMap(fMapName);
+                Logger.getLogger(MapController.class).debug(fMapName);
+                File targetFile = new File(path, fMapName);
+                if (!targetFile.exists())
+                {
+                    targetFile.mkdirs();
+                }
+                // 修改
+                try
+                {
+                    fMap.transferTo(targetFile);
+                }
+                catch (Exception e)
+                {
+                    Logger.getLogger(MapController.class).info(e.getMessage());
+                }
+            }
 
-            dao.updateMap(mapMngModel);
+            if (!fileName.equals(nu))
+            {
+                dao.updateMapData(mapMngModel);
+            }else
+            {
+                dao.updateMapDataNoPath(mapMngModel); 
+            }
             return "redirect:/home/showMapMng";
         }
         else
@@ -290,7 +400,7 @@ public class MapController
             Logger.getLogger(MapController.class).debug(mapMngModel.getFloor());
             String path = request.getSession().getServletContext()
                     .getRealPath("/WEB-INF/upload");
-            saveFile(mapMngModel, file, svg, path, nu, route,pathFile);
+            saveFile(mapMngModel, file, svg, path, nu, route,pathFile,zMap,fMap,zPathFile,iosMap);
 
             return "redirect:/home/showMapMng";
         }
@@ -306,82 +416,122 @@ public class MapController
     }
 
     private void saveFile(MapMngModel mapMngModel, MultipartFile file,
-            MultipartFile svg, String path, String nu, MultipartFile route,MultipartFile pathFile)
+            MultipartFile svg, String path, String nu, MultipartFile route,MultipartFile pathFile,
+            MultipartFile zMap,MultipartFile fMap,MultipartFile zPathFile,MultipartFile iosMap)
     {
         String fileName = file.getOriginalFilename();
         String svgName = svg.getOriginalFilename();
         String routeName = route.getOriginalFilename();
         String pathfileName = pathFile.getOriginalFilename();
+        String fMapName = fMap.getOriginalFilename();
+        String zMapName = zMap.getOriginalFilename();
+        String zPathFileName = zPathFile.getOriginalFilename();
+        String iosMapName = iosMap.getOriginalFilename();
         String _ext = null;
         String _ext1 = null;
         String _ext2 = null;
         String _ext3 = null;
+        String _ext4 = null;
+        String _ext5 = null;
+        String _ext6 = null;
+        String _ext7 = null;
+        // 保存
+        try
+        {
+           
         if (fileName != nu)
         {
             _ext = fileName.substring(fileName.lastIndexOf('.'));
+            fileName = mapMngModel.getFloorNo() + "_" + mapMngModel.getFloor()
+            + _ext;
+            mapMngModel.setPath(fileName);
+            File targetFile = new File(path, fileName);
+            getFile(targetFile);
+            BufferedImage sourceImg = javax.imageio.ImageIO.read(file
+                .getInputStream());
+            mapMngModel.setImgWidth(sourceImg.getWidth());
+            mapMngModel.setImgHeight(sourceImg.getHeight());
+            file.transferTo(targetFile);
 
         }
         if (routeName != nu)
         {
             _ext2 = routeName.substring(routeName.lastIndexOf('.'));
+            routeName = mapMngModel.getFloorNo() + "_" + mapMngModel.getFloor()
+            + _ext2;
+            mapMngModel.setRoute(routeName);
+            File targetFile2 = new File(path, routeName);
+            getFile(targetFile2);
+            route.transferTo(targetFile2);
 
         }
         if (svgName != nu)
         {
             _ext1 = svgName.substring(svgName.lastIndexOf('.'));
+            svgName = mapMngModel.getFloorNo() + "_" + mapMngModel.getFloor()
+            + _ext1;
+            mapMngModel.setSvg(svgName);
+            File targetFile1 = new File(path, svgName);
+            getFile(targetFile1);
+            svg.transferTo(targetFile1);
 
         }
         if (pathfileName != nu)
         {
             _ext3 = pathfileName.substring(pathfileName.lastIndexOf('.'));
+            pathfileName = mapMngModel.getUpdateTime() + "_" + mapMngModel.getFloor()
+            + _ext3;
+            mapMngModel.setPathFile(pathfileName);
+            File targetFile3 = new File(path, pathfileName);
+            getFile(targetFile3);
+            pathFile.transferTo(targetFile3);
+            
+        }
+        if (zMapName != nu)
+        {
+            _ext4 = zMapName.substring(zMapName.lastIndexOf('.'));
+            zMapName = System.currentTimeMillis() + "_" + mapMngModel.getFloor()
+            + _ext4;
+            mapMngModel.setzMap(zMapName);
+            File targetFile3 = new File(path, zMapName);
+            getFile(targetFile3);
+            zMap.transferTo(targetFile3);
+            
+        }
+        if (fMapName != nu)
+        {
+            _ext5 = fMapName.substring(fMapName.lastIndexOf('.'));
+            fMapName = System.currentTimeMillis() + "_" + mapMngModel.getFloor()
+            + _ext5;
+            mapMngModel.setfMap(fMapName);
+            File targetFile3 = new File(path, fMapName);
+            getFile(targetFile3);
+            fMap.transferTo(targetFile3);
+            
+        }
+        if (zPathFileName != nu)
+        {
+            _ext6 = zPathFileName.substring(zPathFileName.lastIndexOf('.'));
+            zPathFileName = System.currentTimeMillis() + "_" + mapMngModel.getFloor()
+            + _ext6;
+            mapMngModel.setzMapPathfile(zPathFileName);
+            File targetFile3 = new File(path, zPathFileName);
+            getFile(targetFile3);
+            zPathFile.transferTo(targetFile3);
+            
+        }
+        if (iosMapName != nu)
+        {
+            _ext7 = iosMapName.substring(iosMapName.lastIndexOf('.'));
+            iosMapName = System.currentTimeMillis() + "_" + mapMngModel.getFloor()
+            + _ext7;
+            mapMngModel.setzIosMap(iosMapName);
+            File targetFile3 = new File(path, iosMapName);
+            getFile(targetFile3);
+            iosMap.transferTo(targetFile3);
             
         }
 
-        fileName = mapMngModel.getFloorNo() + "_" + mapMngModel.getFloor()
-                + _ext;
-        svgName = mapMngModel.getFloorNo() + "_" + mapMngModel.getFloor()
-                + _ext1;
-        routeName = mapMngModel.getFloorNo() + "_" + mapMngModel.getFloor()
-                + _ext2;
-        pathfileName = mapMngModel.getUpdateTime() + "_" + mapMngModel.getFloor()
-        + _ext3;
-        if (_ext != null)
-        {
-            mapMngModel.setPath(fileName);
-        }
-        if (_ext1 != null)
-        {
-            mapMngModel.setSvg(svgName);
-        }
-        if (_ext2 != null)
-        {
-            mapMngModel.setRoute(routeName);
-        }
-        if (_ext3 != null)
-        {
-            mapMngModel.setPathFile(pathfileName);
-        }
-
-        File targetFile = new File(path, fileName);
-        File targetFile1 = new File(path, svgName);
-        File targetFile2 = new File(path, routeName);
-        File targetFile3 = new File(path, pathfileName);
-        getFile(targetFile);
-        getFile(targetFile1);
-        getFile(targetFile2);
-        getFile(targetFile3);
-        // 保存
-        try
-        {
-            BufferedImage sourceImg = javax.imageio.ImageIO.read(file
-                    .getInputStream());
-            file.transferTo(targetFile);
-            svg.transferTo(targetFile1);
-            route.transferTo(targetFile2);
-            pathFile.transferTo(targetFile3);
-
-            mapMngModel.setImgWidth(sourceImg.getWidth());
-            mapMngModel.setImgHeight(sourceImg.getHeight());
             // svg.transferTo(targetFile1);
             dao.saveMapInfo(mapMngModel);
 

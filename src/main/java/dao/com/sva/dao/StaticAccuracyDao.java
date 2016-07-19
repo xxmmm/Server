@@ -19,78 +19,106 @@ import com.sva.web.models.StaticAccuracyApiModel;
 public class StaticAccuracyDao
 {
     private JdbcTemplate jdbcTemplate;
-
+    
     // 注入DataSource
     public void setDataSource(DataSource dataSource)
     {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
-
-    public Collection<StaticAccuracyModel> getData(int start, int length,
-            String sortCol, String sortDir)
+    
+    public Collection<StaticAccuracyModel> getData(int start, int length, String sortCol, String sortDir)
     {
         String sql = "select a.*,b.floor,c.deviation, d.name place from staticaccuracy a "
-                + "left join maps b on a.floorNo = b.floorNo "
-                + "left join store d on a.placeId = d.id "
-                + "left join estimatedev c on b.floorNo = c.floorNo "
-                + " order by " + sortCol + ' ' + sortDir + " limit ?,?";
-        return jdbcTemplate.query(sql, new Object[]{start, length},
-                new AccuracyMapper());
+            + "left join maps b on a.floorNo = b.floorNo " + "left join store d on a.placeId = d.id "
+            + "left join estimatedev c on b.floorNo = c.floorNo " + " order by " + sortCol + ' ' + sortDir
+            + " limit ?,?";
+        return jdbcTemplate.query(sql, new Object[] {start, length}, new AccuracyMapper());
     }
-
+    
+    public Collection<StaticAccuracyModel> getDataByPlaceIdTime(String startTime, String endTime, String placeId)
+    {
+        
+        String sql = "select a.*,b.floor,c.deviation, d.name place from staticaccuracy a left join maps b "
+            + "on a.floorNo = b.floorNo left join store d on a.placeId = d.id left join estimatedev c on b.floorNo = c.floorNo "
+            + "where a.placeId = ? and a.start_date > ? and a.end_date< ?";
+        return jdbcTemplate.query(sql, new Object[] {placeId, startTime, endTime}, new AccuracyMapper());
+    }
+    public Collection<StaticAccuracyModel> getAllDataByPlaceIdTime(String placeId, String startTime, String endTime)
+    {
+        
+        String sql = "select a.*,b.floor,c.deviation, d.name place from staticaccuracy a left join maps b "
+            + "on a.floorNo = b.floorNo left join store d on a.placeId = d.id left join estimatedev c on b.floorNo = c.floorNo "
+            + "where a.placeId = ? and a.start_date > ? and a.end_date< ?";
+        return jdbcTemplate.query(sql, new Object[] {placeId,startTime,endTime}, new AccuracyMapper());
+    }
+    
+    public Collection<StaticAccuracyModel> getAllData(String startTime, String endTime)
+    {
+        
+        String sql = "select a.*,b.floor,c.deviation, d.name place from staticaccuracy a left join maps b "
+            + "on a.floorNo = b.floorNo left join store d on a.placeId = d.id left join estimatedev c on b.floorNo = c.floorNo "
+            + " where a.start_date > ? and a.end_date< ? ";
+        return jdbcTemplate.query(sql,new Object[]{startTime,endTime},new AccuracyMapper());
+    }
+    
     /*
      * 通过用户名获取相对应的商场权限
      */
-    public Collection<StaticAccuracyModel> getStaticDataByStoreid(int start,
-            int length, String sortCol, String sortDir, int storeid)
+    public Collection<StaticAccuracyModel> getStaticDataByStoreid(int start, int length, String sortCol, String sortDir,
+        int storeid)
     {
         String sql = "select a.*,b.floor,c.deviation, d.name place from staticaccuracy a "
-                + "left join maps b on a.floorNo = b.floorNo "
-                + "left join store d on a.placeId = d.id "
-                + "left join estimatedev c on b.floorNo = c.floorNo "
-                + " order by "
-                + sortCol
-                + ' '
-                + sortDir
-                + "where a.placeId = "
-                + storeid + " limit ?,?";
-        return jdbcTemplate.query(sql, new Object[]{start, length},
-                new AccuracyMapper());
+            + "left join maps b on a.floorNo = b.floorNo " + "left join store d on a.placeId = d.id "
+            + "left join estimatedev c on b.floorNo = c.floorNo " + " order by " + sortCol + ' ' + sortDir
+            + "where a.placeId = " + storeid + " limit ?,?";
+        return jdbcTemplate.query(sql, new Object[] {start, length}, new AccuracyMapper());
     }
-
+    
     public int getDataLength()
     {
         String sql = "select count(*) a from staticaccuracy";
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
-
+    
     public int staticSaveTestInfo(StaticAccuracyApiModel aam)
-            throws SQLException
+        throws SQLException
     {
-        String sql = "INSERT INTO staticaccuracy(triggerIp,placeId,floorNo,origin,destination,start_date,end_date,avgeOffset,maxOffset,staicAccuracy,offsetCenter,offsetNumber,stability,count_3,count_5,count_10,count_10p,detail) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        return this.jdbcTemplate.update(sql, aam.getTriggerIp(),
-                aam.getPlaceId(), aam.getFloorNo(), aam.getOrigin(),
-                aam.getDestination(), aam.getStartdate(), aam.getEnddate(),
-                aam.getAvgeOffset(), aam.getMaxOffset(),
-                aam.getStaicAccuracy(), aam.getOffsetCenter(),
-                aam.getOffsetNumber(), aam.getStability(), aam.getCount3(),
-                aam.getCount5(), aam.getCount10(), aam.getCount10p(),
-                aam.getDetail());
+        String sql =
+            "INSERT INTO staticaccuracy(triggerIp,placeId,floorNo,origin,destination,start_date,end_date,avgeOffset,maxOffset,staicAccuracy,offsetCenter,offsetNumber,stability,count_3,count_5,count_10,count_10p,detail) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        return this.jdbcTemplate.update(sql,
+            aam.getTriggerIp(),
+            aam.getPlaceId(),
+            aam.getFloorNo(),
+            aam.getOrigin(),
+            aam.getDestination(),
+            aam.getStartdate(),
+            aam.getEnddate(),
+            aam.getAvgeOffset(),
+            aam.getMaxOffset(),
+            aam.getStaicAccuracy(),
+            aam.getOffsetCenter(),
+            aam.getOffsetNumber(),
+            aam.getStability(),
+            aam.getCount3(),
+            aam.getCount5(),
+            aam.getCount10(),
+            aam.getCount10p(),
+            aam.getDetail());
     }
-
+    
     // 查询所有的信息
     public List<StaticAccuracyModel> allQueryStaicAccuracy()
     {
         String sql = "select a.*,b.name place,d.floor,c.deviation from staticaccuracy a "
-                + "left join store b on a.placeId = b.id "
-                + "left join maps d on a.floorNo = d.floorNo "
-                + "left join estimatedev c on a.floorNo = c.floorNo";
+            + "left join store b on a.placeId = b.id " + "left join maps d on a.floorNo = d.floorNo "
+            + "left join estimatedev c on a.floorNo = c.floorNo";
         return this.jdbcTemplate.query(sql, new AccuracyMapper());
     }
-
+    
     private class AccuracyMapper implements RowMapper
     {
-        public Object mapRow(ResultSet rs, int num) throws SQLException
+        public Object mapRow(ResultSet rs, int num)
+            throws SQLException
         {
             StaticAccuracyModel am = new StaticAccuracyModel();
             am.setId(rs.getInt("ID"));
@@ -117,5 +145,5 @@ public class StaticAccuracyDao
             return am;
         }
     }
-
+    
 }

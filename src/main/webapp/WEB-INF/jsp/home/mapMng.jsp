@@ -253,7 +253,28 @@ div.svgCotainer {
                                                     style="width: 101%; margin-left: -1%;margin-top: 2px;" /><input id="pathFileId"  type="file" style="height: 30px" multiple name="pathroutefile" class="input-file-1">
                                                 </span>
                                             </div>
-                                        </div>                                          										
+                                        </div>
+                                        
+                                        <div class="control-group">
+                                            <label class="control-label" for="pathfile4">Android Map</label>
+                                            <div class="controls">
+                                              <input type='text' class="input-text" errormsg='<spring:message code="tools_pRRU_tishi" />' name='pathFile4'  id='pathFile4' datatype = "all"
+                                                    disabled="disabled" style="width: 32%; margin: auto;"   readonly />
+                                               <span class="btn-upload form-group">
+                                                    <input type='button'  class="btn"
+                                                    value='<spring:message code="tools_pRRU_wenjian" />'
+                                                    style="width: 101%; margin-left: -1%;margin-top: 2px;" /><input id="pathFileId4"  type="file" style="height: 30px" multiple name="pathroutefile4" class="input-file-1">
+                                                </span>
+                                            </div>
+                                        </div> 
+                                            <input type="hidden" name = "path" id="pathId">
+                                            <input type="hidden" name = "svg" id="svgId">
+                                            <input type="hidden" name = "route" id="routeId">
+                                            <input type="hidden" name = "pathFile" id="pathFileIds">
+                                            <input type="hidden" name = "zMap" id="zMapId">
+                                            <input type="hidden" name = "zIosMap" id="zIosMapId">
+                                            <input type="hidden" name = "zMapPathfile" id="zMapPathfileId">
+                                            <input type="hidden" name = "fMap" id="fMapId">                                                                                                                                                                                                                  										
 									</div>
 								</div>
 							</div>
@@ -264,6 +285,47 @@ div.svgCotainer {
 								<div class="row-fluid">
 									<div class="span12"
 										style="outline: 0px solid #E6E4E4; padding: 20px 0;">
+										
+                                        <div class="control-group">
+                                            <label class="control-label" for="pathfile5">IOS Map</label>
+                                            <div class="controls">
+                                              <input type='text' class="input-text" datatype = "all" name='pathFile5'   id='pathFile5'
+                                                    disabled="disabled" style="width: 32%; margin: auto;"   readonly />
+                                               <span class="btn-upload form-group">
+                                                    <input type='button'  class="btn"
+                                                    value='<spring:message code="tools_pRRU_wenjian" />'
+                                                    style="width: 101%; margin-left: -1%;margin-top: 2px;" /><input id="pathFileId5"  type="file" style="height: 30px" multiple name="pathroutefile5" class="input-file-1">
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="control-group">
+                                            <label class="control-label" for="pathfile6">Android Pathfile</label>
+                                            <div class="controls">
+                                              <input type='text' class="input-text"  datatype = "all" id='pathFile6'
+                                                    disabled="disabled" style="width: 32%; margin: auto;"   readonly />
+                                               <span class="btn-upload form-group">
+                                                    <input type='button'  class="btn"
+                                                    value='<spring:message code="tools_pRRU_wenjian" />'
+                                                    style="width: 101%; margin-left: -1%;margin-top: 2px;" /><input id="pathFileId6"  type="file" style="height: 30px" multiple name="pathroutefile6" class="input-file-1">
+                                                </span>
+                                            </div>
+                                        </div> 
+                                                                                 
+                                        <div class="control-group">
+                                            <label class="control-label" for="pathfile7">IOS Pathfile</label>
+                                            <div class="controls">
+                                              <input type='text' class="input-text"  datatype = "all" id='pathFile7'
+                                                    disabled="disabled" style="width: 32%; margin: auto;"   readonly />
+                                               <span class="btn-upload form-group">
+                                                    <input type='button'  class="btn"
+                                                    value='<spring:message code="tools_pRRU_wenjian" />'
+                                                    style="width: 101%; margin-left: -1%;margin-top: 2px;" /><input id="pathFileId7"  type="file" style="height: 30px" multiple name="pathroutefile7" class="input-file-1">
+                                                </span>
+                                            </div>
+                                        </div>                                          
+										
+																														
 										<div class="control-group">
 											<label class="control-label" for="mapid"><spring:message
 													code="map_table_title_choose" /><i
@@ -271,7 +333,7 @@ div.svgCotainer {
 												title="<spring:message code="map_map_info" />"></i></label>
 											<div class="controls">
 											  <input type='text' class="input-text"  name='textfield' id='textfield'
-                                                    disabled="disabled" style="width: 32%; margin: auto;" errormsg='<spring:message code="map_format" />' nullmsg='<spring:message code="map_info_choose" />' datatype="jp" readonly />
+                                                    disabled="disabled" style="width: 32%; margin: auto;"  errormsg='<spring:message code="map_format" />' nullmsg='<spring:message code="map_info_choose" />' datatype="jp" readonly />
 											   <span class="btn-upload form-group">
 													<input type='button'  class="btn"
 													value='<spring:message code="map_table_title_choose" />'
@@ -382,12 +444,16 @@ div.svgCotainer {
 							<th><spring:message code="map_table_title_choose" /><i
 								class="icon-question-sign tip" data-toggle="tooltip"
 								title="<spring:message code="map_map_info" />"></i></th>
-							<th style="min-width: 56px; text-align: center;"><spring:message
+							<th style="min-width: 36px; text-align: center;"><spring:message
 									code="map_svg" /></th>
-							<th style="min-width: 56px; text-align: center;"><spring:message
+							<th style="min-width: 36px; text-align: center;"><spring:message
 									code="bz_route_file" /></th>
 							<th style="min-width: 36px; text-align: center;"><spring:message
 									code="map_file_path" /></th>
+							<th style="min-width: 20px; text-align: center;">Android Map</th>
+							<th style="min-width: 20px; text-align: center;">IOS Map</th>
+							<th style="min-width: 20px; text-align: center;">Android Pathfile</th>
+							<th style="min-width: 20px; text-align: center;">IOS Pathfile</th>
 							<th style="min-width: 165px; text-align: center;"><spring:message
 									code="map_table_title_operation" /></th>
 							<th></th>
@@ -555,6 +621,9 @@ div.svgCotainer {
 	                                      return false;
 	                                       }
 	                                    }
+	                                },
+	                           "all":function(gets,obj,curform,regxp){
+
 	                                },
 	                            "mapId":function(gets,obj,curform,regxp){
 	                                 if(isNaN(gets))

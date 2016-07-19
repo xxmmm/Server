@@ -6,7 +6,19 @@ $("#exportButton").click(function(e){
 var Accuracy = function () {
 	return {
 		initTable:function(){
-        	$.get("/sva/delay/api/getTableData?t="+Math.random(),function(data){
+			placeId = $("#marketSel").val();
+			startTime = $("#select_time_begin_tab1").val();
+			endTime = $("#select_time_end_tab1").val();
+			if (startTime=="") {
+				startTime = "1016-06-23 14:30:12";
+				endTime = "3016-06-23 14:30:12";
+			}
+			var param = {
+					placeId :placeId,
+					startTime :startTime ,
+					endTime :endTime 
+			};			
+        	$.get("/sva/delay/api/getTableDataNew?",param,function(data){
         		if(!data.error){
         			if(oTable){oTable.fnDestroy();};
         			oTable = $('#table').dataTable({
@@ -62,9 +74,224 @@ var Accuracy = function () {
         					return sName + "="+JSON.stringify(newObj)+"; expires=" + sExpires +"; path=" + sPath;    
         				}
         			});
+ 
+    				var myVisitChart = echarts.init(document.getElementById("chart3"));
+    				var option = {
+//    				    title : {
+//    				        text: i18n_title
+//    				    },
+    				    legend: {
+    				        data:data.CDFName
+    				    },
+    				    tooltip : {
+    				        trigger: 'axis'
+    				    },
+    				    lineStyle:{
+    				    	type:'solid'
+    				    },
+    				    toolbox: {
+    				        show : true,
+    				        feature : {
+    				            dataView : {
+    				            	show: true, 
+    				            	title : i18n_dataview,
+    				            	readOnly: true,
+    				                lang: [i18n_dataview, i18n_close, i18n_refresh]
+    				            },
+    				            saveAsImage : {
+    				            	show: true,
+    				            	title : i18n_saveimg
+    				            },
+    				            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+    				            restore : {show: true}
+    				        }
+    				    },
+    				    calculable : false,
+    				    xAxis : [
+    				        {
+    				            type : 'category',
+    				            boundaryGap : false,
+    				            data : data.xValue,
+    				            axisLabel : {
+    				                formatter: '{value} '+'(s)'
+    				            }
+    				        }
+    				    ],
+    				    yAxis : [
+    				        {
+    				            type : 'value',
+    				            axisLabel : {
+    				                formatter: '{value}'+i18n_cishu
+    				            }
+    				        }
+    				    ],
+    				    series : data.CDFdata
+    				};                  
+    				
+    				myVisitChart.setOption(option);	        			
+        			
         		}        		
         	});
+        	
         },
+		showDate: function(id){
+			WdatePicker({
+				el : document.getElementById(id),
+				lang : i18n_language,
+				isShowClear : false,
+				isShowToday:false,
+				readOnly : true,
+				dateFmt : 'yyyy-MM-dd HH:00:00',
+				maxDate : '%y-%M-%d 23:00:00',
+				skin : "twoer"
+			});
+		},
+		clickComfirm : function()
+		{
+			placeId = $("#marketSel").val();
+			startTime = $("#select_time_begin_tab1").val();
+			endTime = $("#select_time_end_tab1").val();
+			if(startTime>=endTime)
+			{
+				$("#msgdemo2").removeClass("Validform_right");
+				$("#msgdemo2").addClass("Validform_wrong");
+				$("#msgdemo2").text(i18n_time);
+				return false;
+			}
+			$("#msgdemo2").removeClass("Validform_wrong");
+			$("#msgdemo2").addClass("Validform_right");
+			$("#msgdemo2").text(pa);
+			
+			var param = {
+					placeId :placeId,
+					startTime :startTime ,
+					endTime :endTime 
+			};
+        	$.get("/sva/delay/api/getTableDataNew?",param,function(data){
+        		if(!data.error){
+        			if(oTable){oTable.fnDestroy();};
+        			oTable = $('#table').dataTable({
+        				"bProcessing": true,
+        				"sDom": 'rt<"toolbar"lp<"clearer">>',
+        				"sPaginationType": "full_numbers",
+        				"aaData":data.data,
+        				"bStateSave": true,
+        				"aoColumnDefs": [
+        									{ 
+        										"aTargets": [0],
+        										"bVisible": false,
+        										"mData": "id" 
+        									},
+        									{ 
+        										"aTargets": [1],
+        										"mData": "place",
+        										"mRender": function ( data, type, full ) {
+        											if(data.length > 20){
+        												var html = data.substring(0,20)+"...";
+        												html = '<span title="'+data+'">'+html+'</span>';
+        													return html;
+        											}
+        											return data;
+        										}
+        									},
+        									{ 
+        										"aTargets": [2],
+        										"mData": "floor"
+        									},
+        									{ 
+        										"aTargets": [3],
+        										"mData": "dataDelay"
+        									},
+        									{ 
+        										"aTargets": [4],
+        										"mData": "positionDelay"
+        									},
+        									{
+        					                    "aTargets": [5],
+        					                    "bSortable": false,
+        										"mData": "updateTime",
+        										"mRender": function ( data, type, full ) {
+        											var date = new Date();
+        											date.setTime(data);
+        											return dateFormat(date,"yyyy/MM/dd HH:mm:ss");
+        										}
+        					                }
+        								],
+        				"fnCookieCallback": function (sName, oData, sExpires, sPath) {      
+        					// Customise oData or sName or whatever else here     
+        					var newObj = {iLength:oData.iLength};
+        					return sName + "="+JSON.stringify(newObj)+"; expires=" + sExpires +"; path=" + sPath;    
+        				}
+        			});
+ 
+    				var myVisitChart = echarts.init(document.getElementById("chart3"));
+    				var option = {
+//    				    title : {
+//    				        text: i18n_title
+//    				    },
+    				    legend: {
+    				        data:data.CDFName
+    				    },
+    				    tooltip : {
+    				        trigger: 'axis'
+    				    },
+    				    lineStyle:{
+    				    	type:'solid'
+    				    },
+    				    toolbox: {
+    				        show : true,
+    				        feature : {
+    				            dataView : {
+    				            	show: true, 
+    				            	title : i18n_dataview,
+    				            	readOnly: true,
+    				                lang: [i18n_dataview, i18n_close, i18n_refresh]
+    				            },
+    				            saveAsImage : {
+    				            	show: true,
+    				            	title : i18n_saveimg
+    				            },
+    				            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+    				            restore : {show: true}
+    				        }
+    				    },
+    				    calculable : false,
+    				    xAxis : [
+    				        {
+    				            type : 'category',
+    				            boundaryGap : false,
+    				            data : data.xValue,
+    				            axisLabel : {
+    				                formatter: '{value} '+'(s)'
+    				            }
+    				        }
+    				    ],
+    				    yAxis : [
+    				        {
+    				            type : 'value',
+    				            axisLabel : {
+    				                formatter: '{value}'+i18n_cishu
+    				            }
+    				        }
+    				    ],
+    				    series : data.CDFdata
+    				};                  
+    				
+    				myVisitChart.setOption(option);	        			
+        			
+        		}        		
+        	});
+			
+		},		
+		initDropdown : function() {
+			$.get("/sva/store/api/getData?t="+Math.random(),function(data){
+				if(!data.error){
+					updateList("marketSel",data.data);
+				}
+				$('#myTab a:last').tab('show');
+				$('#myTab a:first').tab('show');
+			});
+		},		
         initPopupText: function(data){
         	if(data){
 				var val = '';
@@ -193,3 +420,21 @@ var Accuracy = function () {
     };
 
 }();
+var updateList = function(renderId, data, callback) {
+	var sortData = data.sort(function(a,b){return a.name - b.name;});
+    var len = sortData.length;
+    var options = '';
+    for(var i=0;i<len;i++){
+    	var info = sortData[i];
+		options += '<option class="addoption" value="'+info.id+'">' + HtmlDecode3(info.name) +'</option>';
+    }
+    removeOption(renderId);
+    $('#' + renderId).append(options);
+    if(callback){
+        callback();
+    }
+    return;
+};
+var removeOption = function(renderId) {
+	$('#' + renderId + ' .addoption').remove().trigger("liszt:updated");
+};

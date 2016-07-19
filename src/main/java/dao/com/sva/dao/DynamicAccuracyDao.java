@@ -39,6 +39,33 @@ public class DynamicAccuracyDao
                 new AccuracyMapper());
     }
 
+    public Collection<DynamicAccuracyModel> getDataByPlaceIdTime(String startTime, String endTime, String placeId)
+    {
+        
+        String sql = "select a.*,b.floor,c.deviation, d.name place from dynamicaccuracy a left join maps b "
+            + "on a.floorNo = b.floorNo left join store d on a.placeId = d.id left join estimatedev c on b.floorNo = c.floorNo "
+            + "where a.placeId = ? and a.start_date > ? and a.end_date< ?";
+        return jdbcTemplate.query(sql, new Object[] {placeId, startTime, endTime}, new AccuracyMapper());
+    }  
+    
+    public Collection<DynamicAccuracyModel> getAllDataByPlaceIdTime(String placeId, String startTime, String endTime)
+    {
+        
+        String sql = "select a.*,b.floor,c.deviation, d.name place from dynamicaccuracy a left join maps b "
+            + "on a.floorNo = b.floorNo left join store d on a.placeId = d.id left join estimatedev c on b.floorNo = c.floorNo "
+            + "where a.placeId = ? and a.start_date > ? and a.end_date< ?";
+        return jdbcTemplate.query(sql, new Object[] {placeId,startTime,endTime}, new AccuracyMapper());
+    }
+    
+    public Collection<DynamicAccuracyModel> getAllData(String startTime, String endTime)
+    {
+        
+        String sql = "select a.*,b.floor,c.deviation, d.name place from dynamicaccuracy a left join maps b "
+            + "on a.floorNo = b.floorNo left join store d on a.placeId = d.id left join estimatedev c on b.floorNo = c.floorNo "
+            + " where a.start_date > ? and a.end_date< ? ";
+        return jdbcTemplate.query(sql,new Object[]{startTime,endTime},new AccuracyMapper());
+    }
+    
     /*
      * 通过用户名获取相对应的商场权限
      */
