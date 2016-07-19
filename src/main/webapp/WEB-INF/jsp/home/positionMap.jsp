@@ -65,31 +65,40 @@
 
 			<div class="row-fluid" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1);margin-bottom:5%;">
 				<form class="demoform" onkeydown= "if(event.keyCode==13)return false;">
-					<div class="span3">
+					<div class="span2">
 						<select id="marketSel" datatype="*"  nullmsg='<spring:message code="map_store_name" />' 
 							data-placeholder="<spring:message code="heatmap_place" />"
 							style="width: 30%" >
 							<option value=""></option>
 						</select> 
 					</div>
-					<div class="span3">
+					<div class="span2">
 						<select id="floorSel" datatype="*"  nullmsg='<spring:message code="all_floor_choose" />' name="floorSelName"
 							data-placeholder="<spring:message code="heatmap_floor" />"
 							style="width: 30%" class="chosen-select">
 							<option value=""></option>
 						</select>
 					</div>
-					<div class="span3">
+					<div class="span4">
 						<div class="input-append">
-							<input id="select_time_begin_tab" datatype="*"  nullmsg='<spring:message code="all_choose_starttime" />' style="width: 180px" readonly/> 
+							<input id="select_time_begin_tab" style="width: 180px" readonly/> 
 							<span class="add-on" onclick="Positionmap.showDate('select_time_begin_tab');">
 								<i class="icon-calendar"></i>
 							</span>
 						</div>
+						-
+						<div class="input-append">
+							<input id="select_time_end_tab" style="width: 180px" readonly/> 
+							<span class="add-on" onclick="Positionmap.showDate('select_time_end_tab');"> 
+								<i class="icon-calendar"></i>
+							</span>
+						</div>
 					</div>
-					<div class="span3">
+					<div class="span4">
 						<input id="confirm" type="button"
-						style="vertical-align: top; padding: 0px 3px 0px 4px; height: 22px" value="<spring:message code="common_confirm" />">	
+						style="vertical-align: top; padding: 0px 3px 0px 4px; height: 22px" value="<spring:message code="common_confirm" />">
+						
+						<span  id="msgdemo2"></span>	
 					</div>	
 				</form>
 			</div>

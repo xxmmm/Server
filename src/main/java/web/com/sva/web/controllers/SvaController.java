@@ -63,6 +63,7 @@ public class SvaController
             sm.setPassword(l.getPassword());
             sm.setStatus(l.getStatus());
             sm.setType(l.getType());
+            sm.setIdType(l.getIdType());
             sm.setTokenProt(l.getTokenProt());
             sm.setBrokerProt(l.getBrokerProt());
             list.add(sm);

@@ -94,6 +94,21 @@ var SvaMng = function () {
     	                    "aTargets": [8],
     	                    "bSortable": false,
     	                    "bFilter": false,
+    	                    "mData": "idType",
+    	                    "mRender": function ( data, type, full ) {
+    	                    	var html;
+	    	            		if(full.type == "0"){
+	    	            			html = data;
+	    	        			}else{
+	    	        				html = "" ;
+	    	        			}
+    	                        return html;
+    	                    }
+    	                },
+    					{
+    	                    "aTargets": [9],
+    	                    "bSortable": false,
+    	                    "bFilter": false,
     	                    "mData": function(source, type, val) {
     	                        return "";
     	                    },
@@ -108,7 +123,7 @@ var SvaMng = function () {
     	                      }
     	                },
     					{
-    	                    "aTargets": [9],
+    	                    "aTargets": [10],
     	                    "bSortable": false,
     	                    "bFilter": false,
     	                    "mData": function(source, type, val) {
@@ -211,14 +226,17 @@ var SvaMng = function () {
 	           	var row = $(this).parent().parent();
 	        	var data1 = oTable.fnGetData(row[0]);
 	           	var ip = rowObj.childNodes[0].innerHTML,
-	           		   name =  $(rowObj.childNodes[1].childNodes[0]).attr("title"),
-	           		   position =$(rowObj.childNodes[2].childNodes[0]).attr("title"),
-	           		   token = rowObj.childNodes[3].innerHTML,
-	           		   broker = rowObj.childNodes[4].innerHTML,
-	           	 	   username = $(rowObj.childNodes[5].childNodes[0]).attr("title"),
+	           		name =  $(rowObj.childNodes[1].childNodes[0]).attr("title"),
+	           		position =$(rowObj.childNodes[2].childNodes[0]).attr("title"),
+	           		token = rowObj.childNodes[3].innerHTML,
+	           		broker = rowObj.childNodes[4].innerHTML,
+	           	 	username = $(rowObj.childNodes[5].childNodes[0]).attr("title"),
 	           	 	 //  password = rowObj.childNodes[].innerHTML,
-	           	 	   status = rowObj.childNodes[7].innerHTML;
-	           	       type = rowObj.childNodes[6].innerHTML;
+	           	 	status = rowObj.childNodes[8].innerHTML,
+	           	    type = rowObj.childNodes[6].innerHTML,
+	           	    idType = rowObj.childNodes[7].innerHTML;
+	           			
+	           	       
 				$("input[name='ip']").val(ip);
 				$("#SVAPosition").val(HtmlDecode2(position));
 	           	$("input[name='name']").val(HtmlDecode2(name));
@@ -250,6 +268,15 @@ var SvaMng = function () {
 					
 	           		$("#enableSel").val(0);           	 
 				}
+	           	
+	           	// 如果非匿名化订阅，显示idType
+	           	if(type == i18n_type1){
+            		$("#idTypeDiv").show();
+            		$("#IdType").val(idType);
+            	}else{
+            		$("#idTypeDiv").hide();
+            	}
+	           	
 	           	$.get("/sva/store/api/getData?t="+Math.random(),function(data){
 	        		if(!data.error){
 	        			$.post("/sva/store/api/getStoreBySvaId",{svaId:id},function(data2){
@@ -274,6 +301,16 @@ var SvaMng = function () {
 				}
            });
             
+            // 非匿名化订阅的情况，可以选择id类型
+            $("#subscriptionId").on("change",function(e){
+            	var subType = $("#subscriptionId").val();
+            	if(subType == "0"){
+            		$("#idTypeDiv").show();
+            	}else{
+            		$("#idTypeDiv").hide();
+            	}
+            });
+            
             $("#confirm").on("click",function(e){
 //            	$("#jiazai").show();
             	$(".sameInfo").html("");
@@ -283,6 +320,7 @@ var SvaMng = function () {
             	
             	if(check){
 //            	$("#jiazai").show();
+            		
               	  $.post("/sva/svalist/api/checkName",param,function(data){
               		  var b = data.data;
               		  if (data.ip) 
@@ -306,8 +344,6 @@ var SvaMng = function () {
       			              $(".sameInfo").text(i18n_svaSame);
       						}
               		});
-
-              		
               	}
             });
     	},

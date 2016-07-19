@@ -20,7 +20,15 @@ public class SvaModel
 
     private int status;
 
+    /**
+     * @Fields type 订阅类型
+     */
     private int type;
+    
+    /**
+     * @Fields idType id类型
+     */
+    private String idType;
 
     private String tokenProt;
 
@@ -28,7 +36,21 @@ public class SvaModel
 
     private String token;
 
-    public String getToken()
+    /**
+	 * @return the idType
+	 */
+	public String getIdType() {
+		return idType;
+	}
+
+	/**
+	 * @param idType the idType to set
+	 */
+	public void setIdType(String idType) {
+		this.idType = idType;
+	}
+
+	public String getToken()
     {
         return token;
     }

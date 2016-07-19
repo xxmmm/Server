@@ -387,14 +387,20 @@ public class LocationDao
      * @return Collection<LocationModel>   
      * @throws 
      */
-    public List<Map<String,Object>> queryLocationForPosition(String floorNo, String time)
+    public List<Map<String,Object>> queryLocationForPosition(String floorNo, List<String> timeList)
     {
-    	String tableName = Params.LOCATION + time;
-        String sql = "select userID from " + tableName + " where z = ? and idType = 'MSISDN'";
-        
-        String[] params = {String.valueOf(floorNo)};
+    	String tableName = "";
+    	StringBuffer sqlBuffer = new StringBuffer();
+    	// 多表查询，union拼接
+    	for(String time:timeList){
+        	tableName = Params.LOCATION + time;    		
+        	sqlBuffer.append("select userID from " + tableName + " where z = "+floorNo+" and idType = 'MSISDN'");
+        	sqlBuffer.append(" union ");
+    	}
+    	// 删掉最后一个多余的union字符串
+    	sqlBuffer.delete(sqlBuffer.length()-6, sqlBuffer.length());
 
-        return this.jdbcTemplate.queryForList(sql,params);
+        return this.jdbcTemplate.queryForList(sqlBuffer.toString());
     }
 
 }

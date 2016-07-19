@@ -1,11 +1,16 @@
 package com.sva.common;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import com.sva.common.conf.Params;
 
 public abstract class ConvertUtil
 {
@@ -158,6 +163,33 @@ public abstract class ConvertUtil
             Logger.getLogger(ConvertUtil.class).info(e.getStackTrace());
         }
         return result;
+    }   
+    
+    /** 
+     * @Title: getRangeDay 
+     * @Description: 获取两个时间之间的日期数组，格式由参数format决定
+     * @param start 开始时间
+     * @param end 结束时间
+     * @param format 日期格式
+     * @return List<String>   
+     * @throws 
+     */
+    public static List<String> getRangeDay(Date start, Date end, String format){
+    	// 返回值
+    	List<String> result = new ArrayList<String>();
+    	// 日历型 用于日期加法，设置起始为start
+		Calendar c = Calendar.getInstance();  
+        c.setTime(start);     
+    	// 当起始日期小于等于结束日期，运行循环体内逻辑
+    	while(start.getTime()<=end.getTime()){
+    		// 将该起始日期转换格式后添加进返回数组中
+    		result.add(dateFormat(start,Params.YYYYMMDD));
+    		// 日期加1后 作为新的起始日期
+            c.add(Calendar.DATE, 1);   
+            start = c.getTime();  
+    	}
+    	
+    	return result;
     }
 
 }

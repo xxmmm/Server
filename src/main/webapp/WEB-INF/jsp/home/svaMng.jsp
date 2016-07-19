@@ -151,6 +151,15 @@
                                             </select>                
                                         </div>
                                     </div>
+                                    <div id="idTypeDiv" class="control-group hide">
+                                        <label class="control-label" for="IdType"><spring:message code="sva_id_type" /></label>
+                                        <div class="controls">
+                                            <select style="width: 58%;height: 15%;" datatype="*"  nullmsg='<spring:message code="map_store_name" />' name=idType id="IdType" >
+                                                <option value="IP">IP</option>
+                                                <option value="MSISDN">MSISDN</option>
+                                            </select>                
+                                        </div>
+                                    </div>
                   				</div>
                 			</div>
                			</div>
@@ -226,6 +235,7 @@
                             <th><spring:message code="sva_title_username" /></th>
                             <th><spring:message code="sva_title_password" /></th> 
                             <th><spring:message code="sva_Subscription_type" /></th>
+                            <th><spring:message code="sva_id_type" /></th>
                             <th><spring:message code="sva_title_status" /></th>
                             <th><spring:message code="message_table_title_operation" /></th>
                         </tr>

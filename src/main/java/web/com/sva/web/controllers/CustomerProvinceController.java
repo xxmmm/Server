@@ -9,6 +9,7 @@
  */
 package com.sva.web.controllers;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sva.common.ConvertUtil;
+import com.sva.common.conf.Params;
 import com.sva.dao.LocationDao;
 import com.sva.service.PositionService;
 
@@ -62,10 +65,14 @@ public class CustomerProvinceController {
 	 */
 	@RequestMapping("/getProvinceData")
 	@ResponseBody
-	public Map<String,Object> getProvinceData(String floorNo, String time){
-		log.info("[CustomerProvinceController.getProvinceData]用户查询location数据，参数为："+time+"-"+floorNo);
+	public Map<String,Object> getProvinceData(String floorNo, String beginTime, String endTime){
+		log.info("[CustomerProvinceController.getProvinceData]用户查询location数据，参数为："+beginTime+"-"+endTime+"-"+floorNo);
 		// 返回值
 		Map<String, Object> modelMap = new HashMap<String, Object>(1);
+		// 将时间段转换为日期数组
+		Date start = ConvertUtil.dateStringFormat(beginTime,Params.YYYYMMDD);
+		Date end = ConvertUtil.dateStringFormat(endTime,Params.YYYYMMDD);
+		List<String> time = ConvertUtil.getRangeDay(start, end, Params.YYYYMMDD);
 		// 获取指定楼层、指定时间内的所有用户的手机信息
 		List<Map<String,Object>> result = locationDao.queryLocationForPosition(floorNo,time);
 		// 存储各省份的用户数

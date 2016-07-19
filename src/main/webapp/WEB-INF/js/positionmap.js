@@ -79,9 +79,9 @@ var Positionmap = function() {
 	};
 	
 	// 图形初始化
-	var initMap = function(floorNo,time){
+	var initMap = function(floorNo,beginTime,endTime){
 		// 获取数据
-		$.get("/sva/position/getProvinceData",{floorNo:floorNo,time:time},function(data){
+		$.get("/sva/position/getProvinceData",{floorNo:floorNo,beginTime:beginTime, endTime:endTime},function(data){
 			if(!data.error){
 				var provinceData = data.data;
 				// 初始化柱状图
@@ -184,6 +184,7 @@ var Positionmap = function() {
 	
 	// 中国地图初始化
 	var initChinamap = function(data){
+		if(_.isEmpty(data)) return;
 		
 		//-------数据预处理------start
 		// 出发数据
@@ -450,6 +451,23 @@ var Positionmap = function() {
 		//-------图形渲染------end
 	};
 	
+	var checkInput = function(){
+		var beginTime = $("#select_time_begin_tab").val();
+	    var endTime = $("#select_time_end_tab").val();
+
+	    if(beginTime>endTime)
+		{
+			$("#msgdemo2").removeClass("Validform_right");
+			$("#msgdemo2").addClass("Validform_wrong");
+			$("#msgdemo2").text(i18n_time);
+			return true;
+		}else{
+		    $("#msgdemo2").removeClass("Validform_wrong");
+		    $("#msgdemo2").text("");
+			return false;
+		}
+	};
+	
 	return {
 		// 初始化下拉列表
 		initDropdown : function() {
@@ -465,6 +483,7 @@ var Positionmap = function() {
 		    function addzero(v) {if (v < 10) return '0' + v;return v.toString();}
 		    var s = d.getFullYear().toString() + addzero(d.getMonth() + 1) + addzero(d.getDate());
 			$("#select_time_begin_tab").val(s);
+			$("#select_time_end_tab").val(s);
 			
 			//var place = $("#marketSel").val();
 			var array=new Array();
@@ -530,12 +549,16 @@ var Positionmap = function() {
 			
 			// 确认按钮点击 触发热力图刷新
 			$('#confirm').click(function(e) {
+				// 判断用户输入是否正确
+				if(checkInput()) return false;
+				
 				var placeId = $("#marketSel").val();
 				var floorNo = $("select[name='floorSelName']").find("option:selected").val();
 			    var floor = $("select[name='floorSelName']").find("option:selected").text();
-			    var time = $("#select_time_begin_tab").val();
-			   				
-				initMap(floorNo, time);
+			    var beginTime = $("#select_time_begin_tab").val();
+			    var endTime = $("#select_time_end_tab").val();
+			    			   				
+				initMap(floorNo, beginTime, endTime);
 
 				$.cookie("place", placeId, { expires: 30});
 				$.cookie("floor", floorNo, { expires: 30});

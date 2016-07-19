@@ -177,7 +177,7 @@ public class SvaDao
             public PreparedStatement createPreparedStatement(Connection conn)
                     throws SQLException
             {
-                String sql = "INSERT INTO svalist(ip,name,username,password,status,type,tokenPort,brokerPort) VALUES(?,?,?,?,?,?,?,?)";
+                String sql = "INSERT INTO svalist(ip,name,username,password,status,type,idType,tokenPort,brokerPort) VALUES(?,?,?,?,?,?,?,?,?)";
                 PreparedStatement ps = conn.prepareStatement(sql,
                         Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, mmm.getIp());
@@ -186,8 +186,9 @@ public class SvaDao
                 ps.setString(4, mmm.getPassword());
                 ps.setInt(5, mmm.getStatus());
                 ps.setInt(6, mmm.getType());
-                ps.setString(7, mmm.getTokenProt());
-                ps.setString(8, mmm.getBrokerProt());
+                ps.setString(7, mmm.getIdType());
+                ps.setString(8, mmm.getTokenProt());
+                ps.setString(9, mmm.getBrokerProt());
                 return ps;
             }
         }, keyHolder);
@@ -198,10 +199,10 @@ public class SvaDao
 
     public void updateSvaInfo(SvaModel sm) throws SQLException
     {
-        String sql = "UPDATE svalist SET ip=?, name=?, username=?, password=?, status=?, type=?,tokenPort=?,brokerPort=? WHERE id=?";
+        String sql = "UPDATE svalist SET ip=?, name=?, username=?, password=?, status=?, type=?,idType=?,tokenPort=?,brokerPort=? WHERE id=?";
         this.jdbcTemplate
                 .update(sql, sm.getIp(), sm.getName(), sm.getUsername(),
-                        sm.getPassword(), sm.getStatus(), sm.getType(),
+                        sm.getPassword(), sm.getStatus(), sm.getType(),sm.getIdType(),
                         sm.getTokenProt(), sm.getBrokerProt(), sm.getId());
     }
 
@@ -263,6 +264,7 @@ public class SvaDao
             sva.setPassword(rs.getString("PASSWORD"));
             sva.setStatus(rs.getInt("STATUS"));
             sva.setType(rs.getInt("TYPE"));
+            sva.setIdType(rs.getString("IDTYPE"));
             sva.setTokenProt(rs.getString("tokenPort"));
             sva.setBrokerProt(rs.getString("brokerPort"));
 

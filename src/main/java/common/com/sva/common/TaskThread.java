@@ -172,7 +172,7 @@ class TaskThread extends Thread
                 {
                     url = "https://" + sva.getIp() + ":" + sva.getTokenProt()
                             + "/enabler/catalog/locationstreamreg/json/v1.0";
-                    content = "{\"APPID\":\"" + sva.getUsername() + "\"}";
+                    content = "{\"APPID\":\"" + sva.getUsername() + "\",\"idType\":\"" + sva.getIdType() + "\"}";
                 }
                 else if (sva.getType() == 1)
                 {
