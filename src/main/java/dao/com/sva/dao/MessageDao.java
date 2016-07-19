@@ -355,4 +355,25 @@ public class MessageDao
         // JdbcTemplate tem = this.getJdbcTemplate();
         return this.jdbcTemplate.query(sql, new MessageMapper());
     }
+    
+    public Collection<MessageModel> getAllMessageDataByAreaId(String areaId)
+    {
+        String sql = "SELECT a.*,b.floor,c.name place FROM message a left join maps b on a.floorNo = b.floorNo left join store c on a.placeId = c.id where a.isEnable='开启' and a.shopId="+areaId;
+        // JdbcTemplate tem = this.getJdbcTemplate();
+        return this.jdbcTemplate.query(sql, new MessageMapper());
+    }
+    //
+    public String  getAreaIdByMessage(String messageId)
+    {
+        String sql = "select shopId from message where id = ?";
+        String[] parem = {messageId};
+        return this.jdbcTemplate.queryForObject(sql,parem,String.class);
+    }
+    
+    public List<String> getTiketPathByAreaId(String areaId)
+    {
+        String sql = "select ticketPath from message where shopId = ?";
+        String[] parem = {areaId};
+        return this.jdbcTemplate.queryForList(sql,parem,String.class);
+    }
 }

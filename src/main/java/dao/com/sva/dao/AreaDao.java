@@ -204,6 +204,7 @@ public class AreaDao
             area.setCategoryId(rs.getInt("CATEGORYID"));
             area.setCategory(rs.getString("CATEGORY"));
             area.setId(rs.getString("ID"));
+            area.setAreaId(rs.getString("ID"));
             area.setStatus(rs.getInt("STATUS"));
             area.setZoneId(rs.getInt("ZONEID"));
             return area;
@@ -564,6 +565,13 @@ public class AreaDao
         String sql = "select count(distinct userID) from district_during where district_id=? ";
         String[] params = {areaId};
         return this.jdbcTemplate.queryForObject(sql, params, Integer.class);
+    }
+    
+    public String getZoneIdByAreaId(String areaId)
+    {
+        String sql = "select zoneid from area where id=?";
+        String[] params = {areaId};
+        return this.jdbcTemplate.queryForObject(sql, params, String.class);
     }
 
     public Map<String, Object> getAllAverageTimeByAreaId(String floorNo,

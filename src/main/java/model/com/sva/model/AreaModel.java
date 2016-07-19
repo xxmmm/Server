@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 public class AreaModel
 {
     private String id;
+    
+    private String areaId;
 
     private String place;
 
@@ -31,6 +33,16 @@ public class AreaModel
     private int status;
 
     private int zoneId;
+    
+    public String getAreaId()
+    {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId)
+    {
+        this.areaId = areaId;
+    }
 
     public int getStatus()
     {

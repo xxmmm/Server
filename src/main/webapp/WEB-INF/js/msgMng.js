@@ -133,12 +133,7 @@ var MsgMng = function () {
     			if(!data.error){
     				updateList("placeSel",data.data);
     			}
-    		});
-    		$.get("/sva/input/api/getTableData?t="+Math.random(),function(data){
-    			if(!data.error){
-    				updateList1("shopId",data.data);
-    			}
-    		});		
+    		});	
     	},
     	
     	bindClickEvent: function(){
@@ -151,8 +146,15 @@ var MsgMng = function () {
 						updateFloorList1("zSel",data.data);
 					}
 				});
+	    		$.get("/sva/input/api/getTableDataById",{placeId:placeId},function(data){
+	    			if(!data.error){
+	    				updateList1("shopId",data.data);
+	    			}
+	    		});					
+				
 	    		$('a[href="#myModal1"]').attr("disabled","disabled");
-			});
+			}); 		
+    		
 			// 楼层下拉列表修改 触发选择坐标时地图变化
 			$("#zSel").on("change", function(){
 				var lastVal = this.validform_lastval; 
@@ -351,12 +353,17 @@ var MsgMng = function () {
 						updateFloorList("zSel",data.data,floor,function(){$("#zSel").change();});
 					}
 				});
+	    		$.get("/sva/input/api/getTableData",{placeId:placeId},function(data){
+	    			if(!data.error){
+	    				updateList1("shopId",data.data);
+	    				$("#shopId").val(shopId);
+	    			}
+	    		});					
 				$("input[name='shopName']").val(HtmlDecode2(shopName));
 //	           	$("input[name='xSpot']").val(xSpot);
 //	           	$("input[name='ySpot']").val(ySpot);
 	           	//$("#zSel").val(zSpot);
 //	           	$("input[name='rangeSpot']").val(rangeSpot);
-				$("#shopId").val(shopId);
 	           	$("input[name='message']").val(message);
 	           	$("input[name='timeInterval']").val(timeInterval);
 	           	$("#enableSel").val(isEnable);
@@ -401,6 +408,12 @@ var MsgMng = function () {
 						updateFloorList("zSel",data.data,floor,function(){$("#zSel").change();});
 					}
 				});
+	    		$.get("/sva/input/api/getTableDataById",{placeId:placeId},function(data){
+	    			if(!data.error){
+	    				updateList1("shopId",data.data);
+	    				$("#shopId").val(shopId);
+	    			}
+	    		});					
 				$("input[name='shopName']").val(HtmlDecode2(shopName));
 //	           	$("input[name='xSpot']").val(xSpot);
 //	           	$("input[name='ySpot']").val(ySpot);
@@ -409,7 +422,6 @@ var MsgMng = function () {
 	           	$("input[name='message']").val(message);
 	           	$("input[name='timeInterval']").val(timeInterval);
 	           	$("#enableSel").val(isEnable);
-				$("#shopId").val(shopId);
 	           	$("#editBox").show();
            	 
             });

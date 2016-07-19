@@ -99,6 +99,56 @@ public class AreaController
 
         return modelMap;
     }
+    
+    @RequestMapping(value = "/api/getTableDataById", method = {RequestMethod.GET})
+    @ResponseBody
+    public Map<String, Object> getTableDataById(HttpServletRequest request,
+            @RequestParam("placeId") String placeId,
+            Model model) throws SQLException
+    {
+        Collection<AreaModel> ResultList = new ArrayList<AreaModel>(10);
+        // List<String> storeides = new ArrayList<String>();
+        Collection<AreaModel> store = new ArrayList<AreaModel>(10);
+        Object userName = request.getSession().getAttribute("username");
+        @SuppressWarnings("unchecked")
+        List<String> storeides = (List<String>) request.getSession()
+                .getAttribute("storeides");
+        if (("admin").equals(userName))
+        {
+
+            ResultList = dao.doqueryAll(Integer.parseInt(placeId));
+        }
+        else
+        {
+            // storeides = accountDao.selectStore(userName);
+            if (storeides.size() > 0)
+            {
+                String storeid = storeides.get(0);
+                String[] stores = storeid.split(",");
+                for (int i = 0; i < stores.length; i++)
+                {
+                    store = dao.doqueryAll(Integer.parseInt(stores[i]));
+                    if (store != null)
+                    {
+                        if (ResultList == null)
+                        {
+                            ResultList = store;
+                        }
+                        else if (!store.isEmpty())
+                        {
+                            ResultList.addAll(store);
+                        }
+                    }
+                }
+            }
+        }
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+
+        modelMap.put("error", null);
+        modelMap.put("data", ResultList);
+
+        return modelMap;
+    }
 
     @RequestMapping(value = "/api/saveData")
     public String saveInputData(HttpServletRequest request, ModelMap model,
