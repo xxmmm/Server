@@ -9,6 +9,7 @@
 package com.sva.web.controllers;
 
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,11 +37,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.support.RequestContext;
 
+import com.sva.common.Util;
 import com.sva.common.conf.Params;
 import com.sva.dao.MessagePushDao;
+import com.sva.model.LocationDelay;
 import com.sva.model.MessagePush;
 
 /**
@@ -105,6 +109,124 @@ public class MessagePushContriller
         return modelMap;
     }
 
+    @RequestMapping(value = "/api/getTableDataNew", method = {RequestMethod.GET})
+    @ResponseBody
+    public Map<String, Object> getTableDataNew(HttpServletRequest request,
+        @RequestParam("placeId") String placeId,
+        @RequestParam("startTime") String startTime,
+        @RequestParam("endTime") String endTime)
+    {
+        RequestContext requestContext = new RequestContext(request);
+        Locale myLocale = requestContext.getLocale();
+        String pushRightName = Params.pushRight;
+        String notPushName = Params.notPush;
+        String pushWrongName = Params.pushWrong;
+        String total = Params.total;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        long startTimestamp = 0;;
+        long endTimestamp = 0;
+        try
+        {
+            startTimestamp = sdf.parse(startTime).getTime();
+            endTimestamp = sdf.parse(endTime).getTime();
+        }
+        catch (ParseException e)
+        {
+           log.debug("shi jian zhuanhuan erro:"+e.getMessage());
+        }
+        Collection<MessagePush> res = new ArrayList<MessagePush>(
+                10);
+        Collection<MessagePush> store = new ArrayList<MessagePush>(
+                10);
+        List<String> listName = new ArrayList<>();
+        
+
+        
+        Object userName = request.getSession().getAttribute("username");
+        @SuppressWarnings("unchecked")
+        List<String> storeides = (List<String>) request.getSession()
+                .getAttribute("storeides");
+        if (("admin").equals(userName))
+        {
+            if (placeId!="")
+            {
+                res = pushDao.getDataByPlaceIdTime(startTimestamp,endTimestamp,placeId);
+            }else
+            {
+                res = pushDao.getAllDatas(startTimestamp,endTimestamp);
+            }
+        }
+        else
+        {
+            if (placeId!="")
+            {
+                if (storeides.size() > 0)
+                {
+                    String storeid = storeides.get(0);
+                    String[] stores = storeid.split(",");
+                    for (int i = 0; i < stores.length; i++)
+                    {
+                        store = pushDao.getDataByPlaceIdTime(startTimestamp, endTimestamp,stores[i]);
+                        if (store != null)
+                        {
+                            if (res == null)
+                            {
+                                res = store;
+                            }
+                            else if (!store.isEmpty())
+                            {
+                                res.addAll(store);
+                            }
+                        }
+                    }
+                }
+            }else
+            {
+                if (storeides.size() > 0)
+                {
+                    String storeid = storeides.get(0);
+                    String[] stores = storeid.split(",");
+                    for (int i = 0; i < stores.length; i++)
+                    {
+                        store = pushDao.getDataByPlaceIdTime(startTimestamp,endTimestamp,stores[i]);
+                        if (store != null)
+                        {
+                            if (res == null)
+                            {
+                                res = store;
+                            }
+                            else if (!store.isEmpty())
+                            {
+                                res.addAll(store);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (!Locale.CHINA.equals(myLocale))
+        {
+            pushRightName = "pushRight";
+            notPushName = "notPush";
+            pushWrongName = "pushWrong";
+            total = "total";
+        }
+        listName.add(pushRightName);
+        listName.add(notPushName);
+        listName.add(pushWrongName);
+        
+        Map<String, Object> modelMap = new HashMap<String, Object>(4);
+        modelMap = Util.getCDFMessagePush(listName, res,total);
+        modelMap.put("data", res);
+        modelMap.put("CDFName", listName);
+
+        return modelMap;
+        
+     
+    }     
+    
+    
+    
     @RequestMapping(value = "/api/exportCodeTemplate")
     @ResponseBody
     public void exportCodeTemplate(HttpServletRequest request,

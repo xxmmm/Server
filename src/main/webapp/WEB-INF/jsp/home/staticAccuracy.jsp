@@ -30,6 +30,8 @@
 <link
 	href="<c:url value='/plugins/data-tables/media/css/demo_table.css'/>"
 	rel="stylesheet" type="text/css" />
+<link href="<c:url value='/css/pages/statistic.css'/>" rel="stylesheet"
+	type="text/css" />	
 <style type="text/css">
 .popuptext{
 	margin-top:50px;
@@ -71,38 +73,86 @@
 					</ul>
 					<!-- END PAGE TITLE & BREADCRUMB-->
 				</div>
-				<div class = "col-md-6" style="text-align: right;">
-					<button type = "button" class="btn btn-primary" id="exportButton"><spring:message code="sva_daochu" /></button>
-				</div>
 			</div>
 			<!-- END PAGE HEADER-->
-
-			<div class="clearfix"></div>
-			<div class="tableBox">
-			<div style="max-width:100%;overflow-x:auto;">
-				<table id="table" class="table table-bordered">
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th><spring:message code="test_table_title_location" /></th>
-							<th><spring:message code="test_table_title_floor" /></th>
-							<th style="min-width:81px"><spring:message code="test_table_title_x" /></th>
-							<th style="min-width:81px"><spring:message code="test_table_title_y" /></th>
-							<th style="min-width:109px"><spring:message code="test_table_title_starttime" /></th>
-							<th style="min-width:109px"><spring:message code="test_table_title_endtime" /></th>
-							<th><spring:message code="test_table_title_trigger" /></th>
-							<th><spring:message code="test_table_title_averDevi" /></th>
-							<th><spring:message code="static_maxoffset_title" /></th>
-							<th><spring:message code="static_staticAccoury_title" /></th>
-							<th><spring:message code="static_offsetcenter_title" /></th>
-							<th><spring:message code="static_offsetnumber_title" /></th>
-							<th><spring:message code="static_stability_title" /></th>
-							<th><spring:message code="test_table_title_detail" /></th>
-						</tr>
-					</thead>
-				</table>
+			<form class="demoform">
+				<div class="span3" style="margin-left: 0px">
+					<select id="marketSel" name = "marketSelName"  datatype="*"  nullmsg='<spring:message code="map_store_name" />'
+						data-placeholder="<spring:message code="heatmap_place" />"
+						style="width: 100%;height:26px;padding:2px 0 2px 0;">
+						<option value=""></option>
+					</select>
 				</div>
-			</div>
+				<div class="span6">
+					<div class="input-append">
+						<input id="select_time_begin_tab1" datatype="*"  nullmsg='<spring:message code="all_choose_starttime" />' style="width: 180px" readonly/> 
+						<span class="add-on" onclick="staticAccuracy.showDate('select_time_begin_tab1');">
+							<i class="icon-calendar"></i>
+						</span>
+					</div>
+					-
+					<div class="input-append">
+						<input id="select_time_end_tab1" datatype="*"  nullmsg='<spring:message code="all_choose_endtime" />' style="width: 180px" readonly/> 
+						<span class="add-on" onclick="staticAccuracy.showDate('select_time_end_tab1');"> 
+							<i class="icon-calendar"></i>
+						</span>
+					</div>
+				</div>
+				<div class="span1">
+					<input type="button" class="btn btn-primary" value="<spring:message code="common_confirm" />" onclick="staticAccuracy.clickComfirm();" id="confirm" style="vertical-align: top;">
+				</div>
+				<div class="span1" id="msgdemo2"></div>				
+				<div class = "col-md-6" style="text-align: right;">
+					<button type = "button" class="btn btn-primary" id="exportButton"><spring:message code="sva_daochu" /></button>
+				</div>				
+			</form>
+	       	<ul id = "myTab" class="nav nav-tabs">
+	       		<li class="active">
+	       			<a href="#pictrue" data-toggle="tab"><spring:message code="cdfli" />
+	       			</a>
+	       		</li>
+	       		<li class>
+	       			<a href="#movie" data-toggle="tab"><spring:message code="cdftu" /></a>
+	       		</li>
+	       	</ul>	
+	       	<div class="tab-content show" id = "myTabContent">
+	       		<div class="tab-pane fade action in" id = "pictrue"  style="">
+					<div class="tableBox">
+					<div style="max-width:100%;overflow-x:auto;">
+						<table id="table" class="table table-bordered">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th><spring:message code="test_table_title_location" /></th>
+									<th><spring:message code="test_table_title_floor" /></th>
+									<th style="min-width:81px"><spring:message code="test_table_title_x" /></th>
+									<th style="min-width:81px"><spring:message code="test_table_title_y" /></th>
+									<th style="min-width:109px"><spring:message code="test_table_title_starttime" /></th>
+									<th style="min-width:109px"><spring:message code="test_table_title_endtime" /></th>
+									<th><spring:message code="test_table_title_trigger" /></th>
+									<th><spring:message code="test_table_title_averDevi" /></th>
+									<th><spring:message code="static_maxoffset_title" /></th>
+									<th><spring:message code="static_staticAccoury_title" /></th>
+									<th><spring:message code="static_offsetcenter_title" /></th>
+									<th><spring:message code="static_offsetnumber_title" /></th>
+									<th><spring:message code="static_stability_title" /></th>
+									<th><spring:message code="test_table_title_detail" /></th>
+								</tr>
+							</thead>
+						</table>
+						</div>
+					</div>
+	       		</div>
+       			<div class="tab-pane fade" style="text-align: center;" id = "movie">
+		            <div class="chartBox" style="margin-bottom: 10px">
+		                <div class="titleStyle"><spring:message code="cdftu" /></div>
+		                    <div>
+		                        <div id="chart3" style="height:400px;width: 1100px"></div>
+		                    </div>
+		            </div> 
+	       		</div>
+	       	</div>	       			
+
 
 		</div>
 		<!-- END PAGE -->
@@ -226,6 +276,11 @@
 	<script
 		src="<c:url value='/plugins/echarts-2.2.5/build/source/echarts-all.js'/>"
 		type="text/javascript"></script>
+	<script
+		src="<c:url value='/plugins/echarts-2.2.5/build/source/echarts-all.js'/>"
+		type="text/javascript"></script>
+	<script src="<c:url value='/plugins/wDatePicker/WdatePicker.js'/>"
+		type="text/javascript"></script>		
 	<script src="<c:url value='/js/app.js'/>" type="text/javascript"></script>
 	<script src="<c:url value='/js/staticAccuracy.js'/>" type="text/javascript"></script>
 	<!-- END PAGE LEVEL SCRIPTS -->
@@ -248,10 +303,20 @@
 			i18n_common_info ='<spring:message code="common_echart_info" />',
 			i18n_accuracy_static ='<spring:message code="test_table_static" />',
 	         i18n_daochu ='<spring:message code="sva_daochu" />',
-			i18n_accuracy_dynamic ='<spring:message code="test_table_dynamic" />';
+			i18n_accuracy_dynamic ='<spring:message code="test_table_dynamic" />',
+	        i18n_time = '<spring:message code="linemap_time" />',
+	        i18n_dataview = '<spring:message code="common_echart_dataview" />',
+	        i18n_close = '<spring:message code="common_close" />',
+	        i18n_refresh = '<spring:message code="common_refresh" />',
+	        i18n_saveimg = '<spring:message code="common_echart_saveimg" />',
+	        i18n_visitTime = '<spring:message code="linemap_visitTime" />',
+	        i18n_visitTitle = '<spring:message code="cdftu_mi" />',
+	        i18n_cishu = '<spring:message code="cdftu_cishu" />',
+	        i18n_language = '<spring:message code="time_language" />';  
 		$(document).ready(function() {
 			App.init();
 			staticAccuracy.initTable();
+			staticAccuracy.initDropdown();
 			$("a[data-type='detail']").live('click', function(e) {
 				var data = oTable.fnGetData( this.parentNode.parentNode );
 				staticAccuracy.initPopupText(data);

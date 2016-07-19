@@ -67,8 +67,8 @@ public class MapsDao
 
     public void saveMapInfo(MapMngModel mmm) throws SQLException
     {
-        String sql = "INSERT INTO maps(mapId,floor,xo,yo,scale,coordinate,angle,path,svg,route,pathfile,imgWidth,imgHeight,floorNo,placeId,floorid,updateTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        this.jdbcTemplate.update(sql, mmm.getMapId(), mmm.getFloor().trim(),
+        String sql = "INSERT INTO maps(zAnMap,zAnMapPath,zIosMap,zIosMapPath,mapId,floor,xo,yo,scale,coordinate,angle,path,svg,route,pathfile,imgWidth,imgHeight,floorNo,placeId,floorid,updateTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        this.jdbcTemplate.update(sql,mmm.getzMap(),mmm.getzMapPathfile(),mmm.getzIosMap(),mmm.getfMap(), mmm.getMapId(), mmm.getFloor().trim(),
                 mmm.getX().trim(), mmm.getY().trim(), mmm.getScale().trim(),
                 mmm.getCoordinate().trim(), mmm.getAngle(), mmm.getPath()
                         .trim(), mmm.getSvg(), mmm.getRoute(), mmm
@@ -133,6 +133,10 @@ public class MapsDao
             maps.setPathFile(rs.getString("PATHFILE"));
             maps.setId(rs.getString("ID"));
             maps.setMapid(rs.getInt("MAPID"));
+            maps.setzMap(rs.getString("zAnMap"));
+            maps.setzIosMap(rs.getString("zIosMap"));
+            maps.setzMapPathfile(rs.getString("zAnMapPath"));
+            maps.setfMap(rs.getString("zIosMapPath"));
 
             return maps;
         }
@@ -161,6 +165,10 @@ public class MapsDao
             maps.setPathFile(rs.getString("PATHFILE"));
             maps.setId(rs.getString("ID"));
             maps.setMapid(rs.getInt("MAPID"));
+            maps.setzMap(rs.getString("zAnMap"));
+            maps.setzIosMap(rs.getString("zIosMap"));
+            maps.setzMapPathfile(rs.getString("zAnMapPath"));
+            maps.setfMap(rs.getString("zIosMapPath"));
 
             return maps;
         }
@@ -406,6 +414,27 @@ public class MapsDao
             }
         }
 
+    }
+    
+    public void updateMapData(MapMngModel mmm) throws SQLException
+    {
+       String sql = "UPDATE maps set zAnMap=?,zIosMap=?,zAnMapPath=?,zIosMapPath=?,mapId=?, floor=?,xo=?,yo=?,scale=?,coordinate=?,angle=?,path=?,svg=?,route=?,pathfile=?,updateTime=?,imgWidth=?,imgHeight=?,floorNo=?,placeId=?,floorid=? where id=?";
+       this.jdbcTemplate.update(sql,mmm.getzMap(),mmm.getzIosMap(),mmm.getzMapPathfile(),mmm.getfMap(),mmm.getMapId(), mmm.getFloor().trim(), mmm.getX()
+           .trim(), mmm.getY().trim(), mmm.getScale().trim(), mmm
+           .getCoordinate().trim(), mmm.getAngle(), mmm.getPath()
+           .trim(), mmm.getSvg(), mmm.getRoute(), mmm
+           .getPathFile(), mmm.getUpdateTime(), mmm.getImgWidth(),
+           mmm.getImgHeight(), mmm.getFloorNo(), mmm.getPlaceId(),
+           mmm.getFloorid(), mmm.getId());        
+    }
+    public void updateMapDataNoPath(MapMngModel mmm) throws SQLException
+    {
+        String sql = "UPDATE maps set zAnMap=?,zIosMap=?,zAnMapPath=?,zIosMapPath=?,mapId=?, floor=?,xo=?,yo=?,scale=?,coordinate=?,angle=?,svg=?,route=?,pathfile=?,updateTime=?,floorNo=?,placeId=?,floorid=? where id=?";
+        this.jdbcTemplate.update(sql,mmm.getzMap(),mmm.getzIosMap(),mmm.getzMapPathfile(),mmm.getfMap(),mmm.getMapId(), mmm.getFloor().trim(), mmm.getX()
+            .trim(), mmm.getY().trim(), mmm.getScale().trim(), mmm
+            .getCoordinate().trim(), mmm.getAngle(),mmm.getSvg(), mmm.getRoute(),mmm
+            .getPathFile(), mmm.getUpdateTime(), mmm.getFloorNo(), mmm.getPlaceId(),
+            mmm.getFloorid(), mmm.getId());        
     }
 
     public void updateMap1(MapMngModel mmm) throws SQLException

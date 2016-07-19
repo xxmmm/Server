@@ -6,194 +6,404 @@ $("#exportButton").click(function(e){
 var staticAccuracy = function () {
 	return {
 		initTable:function(){
-			oTable = $('#table').dataTable( {
-				"bProcessing": true,
-				"sAjaxSource": "/sva/staticAccuracy/api/getTableData",
-				"sServerMethod": "POST",
-				"sDom": 'rt<"toolbar"lp<"clearer">>',
-				"sPaginationType": "full_numbers",
-				"bServerSide": true,
-				"bStateSave": true,
-				"fnServerParams": function(aoData) {
-					console.log(aoData);
-				},
-				"fnCookieCallback": function (sName, oData, sExpires, sPath) {      
-					// Customise oData or sName or whatever else here     
-					var newObj = {iLength:oData.iLength};
-					return sName + "="+JSON.stringify(newObj)+"; expires=" + sExpires +"; path=" + sPath;    
-				},
-				"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {
-					var newObj={};
-					for(var i in aoData){
-						var key = aoData[i].name;
-						var val = aoData[i].value;
-						switch(key){
-							case "sEcho":
-								newObj["sEcho"] = val;
-								break;
-							case "iDisplayStart":
-								newObj["iDisplayStart"] = val;
-								break;
-							case "iDisplayLength":
-								newObj["iDisplayLength"] = val;
-								break;
-							case "iSortingCols":
-								newObj["iSortingCols"] = val;
-								break;
-							case "iSortCol_0":
-								newObj["iSortCol0"] = val;
-								break;
-							case "sSortDir_0":
-								newObj["sSortDir0"] = val;
-								break;
-							case "mDataProp_0":
-								newObj["mDataProp0"] = val;
-								break;
-							case "mDataProp_1":
-								newObj["mDataProp1"] = val;
-								break;
-							case "mDataProp_2":
-								newObj["mDataProp2"] = val;
-								break;
-							case "mDataProp_3":
-								newObj["mDataProp3"] = val;
-								break;
-							case "mDataProp_4":
-								newObj["mDataProp4"] = val;
-								break;
-							case "mDataProp_5":
-								newObj["mDataProp5"] = val;
-								break;
-							case "mDataProp_6":
-								newObj["mDataProp6"] = val;
-								break;
-							case "mDataProp_7":
-								newObj["mDataProp7"] = val;
-								break;
-							case "mDataProp_8":
-								newObj["mDataProp8"] = val;
-								break;
-							case "mDataProp_9":
-								newObj["mDataProp9"] = val;
-								break;
-							case "mDataProp_10":
-								newObj["mDataProp10"] = val;
-								break;
-							case "mDataProp_11":
-								newObj["mDataProp11"] = val;
-								break;
-							case "mDataProp_12":
-								newObj["mDataProp12"] = val;
-								break;
-							case "iColumns":
-								newObj["iColumns"] = val;
-								break;
-							default:
-								break;
-						}
-					}
-					oSettings.jqXHR = $.ajax({
-						"dataType": 'json', 
-						"contentType" : "application/json",
-						"type": "POST", 
-						"url": sSource, 
-						"data": JSON.stringify(newObj), 
-						"success": fnCallback
-					});
-				},
-				"aoColumnDefs": [
-					{ 
-						"aTargets": [0],
-						"bVisible": false,
-						"mData": "id" 
-					},
-					{ 
-						"aTargets": [1],
-						"mData": "place",
-						
-					},
-					{ 
-						"aTargets": [2],
-						"mData": "floor"
-					},
-					{ 
-						"aTargets": [3],
-						"mData": "origin"
-					},
-					{ 
-						"aTargets": [4],
-						"mData": "destination",
-						"mRender": function ( data, type, full ) {
-							if(!data){
-								return "-";
-							}else{
-								return data;
-							}
-						}
-					},
-					{ 
-						"aTargets": [5],
-						"mData": "startdate",
-						"mRender": function ( data, type, full ) {
-							var date = new Date();
-							date.setTime(data);
-							return dateFormat(date,"yyyy/MM/dd HH:mm:ss");
-						}
-					},
-					{ 
-						"aTargets": [6],
-						"mData": "enddate",
-						"mRender": function ( data, type, full ) {
-							var date = new Date();
-							date.setTime(data);
-							return dateFormat(date,"yyyy/MM/dd HH:mm:ss");
-						}
-					},
-					{ 
-						"aTargets": [7],
-						"mData": "triggerIp"
-					},
-					{ 
-						"aTargets": [8],
-						"mData": "avgeOffset"
-					},
-					{ 
-						"aTargets": [9],
-						"mData": "maxOffset"
-					},
-					{ 
-						"aTargets": [10],
-						"mData": "staicAccuracy"
-					},
-					{ 
-						"aTargets": [11],
-						"mData": "offsetCenter"
-					},
-					{ 
-						"aTargets": [12],
-						"mData": "offsetNumber"
-						
-					},
-					{ 
-						"aTargets": [13],
-						"mData": "stability"
-						
-					},
-					{
-	                    "aTargets": [14],
-	                    "bSortable": false,
-	                    "bFilter": false,
-	                    "mData": function(source, type, val) {
-	                        return "";
-	                    },
-	                    "mRender": function ( data, type, full ) {
-	                    	console.log(full);
-	                        return '<a data-type="detail" data-toggle="modal" href="#modal" data-id="'+full.id+'">'+i18n_detail+'</a>';
-	                      }
-	                }
-				]
-			} );
+			placeId = $("#marketSel").val();
+			startTime = $("#select_time_begin_tab1").val();
+			endTime = $("#select_time_end_tab1").val();
+			if (startTime=="") {
+				startTime = "1016-06-23 14:30:12";
+				endTime = "3016-06-23 14:30:12";
+			}
+			var param = {
+					placeId :placeId,
+					startTime :startTime ,
+					endTime :endTime 
+			};
+			$.post("/sva/staticAccuracy/api/getTableDataNew",param,function(data){
+        		if(!data.error){
+        			if(oTable){oTable.fnDestroy();};
+        			oTable = $('#table').dataTable({
+        				"bProcessing": true,
+        				"sDom": 'rt<"toolbar"lp<"clearer">>',
+        				"sPaginationType": "full_numbers",
+        				"aaData":data.data,
+        				"bStateSave": true,
+        				"aoColumnDefs": [
+        									{ 
+        										"aTargets": [0],
+        										"bVisible": false,
+        										"mData": "id" 
+        									},
+        									{ 
+        										"aTargets": [1],
+        										"mData": "place",
+        										
+        									},
+        									{ 
+        										"aTargets": [2],
+        										"mData": "floor"
+        									},
+        									{ 
+        										"aTargets": [3],
+        										"mData": "origin"
+        									},
+        									{ 
+        										"aTargets": [4],
+        										"mData": "destination",
+        										"mRender": function ( data, type, full ) {
+        											if(!data){
+        												return "-";
+        											}else{
+        												return data;
+        											}
+        										}
+        									},
+        									{ 
+        										"aTargets": [5],
+        										"mData": "startdate",
+        										"mRender": function ( data, type, full ) {
+        											var date = new Date();
+        											date.setTime(data);
+        											return dateFormat(date,"yyyy/MM/dd HH:mm:ss");
+        										}
+        									},
+        									{ 
+        										"aTargets": [6],
+        										"mData": "enddate",
+        										"mRender": function ( data, type, full ) {
+        											var date = new Date();
+        											date.setTime(data);
+        											return dateFormat(date,"yyyy/MM/dd HH:mm:ss");
+        										}
+        									},
+        									{ 
+        										"aTargets": [7],
+        										"mData": "triggerIp"
+        									},
+        									{ 
+        										"aTargets": [8],
+        										"mData": "avgeOffset"
+        									},
+        									{ 
+        										"aTargets": [9],
+        										"mData": "maxOffset"
+        									},
+        									{ 
+        										"aTargets": [10],
+        										"mData": "staicAccuracy"
+        									},
+        									{ 
+        										"aTargets": [11],
+        										"mData": "offsetCenter"
+        									},
+        									{ 
+        										"aTargets": [12],
+        										"mData": "offsetNumber"
+        										
+        									},
+        									{ 
+        										"aTargets": [13],
+        										"mData": "stability"
+        										
+        									},
+        									{
+        					                    "aTargets": [14],
+        					                    "bSortable": false,
+        					                    "bFilter": false,
+        					                    "mData": function(source, type, val) {
+        					                        return "";
+        					                    },
+        					                    "mRender": function ( data, type, full ) {
+        					                    	console.log(full);
+        					                        return '<a data-type="detail" data-toggle="modal" href="#modal" data-id="'+full.id+'">'+i18n_detail+'</a>';
+        					                      }
+        					                }
+        								],
+        				"fnCookieCallback": function (sName, oData, sExpires, sPath) {      
+        					// Customise oData or sName or whatever else here     
+        					var newObj = {iLength:oData.iLength};
+        					return sName + "="+JSON.stringify(newObj)+"; expires=" + sExpires +"; path=" + sPath;    
+        				}
+        			});
+        			
+    				var myVisitChart = echarts.init(document.getElementById("chart3"));
+    				var option = {
+//    				    title : {
+//    				        text: i18n_title
+//    				    },
+    				    legend: {
+    				        data:data.CDFName
+    				    },
+    				    tooltip : {
+    				        trigger: 'axis'
+    				    },
+    				    lineStyle:{
+    				    	type:'solid'
+    				    },
+    				    toolbox: {
+    				        show : true,
+    				        feature : {
+    				            dataView : {
+    				            	show: true, 
+    				            	title : i18n_dataview,
+    				            	readOnly: true,
+    				                lang: [i18n_dataview, i18n_close, i18n_refresh]
+    				            },
+    				            saveAsImage : {
+    				            	show: true,
+    				            	title : i18n_saveimg
+    				            },
+    				            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+    				            restore : {show: true}
+    				        }
+    				    },
+    				    calculable : false,
+    				    xAxis : [
+    				        {
+    				            type : 'category',
+    				            boundaryGap : false,
+    				            data : data.xValue,
+    				            axisLabel : {
+    				                formatter: '{value} '+i18n_visitTitle
+    				            }
+    				        }
+    				    ],
+    				    yAxis : [
+    				        {
+    				            type : 'value',
+    				            axisLabel : {
+    				                formatter: '{value}'+i18n_cishu
+    				            }
+    				        }
+    				    ],
+    				    series : data.CDFdata
+    				};                  
+    				
+    				myVisitChart.setOption(option);	
+        		}  
+				
+			});
         },
+		initDropdown : function() {
+			$.get("/sva/store/api/getData?t="+Math.random(),function(data){
+				if(!data.error){
+					updateList("marketSel",data.data);
+				}
+				$('#myTab a:last').tab('show');
+				$('#myTab a:first').tab('show');
+			});
+		}, 
+		clickComfirm : function()
+		{
+			placeId = $("#marketSel").val();
+			startTime = $("#select_time_begin_tab1").val();
+			endTime = $("#select_time_end_tab1").val();
+//				if (placeId=="") 
+//			{
+//					placeId = 0;
+//			}
+//				if (startTime=="") 
+//				{
+//					$(".demoform").submit();
+//					return false;
+//				}
+//				if (endTime=="") 
+//				{
+//					$(".demoform").submit();
+//					return false;
+//				}
+			if(startTime>=endTime)
+			{
+				$("#msgdemo2").removeClass("Validform_right");
+				$("#msgdemo2").addClass("Validform_wrong");
+				$("#msgdemo2").text(i18n_time);
+				return false;
+			}
+			$("#msgdemo2").removeClass("Validform_wrong");
+			$("#msgdemo2").addClass("Validform_right");
+			$("#msgdemo2").text(pa);
+			
+			var param = {
+					placeId :placeId,
+					startTime :startTime ,
+					endTime :endTime 
+			};
+			$.post("/sva/staticAccuracy/api/getTableDataNew",param,function(data){
+        		if(!data.error){
+        			if(oTable){oTable.fnDestroy();};
+        			oTable = $('#table').dataTable({
+        				"bProcessing": true,
+        				"sDom": 'rt<"toolbar"lp<"clearer">>',
+        				"sPaginationType": "full_numbers",
+        				"aaData":data.data,
+        				"bStateSave": true,
+        				"aoColumnDefs": [
+        									{ 
+        										"aTargets": [0],
+        										"bVisible": false,
+        										"mData": "id" 
+        									},
+        									{ 
+        										"aTargets": [1],
+        										"mData": "place",
+        										
+        									},
+        									{ 
+        										"aTargets": [2],
+        										"mData": "floor"
+        									},
+        									{ 
+        										"aTargets": [3],
+        										"mData": "origin"
+        									},
+        									{ 
+        										"aTargets": [4],
+        										"mData": "destination",
+        										"mRender": function ( data, type, full ) {
+        											if(!data){
+        												return "-";
+        											}else{
+        												return data;
+        											}
+        										}
+        									},
+        									{ 
+        										"aTargets": [5],
+        										"mData": "startdate",
+        										"mRender": function ( data, type, full ) {
+        											var date = new Date();
+        											date.setTime(data);
+        											return dateFormat(date,"yyyy/MM/dd HH:mm:ss");
+        										}
+        									},
+        									{ 
+        										"aTargets": [6],
+        										"mData": "enddate",
+        										"mRender": function ( data, type, full ) {
+        											var date = new Date();
+        											date.setTime(data);
+        											return dateFormat(date,"yyyy/MM/dd HH:mm:ss");
+        										}
+        									},
+        									{ 
+        										"aTargets": [7],
+        										"mData": "triggerIp"
+        									},
+        									{ 
+        										"aTargets": [8],
+        										"mData": "avgeOffset"
+        									},
+        									{ 
+        										"aTargets": [9],
+        										"mData": "maxOffset"
+        									},
+        									{ 
+        										"aTargets": [10],
+        										"mData": "staicAccuracy"
+        									},
+        									{ 
+        										"aTargets": [11],
+        										"mData": "offsetCenter"
+        									},
+        									{ 
+        										"aTargets": [12],
+        										"mData": "offsetNumber"
+        										
+        									},
+        									{ 
+        										"aTargets": [13],
+        										"mData": "stability"
+        										
+        									},
+        									{
+        					                    "aTargets": [14],
+        					                    "bSortable": false,
+        					                    "bFilter": false,
+        					                    "mData": function(source, type, val) {
+        					                        return "";
+        					                    },
+        					                    "mRender": function ( data, type, full ) {
+        					                    	console.log(full);
+        					                        return '<a data-type="detail" data-toggle="modal" href="#modal" data-id="'+full.id+'">'+i18n_detail+'</a>';
+        					                      }
+        					                }
+        								],
+        				"fnCookieCallback": function (sName, oData, sExpires, sPath) {      
+        					// Customise oData or sName or whatever else here     
+        					var newObj = {iLength:oData.iLength};
+        					return sName + "="+JSON.stringify(newObj)+"; expires=" + sExpires +"; path=" + sPath;    
+        				}
+        			});
+        			
+    				var myVisitChart = echarts.init(document.getElementById("chart3"));
+    				var option = {
+//    				    title : {
+//    				        text: i18n_title
+//    				    },
+    				    legend: {
+    				        data:data.CDFName
+    				    },
+    				    tooltip : {
+    				        trigger: 'axis'
+    				    },
+    				    toolbox: {
+    				        show : true,
+    				        feature : {
+    				            dataView : {
+    				            	show: true, 
+    				            	title : i18n_dataview,
+    				            	readOnly: true,
+    				                lang: [i18n_dataview, i18n_close, i18n_refresh]
+    				            },
+    				            saveAsImage : {
+    				            	show: true,
+    				            	title : i18n_saveimg
+    				            },
+    				            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+    				            restore : {show: true}
+    				        }
+    				    },
+    				    calculable : false,
+    				    xAxis : [
+    				        {
+    				            type : 'category',
+    				            boundaryGap : false,
+    				            data : data.xValue,
+    				            axisLabel : {
+    				                formatter: '{value} '+i18n_visitTitle
+    				            }
+    				        }
+    				    ],
+    				    yAxis : [
+    				        {
+    				            type : 'value',
+    				            axisLabel : {
+    				                formatter: '{value} '+i18n_cishu
+    				            }
+    				        }
+    				    ],
+    				    series : data.CDFdata
+    				};                  
+    				
+    				myVisitChart.setOption(option);	
+        		}  
+				
+			});
+			
+		},
+		
+		showDate: function(id){
+			WdatePicker({
+				el : document.getElementById(id),
+				lang : i18n_language,
+				isShowClear : false,
+				isShowToday:false,
+				readOnly : true,
+				dateFmt : 'yyyy-MM-dd HH:00:00',
+				maxDate : '%y-%M-%d 23:00:00',
+				skin : "twoer"
+			});
+		},
+        
         initPopupText: function(data){
         	if(data){
 				var val = '';
@@ -327,3 +537,21 @@ var staticAccuracy = function () {
     };
 
 }();
+var updateList = function(renderId, data, callback) {
+	var sortData = data.sort(function(a,b){return a.name - b.name;});
+    var len = sortData.length;
+    var options = '';
+    for(var i=0;i<len;i++){
+    	var info = sortData[i];
+		options += '<option class="addoption" value="'+info.id+'">' + HtmlDecode3(info.name) +'</option>';
+    }
+    removeOption(renderId);
+    $('#' + renderId).append(options);
+    if(callback){
+        callback();
+    }
+    return;
+};
+var removeOption = function(renderId) {
+	$('#' + renderId + ' .addoption').remove().trigger("liszt:updated");
+};

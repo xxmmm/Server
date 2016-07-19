@@ -172,20 +172,30 @@ public class QuartzJob {
 
 	}
 
+
+	/** 
+	 * @Title: doStatisticDataPerHalfHour 
+	 * @Description: 每个小时按小时统计、按天统计、按楼层统计预处理    
+	 * @throws 
+	 */
 	public void doStatisticDataPerHalfHour() {
 		// 获取一个小时之前的时间戳
-		long startTime = System.currentTimeMillis() - 3600000;
-		Calendar cal = Calendar.getInstance();
-		String time = ConvertUtil.dateFormat(cal.getTime(), Params.YYYYMMDD);
+		long startTime = System.currentTimeMillis() - Params.ONE_HOUR;
+        long insertTime = System.currentTimeMillis() - Params.HALF_HOUR;
+        //获取前半个小时的小时时间
+        String times = ConvertUtil.dateFormat(insertTime,Params.YYYYMMddHH00);
+        //获取今天的日期时间
+		String time = ConvertUtil.dateFormat(insertTime, Params.YYYYMMDD);
 		String tableName = Params.LOCATION + time;
-		log.info("doStatisticDataPerHalfHour:" + ConvertUtil.dateFormat(cal.getTime(), "yyyyMMddHHmmSS"));
+		log.info("doStatisticDataPerHalfHour:" + ConvertUtil.dateFormat(System.currentTimeMillis(), "yyyyMMddHHmmSS"));
+		
 		String sqlHour = "insert into statistichour "
-				+ "(SELECT b.placeId placeId,FROM_UNIXTIME(a.timestamp/1000,'%Y%m%d%H0000') time,COUNT(distinct a.userID) number "
+				+ "(SELECT b.placeId placeId,'"+times+"' time,COUNT(distinct a.userID) number "
 				+ "FROM " + tableName + " a join maps b on a.z = b.floorNo and a.timestamp> " + startTime
-				+ " GROUP BY b.placeId,time)";
+				+ " GROUP BY b.placeId)";
 
 		String sqlDay = "replace into statisticday " + "(SELECT b.placeId placeId,"
-				+ ConvertUtil.dateFormat(cal.getTime(), Params.YYYYMMDD) + " time,COUNT(distinct a.userID) number "
+				+ time + " time,COUNT(distinct a.userID) number "
 				+ "FROM " + tableName + " a join maps b on a.z = b.floorNo GROUP BY b.placeId)";
 
 		String sqlFloor = "replace into statisticfloor "
@@ -199,7 +209,7 @@ public class QuartzJob {
 			// refreshRangeStat();
 			// addLineStat();
 		} catch (Exception e) {
-			log.info(e.getStackTrace());
+			log.error(e.getStackTrace());
 		}
 
 	}

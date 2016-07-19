@@ -41,6 +41,54 @@ public class MapMngModel
     private String updateTime;
 
     private String mapId;
+    
+    private String fMap;
+    
+    private String zMap;
+    
+    private String zMapPathfile;
+    
+    private String zIosMap;
+
+    public String getzIosMap()
+    {
+        return zIosMap;
+    }
+
+    public void setzIosMap(String zIosMap)
+    {
+        this.zIosMap = zIosMap;
+    }
+
+    public String getfMap()
+    {
+        return fMap;
+    }
+
+    public void setfMap(String fMap)
+    {
+        this.fMap = fMap;
+    }
+
+    public String getzMap()
+    {
+        return zMap;
+    }
+
+    public void setzMap(String zMap)
+    {
+        this.zMap = zMap;
+    }
+
+    public String getzMapPathfile()
+    {
+        return zMapPathfile;
+    }
+
+    public void setzMapPathfile(String zMapPathfile)
+    {
+        this.zMapPathfile = zMapPathfile;
+    }
 
     public String getMapId()
     {
