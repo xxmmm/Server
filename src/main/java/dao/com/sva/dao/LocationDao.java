@@ -390,7 +390,7 @@ public class LocationDao
     public List<Map<String,Object>> queryLocationForPosition(String floorNo, String time)
     {
     	String tableName = Params.LOCATION + time;
-        String sql = "select userID from " + tableName + " where z = ?";
+        String sql = "select userID from " + tableName + " where z = ? and idType = 'MSISDN'";
         
         String[] params = {String.valueOf(floorNo)};
 
