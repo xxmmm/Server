@@ -58,6 +58,28 @@ public class BZPramesController
 
         return modelMap;
     }
+    
+    /** 
+     * @Title: getTableData3 
+     * @Description: 菁蓉镇数据列表
+     * @param model
+     * @return Map<String,Object>       
+     * @throws 
+     */
+    @RequestMapping(value = "/api/getData3", method = {RequestMethod.GET})
+    @ResponseBody
+    public Map<String, Object> getTableData3(Model model)
+    {
+        log.info("ParamController:getTableData");
+
+        Collection<BZPramesModel> ResultList = bzPramesDao.doquery4();
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+
+        modelMap.put("error", null);
+        modelMap.put("data", ResultList);
+
+        return modelMap;
+    }
 
     
     @RequestMapping(value = "/api/getData1", method = {RequestMethod.GET})
@@ -271,4 +293,80 @@ public class BZPramesController
 			modelMap.put("data", null);
 			return modelMap;
 		}
+    
+    /** 
+     * @Title: saveData2 
+     * @Description: 菁蓉镇参数配置
+     * @param densitySel
+     * @param radiusSel
+     * @param densitySel1
+     * @param radiusSel1
+     * @param densitySel2
+     * @param radiusSel2
+     * @param densitySel4
+     * @param radiusSel4
+     * @param floorNo
+     * @param floorNo2
+     * @param floorNo3
+     * @param floorNo4
+     * @param periodSel
+     * @param coefficient
+     * @param startTime
+     * @return Map<String,Object>       
+     * @throws 
+     */
+    @RequestMapping(value = "/api/saveData3", method = {RequestMethod.POST})
+   @ResponseBody
+   public Map<String, Object> saveData3(
+           @RequestParam("densitySel") int densitySel,
+           @RequestParam("radiusSel") int radiusSel,
+           @RequestParam("densitySel1") int densitySel1,
+           @RequestParam("radiusSel1") int radiusSel1,
+           @RequestParam("densitySel2") int densitySel2,
+           @RequestParam("radiusSel2") int radiusSel2,
+           @RequestParam("densitySel4") int densitySel4,
+           @RequestParam("radiusSel4") int radiusSel4,
+           @RequestParam("floorNo") String floorNo,
+           @RequestParam("floorNo2") String floorNo2,
+           @RequestParam("floorNo3") String floorNo3,
+           @RequestParam("floorNo4") String floorNo4,
+           @RequestParam("periodSel") int periodSel,
+           @RequestParam("coefficient") Double coefficient,
+           @RequestParam("startTime") String startTime)
+   {
+       Map<String, Object> modelMap = new HashMap<String, Object>(2);
+       BigDecimal bd = new BigDecimal(floorNo);
+       BigDecimal bd2 = new BigDecimal(floorNo2);
+       BigDecimal bd3 = new BigDecimal(floorNo3);
+       BigDecimal bd4 = new BigDecimal(floorNo4);
+       BZPramesModel sm = new BZPramesModel();
+       sm.setDensitySel(densitySel);
+       sm.setRadiusSel(radiusSel);
+       sm.setDensitySel1(densitySel1);
+       sm.setRadiusSel1(radiusSel1);
+       sm.setDensitySel2(densitySel2);
+       sm.setRadiusSel2(radiusSel2);
+       sm.setDensitySel4(densitySel4);
+       sm.setRadiusSel4(radiusSel4);
+       sm.setFloorNo(bd);
+       sm.setFloorNo2(bd2);
+       sm.setFloorNo3(bd3);
+       sm.setFloorNo4(bd4);
+       sm.setPeriodSel(periodSel);
+       sm.setCoefficient(coefficient);
+       startTime = "2016-02-15 " + startTime;
+       sm.setStartTime(ConvertUtil.dateStringFormat(startTime,
+               "yyyy-MM-dd HH:mm:ss"));
+       sm.setId(1);
+       try
+       {
+           bzPramesDao.updateSHInfoJing(sm);
+       }
+       catch (SQLException e)
+       {
+           e.printStackTrace();
+       }
+       modelMap.put("data", null);
+       return modelMap;
+   }
 }

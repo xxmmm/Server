@@ -43,6 +43,14 @@ public class BZPramesDao
         // JdbcTemplate tem = this.getJdbcTemplate();
         return this.jdbcTemplate.query(sql, new BZPramesMapper2());
     }
+    public Collection<BZPramesModel> doquery4()
+    {
+        // String sql =
+        // "SELECT a.*,b.floor,c.name place FROM BZPrames a left join maps b on a.floorNo = b.floorNo left join store c on a.placeId = c.id ";
+        String sql = "select * from shpramesJing";
+        // JdbcTemplate tem = this.getJdbcTemplate();
+        return this.jdbcTemplate.query(sql, new BZPramesMapper3());
+    }
     
     public Collection<BZPramesModel> doquery1()
     {
@@ -75,6 +83,23 @@ public class BZPramesDao
                 mmm.getDensitySel1(), mmm.getRadiusSel1(), mmm.getDensitySel2(),
                 mmm.getRadiusSel2(),mmm.getFloorNo(), mmm.getFloorNo2(),
                 mmm.getFloorNo3(), mmm.getPeriodSel(), mmm.getStartTime(),
+                mmm.getCoefficient(), mmm.getId());
+    }
+    
+    /** 
+     * @Title: updateSHInfoJing 
+     * @Description: 菁蓉镇参数配置sql
+     * @param mmm
+     * @throws SQLException void       
+     * @throws 
+     */
+    public void updateSHInfoJing(BZPramesModel mmm) throws SQLException
+    {
+        String sql = "REPLACE INTO shpramesJing(densitySel1,radiusSel1,densitySel2,radiusSel2,densitySel3,radiusSel3,densitySel4,radiusSel4,floorNo1,floorNo2,floorNo3,floorNo4,periodSel,startTime,coefficient,id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        this.jdbcTemplate.update(sql, mmm.getDensitySel(), mmm.getRadiusSel(),
+                mmm.getDensitySel1(), mmm.getRadiusSel1(), mmm.getDensitySel2(),
+                mmm.getRadiusSel2(),mmm.getDensitySel4(),mmm.getRadiusSel4(),
+                mmm.getFloorNo(), mmm.getFloorNo2(),mmm.getFloorNo3(),mmm.getFloorNo4(), mmm.getPeriodSel(), mmm.getStartTime(),
                 mmm.getCoefficient(), mmm.getId());
     }
 
@@ -144,6 +169,33 @@ public class BZPramesDao
             return bzPramesModel;
         }
     }
+    private class BZPramesMapper3 implements RowMapper
+    {
+        public Object mapRow(ResultSet rs, int num) throws SQLException
+        {
+            BZPramesModel bzPramesModel = new BZPramesModel();
+            bzPramesModel.setDensitySel(rs.getInt("densitySel1"));
+            bzPramesModel.setRadiusSel(rs.getInt("radiusSel1"));
+            bzPramesModel.setDensitySel1(rs.getInt("densitySel2"));
+            bzPramesModel.setDensitySel2(rs.getInt("densitySel3"));
+            bzPramesModel.setDensitySel4(rs.getInt("densitySel4"));
+            bzPramesModel.setRadiusSel2(rs.getInt("radiusSel3"));
+            bzPramesModel.setRadiusSel4(rs.getInt("radiusSel4"));
+            bzPramesModel.setFloorNo(rs.getBigDecimal("FLOORNO1"));
+            bzPramesModel.setFloorNo2(rs.getBigDecimal("FLOORNO2"));
+            bzPramesModel.setFloorNo3(rs.getBigDecimal("FLOORNO3"));
+            bzPramesModel.setFloorNo4(rs.getBigDecimal("FLOORNO4"));
+            bzPramesModel.setPeriodSel(rs.getInt("periodSel"));
+            bzPramesModel.setCoefficient(rs.getDouble("coefficient"));
+            bzPramesModel.setStartTime(rs.getTimestamp("startTime"));
+            String a = bzPramesModel.getStartTime().toString()
+                .substring(11, 19);
+            bzPramesModel.setStartTimeEmp(a);
+            bzPramesModel.setId(rs.getInt("ID"));
+            
+            return bzPramesModel;
+        }
+    }
 
     public List<Map<String, Object>> getBzData(String placeId)
     {
@@ -176,6 +228,22 @@ public class BZPramesDao
         String[] params = {id};
         return this.jdbcTemplate.queryForList(sql, params);
     }
+    
+    /** 
+     * @Title: getAllFloorNoJing 
+     * @Description: 菁蓉镇数据sql
+     * @param id
+     * @return List<Map<String,Object>>       
+     * @throws 
+     */
+    public List<Map<String, Object>> getAllFloorNoJing(String id)
+{
+    String sql = "select floorNo1,startTime,floorNo2,floorNo3,floorNo4,periodSel,coefficient from shpramesJing where id=?";
+    // JdbcTemplate tem = this.getJdbcTemplate();
+    String[] params = {id};
+    return this.jdbcTemplate.queryForList(sql, params);
+}
+    
     
 	public Collection<BZPramesModel1> doquery2() {
 		// String sql =
