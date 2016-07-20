@@ -373,6 +373,31 @@ public class ApiController
         return modelMap;
 
     }
+ 
+    @RequestMapping(value = "/getNewTikectData", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> getNewTikectData(
+            @RequestParam("messageId") String messageId
+            )
+    {
+
+        String areaId =daoMsg.getAreaIdByMessage(messageId);
+        List<String> list = daoMsg.getTiketPathByAreaId(areaId);
+        Map<String, Object> modelMap = new HashMap<String, Object>(3);  
+        String tikePath = null;
+        int size = list.size();
+        if (size>0)
+        {
+            Random rand = new Random();
+            int randNum = rand.nextInt(size);
+            tikePath = list.get(randNum);
+            
+        }
+        modelMap.put("tikectPath",tikePath);
+        return modelMap;
+
+    }    
+    
 
     @RequestMapping(value = "/getLocationData", method = {RequestMethod.POST})
     @ResponseBody
@@ -644,18 +669,60 @@ public class ApiController
         // }
 
         Collection<MapsModel> ResultList = null;
+        Collection<AreaModel> areaList = daoArea.doquery();
         ResultList = daoMaps.doquery();
         Map<String, Object> modelMap = new HashMap<String, Object>(2);
 
         modelMap.put("error", null);
         modelMap.put("data", ResultList);
+        modelMap.put("areaData", areaList);
 
         return modelMap;
     }
+    
+    /** 
+     * @Title: getMessages 
+     * @Description: TODO 同通过店铺Id获取店铺范围的消息推送以及电子围栏消息
+     * @param areaId 店铺Id
+     * @return Map<String,Object>       
+     * @throws 
+     */
+    @RequestMapping(value = "/getMessages", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> getMessages(@RequestBody HashMap<String,List<String>> map)
+    {
+        Collection<MessageModel> messageList = new ArrayList<MessageModel>(10);
+        Collection<GeofencingModel> GeofencingList = new ArrayList<GeofencingModel>(10);
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        try
+        {
+            List<String> areaList = map.get("areaId");
+            if (areaList.size()>0)
+            {
+                
+                for (int i = 0; i < areaList.size(); i++)
+                {
+                    String areaId = areaList.get(i);
+                    messageList.addAll(daoMsg.getAllMessageDataByAreaId(areaId));
+                    String zoneId = daoArea.getZoneIdByAreaId(areaId);
+                    log.debug("getMessage: areaId:"+areaId+" zoneId"+zoneId);
+                    GeofencingList.addAll(geofencingDao.getGeofencingByZoneId(zoneId)); 
+                }
+            }
+            
+        }
+        catch (Exception e)
+        {
+            log.error("getMessage error:"+e.getMessage());
+        }
+        modelMap.put("message", messageList);
+        modelMap.put("geoFence", GeofencingList);
+        return modelMap;
+    }    
 
     @RequestMapping(value = "/getMapData", method = {RequestMethod.GET})
     @ResponseBody
-    public Map<String, Object> getMapData(Model model)
+    public Map<String, Object> getMapData(String model)
     {
         List<MapMngModel> list = new ArrayList<MapMngModel>(10);
         Collection<MapsModel> ResultList = new ArrayList<MapsModel>(10);
@@ -1004,6 +1071,14 @@ public class ApiController
     public Map<String, Object> savaRegister(@RequestBody RegisterModel model)
     {
 
+        String phoneNumber = model.getPhoneNumber();
+        List<RegisterModel> lis = registerDao.getDataByPhoneNumber(phoneNumber); 
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        if (lis.size() > 0 )
+        {
+            modelMap.put("error", "0");
+            return modelMap;
+        }
         log.debug("api savaRegister:");
         long time = System.currentTimeMillis();
         model.setStatus(0);
@@ -1016,7 +1091,7 @@ public class ApiController
         {
             log.error(e.getMessage());
         }
-        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+
         modelMap.put("error", null);
         return modelMap;
     }
@@ -1048,14 +1123,25 @@ public class ApiController
     public Map<String, Object> loginCheck(@RequestBody RegisterModel model)
     {
 
+        String baseChart = "abcdefghijklmnopqrstuvwxyz0123456789";
+        int baseSize = baseChart.length();
+        StringBuffer strb = new StringBuffer();
+        Random ron = new Random();
+        for (int i = 0; i < 10; i++)
+        {
+            int val = ron.nextInt(baseSize);
+            strb.append(baseChart.charAt(val));
+        }
         log.debug("api loginCheck:");
         // int a = registerDao.checkLogin(userName, passWord);
         int b = registerDao.checkLogin1(model);
         log.debug("passWord:" + model.getPassWord() + " phoneNumber:"
-                + model.getPhoneNumber() + " b:" + b);
+                + model.getPhoneNumber() + " b:" + b +" token:"+strb);
         Map<String, Object> modelMap = new HashMap<String, Object>(2);
         if (b > 0)
         {
+            registerDao.setLoginStatus(strb, model.getPhoneNumber());
+            modelMap.put("loginStatus", strb);
             modelMap.put("error", "1");
             return modelMap;
         }
@@ -1189,6 +1275,13 @@ public class ApiController
         log.debug("api seekPeople:" + " myPhone:" + myPhone);
         // List<RegisterModel> lis = registerDao.getDataByUserName(userName);
         List<RegisterModel> lis1 = registerDao.getDataBy(myPhone);
+        List<RegisterModel> lis = registerDao.getDataByPhoneNumber(myPhone);
+        String loginStatus = null;
+        if (lis.size()>0)
+        {
+            loginStatus = lis.get(0).getLoginStatus();
+            modelMap.put("loginStatus",loginStatus);
+        }
         // if (lis.size() > 0)
         // {
         // long otherPhone = lis.get(0).getOtherPhone();
@@ -1507,7 +1600,7 @@ public class ApiController
         List<AreaModel> ResultList2 = daoArea.selectAeareBaShow(floorNo2);
         List<AreaModel> ResultList3 = daoArea.selectAeareBaShow(floorNo3);
         long nowTime = System.currentTimeMillis()
-                - (Integer.parseInt(periodSel) + 10) * 60 * 1000;
+                - (Integer.parseInt(periodSel)+1) * 60 * 1000;
         List<Object> areaData = new ArrayList<Object>();
         List<Object> areaData2 = new ArrayList<Object>();
         List<Object> areaData3 = new ArrayList<Object>();
@@ -1538,6 +1631,8 @@ public class ApiController
         double allTime1 = 0;
         double allTime2 = 0;
         double allTime3 = 0;
+        long allTimes2 = 0; 
+        long allTimes3 = 0; 
         for (int i = 0; i < ResultList1.size(); i++)
         {
             Map<String, Object> quyu1 = null;
@@ -1557,6 +1652,7 @@ public class ApiController
                     ResultList2.get(i).getAreaName(), visitDay, tquyu, map,
                     nowTime, coefficient);
             allTime2 = allTime2 +  Double.parseDouble(quyu2.get("average").toString());
+            allTimes2 = Long.parseLong(quyu2.get("allTime").toString())+allTimes2;
             if (quyu2.size() != 0)
             {
                 areaData2.add(quyu2);
@@ -1569,6 +1665,7 @@ public class ApiController
                     ResultList3.get(i).getAreaName(), visitDay, tquyu, map,
                     nowTime, coefficient);
             allTime3 = allTime3 +  Double.parseDouble((quyu3.get("average").toString()));
+            allTimes3 = Long.parseLong(quyu3.get("allTime").toString())+allTimes3;
             if (quyu3.size() != 0)
             {
                 areaData3.add(quyu3);
@@ -1587,10 +1684,17 @@ public class ApiController
         int allLeiji2 = 0;
         int allLeiji3 = 0;
         
+        double allUser2 = 0;
+        double allUser3 = 0;
+        
+        
         
         allLeiji1 = dao.queryHeatmap6(floorNo1).size();
         allLeiji2 = dao.queryHeatmap6(floorNo2).size();
         allLeiji3 = dao.queryHeatmap6(floorNo3).size();
+        
+        allUser2 = Math.ceil(allLeiji2 * coefficient);
+        allUser3 = Math.ceil(allLeiji3 * coefficient);
         
         allUsers1 = (dao.queryHeatmap5(floorNo1, Integer.parseInt(periodSel))).size();
         allUsers2 = (dao.queryHeatmap5(floorNo2, Integer.parseInt(periodSel))).size();
@@ -1600,14 +1704,25 @@ public class ApiController
 
         allDataMap.put("coefficient", coefficient);
         allDataMap.put("allTime1", allTime1);
-        allDataMap.put("allTime2", allTime2);
-        allDataMap.put("allTime3", allTime3);
+        DecimalFormat    df   = new DecimalFormat("######0.00");   
+        String avgAllTime2 = allUser2 == 0 ? "0.00" : df.format(allTimes2/60000.0/allUser2);
+        String avgAllTime3 = allUser3 == 0 ? "0.00" : df.format(allTimes3/60000.0/allUser3);
+        if (Double.parseDouble(avgAllTime2)>=120)
+        {
+            avgAllTime2 = "120.23";
+        }
+        if (Double.parseDouble(avgAllTime3)>=120)
+        {
+            avgAllTime2 = "120.10";
+        }
+        allDataMap.put("allTime2", avgAllTime2);
+        allDataMap.put("allTime3", avgAllTime3);
         allDataMap.put("User1", Math.ceil(allUsers1 * coefficient));
-        allDataMap.put("User2", Math.ceil(allUsers2 * coefficient));
+        allDataMap.put("User2",Math.ceil(allUsers2 * coefficient) );
         allDataMap.put("User3", Math.ceil(allUsers3 * coefficient));
-        allDataMap.put("allUser1", Math.ceil(allLeiji1 * coefficient));
-        allDataMap.put("allUser2", Math.ceil(allLeiji2 * coefficient));
-        allDataMap.put("allUser3", Math.ceil(allLeiji3 * coefficient));
+        allDataMap.put("allUser1",Math.ceil(allLeiji1 * coefficient) );
+        allDataMap.put("allUser2",allUser2 );
+        allDataMap.put("allUser3", allUser3);
 
 
         return allDataMap;
@@ -1643,15 +1758,21 @@ public class ApiController
         int allSize = 0;
 
         int size = 0;
+        long allTimes = 0;
         // String areaId = ResultList1.get(i).getId();
         String times = null;
         quyu = daoArea.getAverageTimeByAreaId(areaId, visitDay);
         if (!quyu.isEmpty())
         {
             allSize = Integer.parseInt(quyu.get("count").toString());
+            allTimes = Long.parseLong(quyu.get("timePeriod").toString());
             times = getMinute(
                     (Long.parseLong(quyu.get("timePeriod").toString())),
                     allSize);
+        }
+        if (Double.parseDouble(times)>120)
+        {
+            times = "120.21";
         }
         int allSize1 = daoArea.getAllArea(areaId);
         size = daoArea.getBaShowVisitUser(areaId, String.valueOf(nowTime));
@@ -1660,6 +1781,7 @@ public class ApiController
         map.put("current", Math.ceil(size * coefficient));
         map.put("cumulative", Math.ceil(allSize1 * coefficient));
         map.put("average", times);
+        map.put("allTime", allTimes);
 
         return map;
     }
@@ -2060,5 +2182,8 @@ public class ApiController
 
         return allDataMap;
     }
+    
+    
+    
 
 }

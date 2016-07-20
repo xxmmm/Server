@@ -330,6 +330,7 @@ public class SvaController
         catch (Exception e)
         {
             String st = e.getMessage();
+            log.debug("token: "+st);
             if ("Connection timed out: connect".equals(st))
             {
                 modelMap.put("ip", true);

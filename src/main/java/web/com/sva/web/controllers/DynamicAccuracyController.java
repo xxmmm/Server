@@ -28,9 +28,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.support.RequestContext;
 
+import com.sva.common.Util;
 import com.sva.common.conf.Params;
 import com.sva.dao.DynamicAccuracyDao;
 import com.sva.model.DynamicAccuracyModel;
@@ -114,6 +116,110 @@ public class DynamicAccuracyController
         return modelMap;
     }
 
+    
+    
+    @RequestMapping(value = "/api/getDynamicTableDataNew", method = {RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> getDynamicTableDataNew(HttpServletRequest request,
+            @RequestParam("placeId") String placeId,
+            @RequestParam("startTime") String startTime,
+            @RequestParam("endTime") String endTime)
+    {
+        RequestContext requestContext = new RequestContext(request);
+        Locale myLocale = requestContext.getLocale();
+        String avgeOffsetName = Params.avgeOffset;
+        String maxOffsetName = Params.maxOffset;
+        String offsetName = Params.offset;
+        String total = Params.total;
+        Collection<DynamicAccuracyModel> res = new ArrayList<DynamicAccuracyModel>(
+                10);
+        Collection<DynamicAccuracyModel> store = new ArrayList<DynamicAccuracyModel>(
+                10);
+        List<String> listName = new ArrayList<>();
+        
+
+        
+        Object userName = request.getSession().getAttribute("username");
+        @SuppressWarnings("unchecked")
+        List<String> storeides = (List<String>) request.getSession()
+                .getAttribute("storeides");
+        if (("admin").equals(userName))
+        {
+            if (placeId!="")
+            {
+                res = dao.getDataByPlaceIdTime(startTime,endTime,placeId);
+            }else
+            {
+                res = dao.getAllData(startTime,endTime);
+            }
+        }
+        else
+        {
+            if (placeId!="")
+            {
+                if (storeides.size() > 0)
+                {
+                    String storeid = storeides.get(0);
+                    String[] stores = storeid.split(",");
+                    for (int i = 0; i < stores.length; i++)
+                    {
+                        store = dao.getDataByPlaceIdTime(startTime, endTime,stores[i]);
+                        if (store != null)
+                        {
+                            if (res == null)
+                            {
+                                res = store;
+                            }
+                            else if (!store.isEmpty())
+                            {
+                                res.addAll(store);
+                            }
+                        }
+                    }
+                }
+            }else
+            {
+                if (storeides.size() > 0)
+                {
+                    String storeid = storeides.get(0);
+                    String[] stores = storeid.split(",");
+                    for (int i = 0; i < stores.length; i++)
+                    {
+                        store = dao.getAllDataByPlaceIdTime(startTime,endTime,stores[i]);
+                        if (store != null)
+                        {
+                            if (res == null)
+                            {
+                                res = store;
+                            }
+                            else if (!store.isEmpty())
+                            {
+                                res.addAll(store);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (!Locale.CHINA.equals(myLocale))
+        {
+            avgeOffsetName = "avgeOffset";
+            maxOffsetName = "max Offset";
+            offsetName = "Offset";
+            total = "total";
+        }
+        listName.add(avgeOffsetName);
+        listName.add(maxOffsetName);
+        listName.add(offsetName);
+        
+        Map<String, Object> modelMap = new HashMap<String, Object>(4);
+        modelMap = Util.getCDFDynamicAccuracy(listName, res,total);
+        modelMap.put("data", res);
+        modelMap.put("CDFName", listName);
+
+        return modelMap;
+    }
+    
     /*
      * 导出excel Time：2015/10/12 lwx274026
      */

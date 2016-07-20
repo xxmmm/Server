@@ -11,6 +11,12 @@ public class Params
     public static final String YYYYMMDDHHMM = "yyyyMMddHHmm";
 
     public static final String YYYYMMDDHH = "yyyyMMddHH";
+    
+    public static final String YYYYMMddHH00 = "YYYY-MM-dd HH:00:00";
+    
+    public static final int HALF_HOUR = 1800000;
+    
+    public static final int ONE_HOUR = 3600000;
 
     public static final int ZERO = 0;
 
@@ -133,5 +139,7 @@ public class Params
     public static final String triggerIp = "触发者";
     
     public static final String Detail = "详情";
+    
+    public static final String total = "总量";
 
 }
