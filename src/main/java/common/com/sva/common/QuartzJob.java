@@ -703,19 +703,25 @@ public class QuartzJob {
 			time_begin = model.getBigentime();
 			time_local = model.getLocaltime();
 			areaId = model.getAreaId();
-			if (i==0) {
-				sql1 = "('"+idType+"',"+timestamp+","+time_begin+","+time_local+","+during+",'"+dataType+"',"+areaId+",'"+userID+"',"+loc_count+"),";
-			}else
-			{
-				if (i+1<inputSize) {
-					sql1 = sql1+"('"+idType+"',"+timestamp+","+time_begin+","+time_local+","+during+",'"+dataType+"',"+areaId+",'"+userID+"',"+loc_count+"),";
-					
-				}else
-				{
-					sql1 = sql1+"('"+idType+"',"+timestamp+","+time_begin+","+time_local+","+during+",'"+dataType+"',"+areaId+",'"+userID+"',"+loc_count+");";
-					
-				}
-			}
+			if (inputSize==1)
+            {
+			    sql1 = " ('"+idType+"',"+timestamp+","+time_begin+","+time_local+","+during+",'"+dataType+"',"+areaId+",'"+userID+"',"+loc_count+");"; 
+            }else
+            {
+    			if (i==0 && inputSize > 1) {
+    				sql1 = "('"+idType+"',"+timestamp+","+time_begin+","+time_local+","+during+",'"+dataType+"',"+areaId+",'"+userID+"',"+loc_count+"),";
+    			}else
+    			{
+    				if (i+1<inputSize) {
+    					sql1 = sql1+"('"+idType+"',"+timestamp+","+time_begin+","+time_local+","+during+",'"+dataType+"',"+areaId+",'"+userID+"',"+loc_count+"),";
+    					
+    				}else
+    				{
+    					sql1 = sql1+"('"+idType+"',"+timestamp+","+time_begin+","+time_local+","+during+",'"+dataType+"',"+areaId+",'"+userID+"',"+loc_count+");";
+    					
+    				}
+    			}
+            }
 			
 		}
 		String sql = sqlIns+sql1;
@@ -728,17 +734,23 @@ public class QuartzJob {
 			userID = model1.getUserID();
 			timestamp = model1.getTimestamp();
 			areaId = model1.getAreaId();
-			if (j==0) {
-				sql2 = "userId = '"+userID+"' and district_id = "+areaId+" or ";
-			}else
-			{
-				if (j+1<updateSize) {
-					sql2 = sql2+"(userId = '"+userID+"' and district_id = "+areaId+") or ";
-				}else
-				{
-					sql2 = sql2+"(userId = '"+userID+"' and district_id = "+areaId+");";
-				}
-			}
+			if (updateSize==1)
+            {
+			    sql2 = " (userId = '"+userID+"' and district_id = "+areaId+");";
+            }else
+            {
+    			if (j==0 && updateSize >1) {
+    				sql2 = "userId = '"+userID+"' and district_id = "+areaId+" or ";
+    			}else
+    			{
+    				if (j+1<updateSize) {
+    					sql2 = sql2+"(userId = '"+userID+"' and district_id = "+areaId+") or ";
+    				}else
+    				{
+    					sql2 = sql2+"(userId = '"+userID+"' and district_id = "+areaId+");";
+    				}
+    			}
+            }
 			
 		}
 		String sqlup = update+sql2;
