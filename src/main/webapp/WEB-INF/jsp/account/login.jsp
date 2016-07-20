@@ -137,8 +137,9 @@
 			     			</div>
 			     			<div class="row-fluid">
 			     				<div class="span12">
-			     					<button id="loginid" type="submit" class="button"><spring:message code="login_go" /></button>
+			     					<button id="loginid" type="submit" class="button hide"><spring:message code="login_go" /></button>
 			     				</div>
+			     				<img id="loginCheck" class="hide"></img>
 			     				<span id="infomation" style="color: red;margin-left: 10%;"></span>
 			     			</div>
 			     		</form>
@@ -156,6 +157,38 @@
   
 		<%@ include file="../shared/importJs.jsp"%>
 		<script type="text/javascript">
+        $(document).ready(function() { 
+            var explorer = window.navigator.userAgent.toLowerCase() ;
+            var fix = explorer.indexOf("firefox") >= 0;
+            var ch = explorer.indexOf("chrome") >= 0;
+            var iers = explorer.indexOf("msie") >= 0;
+            var tishi = '<spring:message code="login_web" />';
+               if(iers)
+                {
+                    var ver=explorer.match(/msie ([\d.]+)/)[1];
+                    var banben = parseInt(ver);
+                    if(banben<9)
+                        {
+                        $("#loginCheck").attr("src",tishi);
+                        $("#loginCheck").show();
+                        }
+                }else
+                    {
+                       if(!ch && !fix)
+                        {
+                           $("#loginCheck").attr("src",tishi);
+                           $("#loginCheck").show();
+                        }
+                    }
+               if($("#loginCheck").attr("src")==undefined)
+            	   {
+            	   $("#loginid").show();
+            	   }
+               
+
+
+            
+        });		
 			$(function() {
 				var info = "${info}";
 				var login_info = '<spring:message code="login_infomation" />';
