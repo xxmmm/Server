@@ -139,7 +139,7 @@
 			     				<div class="span12">
 			     					<button id="loginid" type="submit" class="button hide"><spring:message code="login_go" /></button>
 			     				</div>
-			     				<img id="loginCheck" class="hide"></img>
+			     				<img id="loginCheck" style="margin-left: -2%" class="hide"></img>
 			     				<span id="infomation" style="color: red;margin-left: 10%;"></span>
 			     			</div>
 			     		</form>
