@@ -399,6 +399,7 @@ public class LocationDao
     	}
     	// 删掉最后一个多余的union字符串
     	sqlBuffer.delete(sqlBuffer.length()-6, sqlBuffer.length());
+    	log.info("sql:"+sqlBuffer.toString());
 
         return this.jdbcTemplate.queryForList(sqlBuffer.toString());
     }

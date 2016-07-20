@@ -104,7 +104,7 @@
                             </a>
                             </li>
                         </c:if>
-                        <c:if test = "${fn:contains(menu,'key_sellerInfo') or menu eq 'all' }" >
+                        <%-- <c:if test = "${fn:contains(menu,'key_sellerInfo') or menu eq 'all' }" >
                             <c:choose>  
                                 <c:when test="${sellerMng}">  
                                     <li class="active">
@@ -118,7 +118,7 @@
                                 <span><spring:message code="menu_info_manage_seller" /></span>
                             </a>
                             </li>
-                        </c:if>
+                        </c:if> --%>
                         <c:if test = "${fn:contains(menu,'key_areaCategory') or menu eq 'all' }" >
                             <c:choose>
                                 <c:when test="${categoryMng}">  
@@ -148,8 +148,7 @@
                                 <span><spring:message code="shop_name" /></span>
                             </a>
                             </li>
-                        </c:if> 
-                        <!--                       
+                        </c:if>                     
                         <c:choose>  
                                 <c:when test="${showElectronic}">  
                                     <li class="active">
@@ -162,8 +161,7 @@
                                 <i class="round" style="background-color: #159FE4;"></i>
                                 <span><spring:message code="Electronic_info" /></span>
                             </a>
-                            </li> 
-                            -->                     
+                            </li>                   
                         <c:if test = "${fn:contains(menu,'key_role') or menu eq 'all' }" >
                             <c:choose>
                                 <c:when test="${role}">  
@@ -223,7 +221,17 @@
                                 </c:otherwise> 
                             </c:choose>
                                 <a href="<c:url value='/home/content4' />"><i class="round" style="background-color: #E64C66;"></i><span><spring:message code="sh_yanshicanshu" /></span></a>
-                            </li>                                                                              
+                            </li>  
+                      <c:choose>
+                                <c:when test="${contentjing}">  
+                                    <li class="active">
+                                </c:when>  
+                                <c:otherwise>  
+                                    <li class="">
+                                </c:otherwise> 
+                            </c:choose>
+                                <a href="<c:url value='/home/contentjing' />"><i class="round" style="background-color: #E64C66;"></i><span><spring:message code="jinjgrong" /></span></a>
+                            </li>                                                                                                          
                     </ul>
                 </li>
             </c:when>   
@@ -709,7 +717,26 @@
                         </a>
                         </li>
                     </c:when>
-                </c:choose>                                
+                </c:choose>  
+
+              <c:choose>
+                    <c:when test="${auth eq 'root'}">
+                        <c:choose>
+                            <c:when test="${contentJingShow}">
+                                <li class="active">
+                            </c:when>
+                            <c:otherwise>
+                                <li class="">
+                            </c:otherwise>
+                        </c:choose>
+                        <a href="<c:url value='/home/contentJingShow' />">
+                            <i class="round" style="background-color: #E64C66;"></i>
+                            <span><spring:message code="jingrong_yanshi" /></span>
+                        </a>
+                        </li>
+                    </c:when>
+                </c:choose>                  
+                                              
                 </ul>
      <!--   <li class="last"><a href="<c:url value='/down/contentShow' />"> <img src="<c:url value='/images/bz.png'/>">
                 <span class="title toggleMenuTxt"><spring:message code="huangzhou_manhua" /></span>

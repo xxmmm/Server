@@ -6,18 +6,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<repositories>
-		<repository>
-			<id>java.net</id>
-			<url>https://maven.java.net/content/repositories/public/</url>
-		</repository>
-
-		<repository>
-			<id>java.net</id>
-			<url>http://mvnrepository.com</url>
-		</repository>
-	</repositories>
-
 	<properties>
 		<commons-beanutils.version>1.8.0</commons-beanutils.version>
 		<commons-collections.version>3.2.1</commons-collections.version>

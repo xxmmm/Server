@@ -125,11 +125,20 @@
 											</div>
 										</div>
 										<div class="control-group">
-											<label class="control-label" for="zSel"><spring:message code="area_areaName" /></label>
+											<label class="control-label" for="areaName"><spring:message code="area_areaName" /></label>
 											<div class="controls">
 												<input type="text" nullmsg="<spring:message code="eaeamap_range" />" maxlength="100" datatype="password" errormsg="<spring:message code="eaeamap_range" />"  style="width: 59%;height: 15%;" name="areaName" id="areaName"  >
 											</div>
 										</div>
+										<div class="control-group">
+					                        <label class="control-label" for="isVipId"><spring:message code="seller_vip_seller"/></label>
+					                          <div class="controls">
+					                             <select style="width: 59%;height: 15%;" datatype="*"  nullmsg='<spring:message code="seller_vip" />' name="isVip" id="isVipId" >
+					                                    <option value="N"><spring:message code="seller_isvip_false" /></option>
+					                                    <option value="Y"><spring:message code="seller_isvip_true" /></option>
+					                             </select>                
+					                          </div>
+					                   </div>          
 										<div class="control-group">
 											<div class="controls">
 												<input type="hidden" name = "id" id="idid" style="width: 56%; height: 15%;">
@@ -207,6 +216,7 @@
 								<th style="width:50px"><spring:message code="message_table_title_floor" /></th>
 								<th style="width:50px"><spring:message code="category_category" /></th>
 								<th style="width:50px"><spring:message code="area_areaName" /></th>
+								<th style="width:93px"><spring:message code="seller_vip_seller" /></th>
 								<th style="width:100px"><spring:message code="message_table_title_x" /></th>
 								<th style="width:100px"><spring:message code="message_table_title_y" /></th>
 								<th style="width:100px"><spring:message code="input_table_title_x1" /></th>

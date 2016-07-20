@@ -47,7 +47,7 @@ class GetSvaData():
                 for i in range(7):
                     x = random.randint(300, 400)
                     y = random.randint(350, 520)
-                    message = message + ',{"IdType":"MSISDN","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x)+',"y":'+str(y)+',"z":2},"userid":["'+str(arrPhone[i])+'"]}'
+                    message = message + ',{"IdType":"MSISDN","Timestamp":'+str(timestamp)+',"datatype":"coordinates","location":{"x":'+str(x)+',"y":'+str(y)+',"z":7},"userid":["'+str(arrPhone[i])+'"]}'
                 message = message + "]}"
                 #message = '{"geofencing":[{"IdType": "IP", "userid": ["bea80202"], "mapid": 2, "zoneid": 0, "zone_event": "exit", "Timestamp":1461054031000}]}'
                 #{"locationstream":[{"IdType":"IP","Timestamp":1427560872000,"datatype":"coordinates","location":{"x":1133.0,"y":492.0,"z":1},"userid":["0a26d23d"]}]}

@@ -2184,6 +2184,221 @@ public class ApiController
     }
     
     
+    /** 
+     * @Title: getShDateJing 
+     * @Description: 菁蓉整数据获取
+     * @return Map<String,Object>       
+     * @throws 
+     */
+    @RequestMapping(value = "/getShDateJing", method = {RequestMethod.POST})
+@ResponseBody
+public Map<String, Object> getShDateJing()
+{
+    Calendar currentDate = new GregorianCalendar();
+    currentDate.set(Calendar.HOUR_OF_DAY, 0);
+    currentDate.set(Calendar.MINUTE, 0);
+    currentDate.set(Calendar.SECOND, 0);
+    List<Map<String, Object>> bzData = bzDao.getAllFloorNoJing("1");
+    String floorNo1 = null;
+    String floorNo2 = null;
+    String floorNo3 = null;
+    String floorNo4 = null;
+    String periodSel = null;
+    double coefficient = 0;
+    long bztime = 0;
+    String startTime = null;
+    long time = 0;
+    if (bzData.size() > 0)
+    {
+        floorNo1 = bzData.get(0).get("floorNo1").toString();
+        floorNo2 = bzData.get(0).get("floorNo2").toString();
+        floorNo3 = bzData.get(0).get("floorNo3").toString();
+        floorNo4= bzData.get(0).get("floorNo4").toString();
+        startTime = bzData.get(0).get("startTime").toString();
+        periodSel = bzData.get(0).get("periodSel").toString();
+        coefficient = Double.parseDouble(bzData.get(0).get("coefficient")
+                .toString());
+        startTime = startTime.split(" ")[1].substring(0, 8);
+//        long maxTimestamp = daoArea.getMaxTimestamp();
+//        if (maxTimestamp > 0)
+//        {
+//            time = maxTimestamp - Integer.parseInt(periodSel) * 60 * 1000;
+//        }
+//        else
+//        {
+//            time = System.currentTimeMillis() - Integer.parseInt(periodSel)
+//                    * 60 * 1000;
+//        }
+    }
+    if (coefficient == 0)
+    {
+        coefficient = 1.0;
+    }
+
+    List<AreaModel> ResultList1 = daoArea.selectAeareBaShow(floorNo1);
+    List<AreaModel> ResultList2 = daoArea.selectAeareBaShow(floorNo2);
+    List<AreaModel> ResultList3 = daoArea.selectAeareBaShow(floorNo3);
+    List<AreaModel> ResultList4 = daoArea.selectAeareBaShow(floorNo4);
+    long nowTime = System.currentTimeMillis()
+            - (Integer.parseInt(periodSel)+1) * 60 * 1000;
+    List<Object> areaData = new ArrayList<Object>();
+    List<Object> areaData2 = new ArrayList<Object>();
+    List<Object> areaData3 = new ArrayList<Object>();
+    List<Object> areaData4 = new ArrayList<Object>();
+    List<Object> areaData1 = new ArrayList<Object>();
+    Map<String, Object> map = null;
+    Map<String, Object> allDataMap = new HashMap<String, Object>(2);
+
+    String tableName = Params.LOCATION
+            + ConvertUtil
+                    .dateFormat(currentDate.getTime(), Params.YYYYMMDD);
+    String visitDay = ConvertUtil.dateFormat(currentDate.getTime(),
+            "yyyy-MM-dd");
+    // 当前时间拼接
+    if (startTime != null)
+    {
+        String startDate = visitDay + " " + startTime;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try
+        {
+            bztime = sdf.parse(startDate).getTime();
+        }
+        catch (Exception e)
+        {
+            log.debug("Time zhuanhuan error!");
+        }
+    }
+    Map<String, Object> tquyu = null;
+    double allTime1 = 0;
+    double allTime2 = 0;
+    double allTime3 = 0;
+    double allTime4 = 0;
+    long allTimes1 = 0; 
+    long allTimes2 = 0; 
+    long allTimes3 = 0; 
+    long allTimes4 = 0; 
+    for (int i = 0; i < ResultList1.size(); i++)
+    {
+        Map<String, Object> quyu2 = null;
+        quyu2 = getAreaDate(areaData1, ResultList1.get(i).getId(),
+                ResultList1.get(i).getAreaName(), visitDay, tquyu, map,
+                nowTime, coefficient);
+        allTime1 = allTime1 +  Double.parseDouble(quyu2.get("average").toString());
+        allTimes1 = Long.parseLong(quyu2.get("allTime").toString())+allTimes1;
+        if (quyu2.size() != 0)
+        {
+            areaData.add(quyu2);
+        }
+    }
+    for (int i = 0; i < ResultList2.size(); i++)
+    {
+        Map<String, Object> quyu2 = null;
+        quyu2 = getAreaDate(areaData1, ResultList2.get(i).getId(),
+                ResultList2.get(i).getAreaName(), visitDay, tquyu, map,
+                nowTime, coefficient);
+        allTime2 = allTime2 +  Double.parseDouble(quyu2.get("average").toString());
+        allTimes2 = Long.parseLong(quyu2.get("allTime").toString())+allTimes2;
+        if (quyu2.size() != 0)
+        {
+            areaData2.add(quyu2);
+        }
+    }
+    for (int i = 0; i < ResultList3.size(); i++)
+    {
+        Map<String, Object> quyu3 = null;
+        quyu3 = getAreaDate(areaData1, ResultList3.get(i).getId(),
+                ResultList3.get(i).getAreaName(), visitDay, tquyu, map,
+                nowTime, coefficient);
+        allTime3 = allTime3 +  Double.parseDouble((quyu3.get("average").toString()));
+        allTimes3 = Long.parseLong(quyu3.get("allTime").toString())+allTimes3;
+        if (quyu3.size() != 0)
+        {
+            areaData3.add(quyu3);
+        }
+    }
+    for (int i = 0; i < ResultList4.size(); i++)
+    {
+        Map<String, Object> quyu3 = null;
+        quyu3 = getAreaDate(areaData4, ResultList4.get(i).getId(),
+            ResultList4.get(i).getAreaName(), visitDay, tquyu, map,
+            nowTime, coefficient);
+        allTime4 = allTime4 +  Double.parseDouble((quyu3.get("average").toString()));
+        allTimes4 = Long.parseLong(quyu3.get("allTime").toString())+allTimes4;
+        if (quyu3.size() != 0)
+        {
+            areaData4.add(quyu3);
+        }
+    }
+
+    allDataMap.put("item", areaData);
+    allDataMap.put("item1", areaData2);
+    allDataMap.put("item2", areaData3);
+    allDataMap.put("item4", areaData4);
+
+    int allUsers1 = 0;
+    int allUsers2 = 0;
+    int allUsers3 = 0;
+    int allUsers4 = 0;
+
+    int allLeiji1 = 0;
+    int allLeiji2 = 0;
+    int allLeiji3 = 0;
+    int allLeiji4 = 0;
     
+    double allUser1 = 0;
+    double allUser2 = 0;
+    double allUser3 = 0;
+    double allUser4 = 0;
+    
+    
+    
+    allLeiji1 = dao.queryHeatmap6(floorNo1).size();
+    allLeiji2 = dao.queryHeatmap6(floorNo2).size();
+    allLeiji3 = dao.queryHeatmap6(floorNo3).size();
+    allLeiji4 = dao.queryHeatmap6(floorNo4).size();
+    
+    allUser1 = Math.ceil(allLeiji1 * coefficient);
+    allUser2 = Math.ceil(allLeiji2 * coefficient);
+    allUser3 = Math.ceil(allLeiji3 * coefficient);
+    allUser4 = Math.ceil(allLeiji4 * coefficient);
+    
+    allUsers1 = (dao.queryHeatmap5(floorNo1, Integer.parseInt(periodSel))).size();
+    allUsers2 = (dao.queryHeatmap5(floorNo2, Integer.parseInt(periodSel))).size();
+    allUsers3 = (dao.queryHeatmap5(floorNo3, Integer.parseInt(periodSel))).size();
+    allUsers4 = (dao.queryHeatmap5(floorNo4, Integer.parseInt(periodSel))).size();
+//    allUsers2 = daoArea.getAllPeoples(floorNo2, tableName, bztime);
+//    allUsers3 = daoArea.getAllPeoples(floorNo3, tableName, bztime);
+
+    allDataMap.put("coefficient", coefficient);
+    allDataMap.put("allTime1", allTime1);
+    DecimalFormat    df   = new DecimalFormat("######0.00");   
+    String avgAllTime1 = allUser1 == 0 ? "0.00" : df.format(allTimes1/60000.0/allUser1);
+    String avgAllTime2 = allUser2 == 0 ? "0.00" : df.format(allTimes2/60000.0/allUser2);
+    String avgAllTime3 = allUser3 == 0 ? "0.00" : df.format(allTimes3/60000.0/allUser3);
+    String avgAllTime4 = allUser4 == 0 ? "0.00" : df.format(allTimes4/60000.0/allUser4);
+    if (Double.parseDouble(avgAllTime2)>=120)
+    {
+        avgAllTime2 = "120.23";
+    }
+    if (Double.parseDouble(avgAllTime3)>=120)
+    {
+        avgAllTime2 = "120.10";
+    }
+    allDataMap.put("allTime1", avgAllTime1);
+    allDataMap.put("allTime2", avgAllTime2);
+    allDataMap.put("allTime3", avgAllTime3);
+    allDataMap.put("allTime4", avgAllTime4);
+    allDataMap.put("User1", Math.ceil(allUsers1 * coefficient));
+    allDataMap.put("User2",Math.ceil(allUsers2 * coefficient) );
+    allDataMap.put("User3", Math.ceil(allUsers3 * coefficient));
+    allDataMap.put("User4", Math.ceil(allUsers4 * coefficient));
+    allDataMap.put("allUser1",allUser1);
+    allDataMap.put("allUser2",allUser2 );
+    allDataMap.put("allUser3", allUser3);
+    allDataMap.put("allUser4", allUser4);
+
+
+    return allDataMap;
+}
 
 }

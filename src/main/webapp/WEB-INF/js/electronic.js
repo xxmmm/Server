@@ -343,6 +343,22 @@ var MsgMng = function () {
 						updateFloorList("zSel",data.data,floor,function(){$("#zSel").change();});
 					}
 				});
+				
+				 $("input[data-type='dingyue']").live("click",function(e){
+		            	var areaId = $(this).data("id");
+		            	
+		            	$.post("/sva/input/api/enableData",{areaId:areaId}, function(data){
+		            		MsgMng.initMsgTable();
+		            	});
+		            	
+		            });
+		            $("input[data-type='undingyue']").live("click",function(e){
+		            	var areaId = $(this).data("id");
+		            	$.post("/sva/input/api/disableData",{areaId:areaId}, function(data){
+		            		MsgMng.initMsgTable();
+		            	});
+		            	
+		            });
 
 	           	//$("#zSel").val(zSpot);
 
@@ -450,8 +466,16 @@ var MsgMng = function () {
         	                        return "";
         	                    },
         	                    "mRender": function ( data, type, full ) {
+        	                    	var htm11  ;
+        	                    	if (full.status=="0") {
+										
+        	                    		htm11 = '<input type="button" style="width: 63px;height:30px;font-size: 13px;font-family:inherit;" data-type="dingyue" data-placeid="'+full.placeId+'" data-categoryid="'+full.Id+'" id="'+full.areaId+'" data-id="'+full.areaId+'" value="'+i18n_dingyue+'">' ;
+									}else
+									{
+										htm11 = '<input type="button" style="width: 63px;height:30px;font-size: 13px;font-family:inherit;" data-type="undingyue" data-placeid="'+full.placeId+'" data-categoryid="'+full.categoryId+'" id="'+full.areaId+'" data-id="'+full.areaId+'" value="'+i18n_undingyue+'">' ;
+									}
         	                    	var html = "" +
-        	                    		
+        	                    		htm11 + 
         	                    		'<input type="button" data-type="edt" style="width: 54px;height:30px;font-size: 13px;font-family:inherit;" data-placeid="'+full.placeId+'" data-shopId="'+full.areaId+'" data-floorno="'+full.floorNo+'" value="'+i18n_edit+'" id="'+full.id+' ">' +
         	                    		'<input type="button" data-type="del" style="width: 54px;height:30px;font-size: 13px;font-family:inherit;" data-floorNo="'+full.floorNo+'" id="'+full.id+'" data-id="'+full.id+'" value="'+i18n_delete+'">'+
         	                    		'<a data-type="preview" role="button" class="btn"  style="font-size:13px;" data-floorNo="'+full.floorNo+'" id="'+full.id+'" data-pictrue="'+full.pictruePath+'" data-movie="'+full.moviePath+'">'+i18n_Preview+'</a>';

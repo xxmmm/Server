@@ -428,6 +428,16 @@ public class HomeController
     }
     
     @AuthPassport
+    @RequestMapping(value = "/contentjing", method = {RequestMethod.GET})
+    public String Contentshowjing (Model model)
+    {
+    model.addAttribute("contentjing", true);
+    model.addAttribute("infoMng", true);
+    model.addAttribute("contentshowjing", true);
+    return "home/contentshowJing";
+    }
+    
+    @AuthPassport
     @RequestMapping(value = "/content2", method = {RequestMethod.GET})
     public String Contentshow2 (Model model)
     {
@@ -443,6 +453,14 @@ public class HomeController
     model.addAttribute("content3", true);
     model.addAttribute("contentshow3", true);
     return "home/contentShowindex2";
+    }
+    
+    @RequestMapping(value = "/contentJingShow", method = {RequestMethod.GET})
+    public String ContentJingShow (Model model)
+    {
+    model.addAttribute("contentJingShow", true);
+    model.addAttribute("contentJingShow", true);
+    return "home/contentShowindexJing";
     }
     
     @RequestMapping(value = "/changeLocal", method = {RequestMethod.GET})

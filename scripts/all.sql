@@ -903,4 +903,26 @@ COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB;
 
 
+CREATE TABLE `shpramesjing` (
+    `floorNo1` DECIMAL(10,2) NULL DEFAULT NULL,
+    `floorNo2` DECIMAL(10,2) NULL DEFAULT NULL,
+    `floorNo3` DECIMAL(10,2) NULL DEFAULT NULL,
+    `floorNo4` DECIMAL(10,2) NULL DEFAULT NULL,
+    `densitySel1` INT(11) NULL DEFAULT NULL,
+    `densitySel2` INT(11) NULL DEFAULT NULL,
+    `densitySel3` INT(11) NULL DEFAULT NULL,
+    `densitySel4` INT(11) NULL DEFAULT NULL,
+    `startTime` DATETIME NULL DEFAULT NULL,
+    `radiusSel1` INT(11) NULL DEFAULT NULL,
+    `radiusSel2` INT(11) NULL DEFAULT NULL,
+    `radiusSel3` INT(11) NULL DEFAULT NULL,
+    `radiusSel4` INT(11) NULL DEFAULT NULL,
+    `id` INT(11) NOT NULL DEFAULT '0',
+    `coefficient` INT(11) NOT NULL DEFAULT '0',
+    `periodSel` INT(11) NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB;
+
 
